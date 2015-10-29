@@ -8,5 +8,4 @@ import enjug.erijan.games.yatzy.rules.ScoreBoxFactory;
 public interface ScoreKeeper<E extends Enum<E>> {
   void enterResult(E scoreBox, int... result);
   int getScore(E scoreBox);
-  void setupScoring(E scoreBox);
 }

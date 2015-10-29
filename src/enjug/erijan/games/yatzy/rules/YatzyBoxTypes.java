@@ -49,7 +49,7 @@ public enum YatzyBoxTypes implements ScoreBoxFactory {
   BONUS {
     @Override
     public ScoreBox createScoreBox() {
-      return new ScoreBox(new TotalSumRule());
+      return new ScoreBox(new BonusRule(63,50));
     }
   },
   ONE_PAIR {

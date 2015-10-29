@@ -25,6 +25,15 @@ public class YatzyDice implements DiceHandler {
     }
   }
 
+  int[] getValues() {
+    int[] retValues = new int[dice.size()];
+    for (int i = 0; i < dice.size(); i++) {
+      retValues[i] = dice.get(i).getSideUp();
+
+    }
+    return retValues;
+  }
+
   @Override
   public void rollDice(List<GameDie> activeDice) {
     for (GameDie d : activeDice) {

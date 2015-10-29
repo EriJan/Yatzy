@@ -27,7 +27,7 @@ public class NSameRule implements ScoreRule {
           count++;
         }
       }
-      if (count >= nSame || highest < i) {
+      if (count >= nSame && highest < i) {
         highest = i;
       }
     }

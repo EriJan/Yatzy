@@ -7,9 +7,16 @@ import enjug.erijan.games.yatzy.rules.YatzyBoxTypes;
  */
 public class ScorColTest {
   public static void main(String[] args) {
-    YatzyBoxTypes boxTypes = YatzyBoxTypes.ONES;
+    YatzyDice dice = new YatzyDice();
+    //YatzyBoxTypes boxTypes = YatzyBoxTypes.ONES;
+
     ScoreColumn tstCol = new ScoreColumn();
-    tstCol.setupScoring(boxTypes);
+
+    for(YatzyBoxTypes box : YatzyBoxTypes.values()) {
+      dice.rollAllDice();
+      System.out.println(dice.toString());
+      tstCol.enterResult(box,dice.getValues());
+    }
     System.out.println(tstCol.toString());
   }
 }

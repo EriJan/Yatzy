@@ -1,7 +1,5 @@
 package enjug.erijan.games.yatzy.rules;
 
-import enjug.erijan.games.yatzy.rules.ScoreRule;
-
 /**
  * Created by Janne on 27/10/15.
  */
@@ -13,7 +11,7 @@ public class ScoreBox {
     score = 0;
   }
 
-  public void calculateScore(int... result) {
+  public void setScore(int... result) {
     score = scoreRule.calculateScore(result);
   }
 

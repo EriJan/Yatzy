@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class YatzyRuleBook implements RuleBook {
 
-  @Override
+  //@Override
   public Map getScoreBoxes() {
     return null;
   }
