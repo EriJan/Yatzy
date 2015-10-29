@@ -61,7 +61,7 @@ public enum YatzyBoxTypes implements ScoreBoxFactory {
   TWO_PAIR {
     @Override
     public ScoreBox createScoreBox() {
-      return null;
+      return new ScoreBox(new TwoPairRule());
     }
   },
   THREE_OF_SAME {
@@ -79,19 +79,19 @@ public enum YatzyBoxTypes implements ScoreBoxFactory {
   FULL_HOUSE {
     @Override
     public ScoreBox createScoreBox() {
-      return null;
+      return new ScoreBox(new FullHouse());
     }
   },
   SMALL_STRAIGHT {
     @Override
     public ScoreBox createScoreBox() {
-      return null;
+      return new ScoreBox(new SmallStraightRule());
     }
   },
   BIG_STRAIGHT {
     @Override
     public ScoreBox createScoreBox() {
-      return null;
+      return new ScoreBox(new BigStraightRule());
     }
   },
   CHANCE {

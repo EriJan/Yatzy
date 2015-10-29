@@ -11,7 +11,6 @@ public class ScoreBox {
     score = 0;
   }
 
-
   public void calculateScore(int... result) {
     score = scoreRule.calculateScore(result);
   }

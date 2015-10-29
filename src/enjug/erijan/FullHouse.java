@@ -3,28 +3,32 @@ package enjug.erijan;
 /**
  * Created by Janne on 29/10/15.
  */
-
-public class TwoPairRule implements ScoreRule {
+public class FullHouse implements ScoreRule {
   private final int maxVal;
   private NSameRule nSameRule;
 
-  public TwoPairRule() {
+  public FullHouse() {
     this.maxVal = 6;
   }
 
   @Override
   public int calculateScore(int... result) {
 
-    nSameRule = new NSameRule(2);
+    nSameRule = new NSameRule(3);
     int score = nSameRule.calculateScore(result);
-    int firstPairVal = score/2;
+    int firstPairVal = score/3;
 
     nSameRule = new NSameRule(2,firstPairVal-1);
     score = nSameRule.calculateScore(result);
     int secondPairVal = score/2;
+    if (secondPairVal > 0) {
+      nSameRule = new NSameRule(2);
+      score = nSameRule.calculateScore(result);
+      secondPairVal = score/2;
+    }
 
     if (firstPairVal*secondPairVal > 0) {
-      score = 2*(firstPairVal + secondPairVal);
+      score = 3*firstPairVal + 2*secondPairVal;
     } else {
       score = 0;
     }

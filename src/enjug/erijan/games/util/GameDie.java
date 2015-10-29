@@ -1,4 +1,4 @@
-package enjug.erijan;
+package enjug.erijan.games.util;
 
 import java.util.Random;
 

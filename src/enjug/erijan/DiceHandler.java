@@ -1,5 +1,7 @@
 package enjug.erijan;
 
+import enjug.erijan.games.util.GameDie;
+
 import java.util.List;
 
 /**

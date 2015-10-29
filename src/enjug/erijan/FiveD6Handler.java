@@ -1,5 +1,8 @@
 package enjug.erijan;
 
+import enjug.erijan.games.util.DieTypes;
+import enjug.erijan.games.util.GameDie;
+
 import java.util.ArrayList;
 import java.util.List;
 
