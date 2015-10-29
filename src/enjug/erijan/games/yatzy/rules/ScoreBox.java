@@ -1,4 +1,6 @@
-package enjug.erijan;
+package enjug.erijan.games.yatzy.rules;
+
+import enjug.erijan.games.yatzy.rules.ScoreRule;
 
 /**
  * Created by Janne on 27/10/15.

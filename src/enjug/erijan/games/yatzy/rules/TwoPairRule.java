@@ -1,34 +1,30 @@
-package enjug.erijan;
+package enjug.erijan.games.yatzy.rules;
 
 /**
  * Created by Janne on 29/10/15.
  */
-public class FullHouse implements ScoreRule {
+
+public class TwoPairRule implements ScoreRule {
   private final int maxVal;
   private NSameRule nSameRule;
 
-  public FullHouse() {
+  public TwoPairRule() {
     this.maxVal = 6;
   }
 
   @Override
   public int calculateScore(int... result) {
 
-    nSameRule = new NSameRule(3);
+    nSameRule = new NSameRule(2);
     int score = nSameRule.calculateScore(result);
-    int firstPairVal = score/3;
+    int firstPairVal = score/2;
 
     nSameRule = new NSameRule(2,firstPairVal-1);
     score = nSameRule.calculateScore(result);
     int secondPairVal = score/2;
-    if (secondPairVal > 0) {
-      nSameRule = new NSameRule(2);
-      score = nSameRule.calculateScore(result);
-      secondPairVal = score/2;
-    }
 
     if (firstPairVal*secondPairVal > 0) {
-      score = 3*firstPairVal + 2*secondPairVal;
+      score = 2*(firstPairVal + secondPairVal);
     } else {
       score = 0;
     }

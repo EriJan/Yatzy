@@ -1,4 +1,4 @@
-package enjug.erijan;
+package enjug.erijan.games.yatzy.rules;
 
 /**
  * Created by Janne on 29/10/15.
@@ -7,7 +7,7 @@ public class SumOfNsRule implements ScoreRule {
 
   private final int targetNumber;
 
-  SumOfNsRule(int targetNumber) {
+  public SumOfNsRule(int targetNumber) {
     this.targetNumber = targetNumber;
   }
 

@@ -1,4 +1,6 @@
-package enjug.erijan;
+package enjug.erijan.games.yatzy.rules;
+
+import enjug.erijan.games.yatzy.rules.RuleBook;
 
 import java.util.Map;
 
@@ -11,4 +13,6 @@ public class YatzyRuleBook implements RuleBook {
   public Map getScoreBoxes() {
     return null;
   }
+
+
 }

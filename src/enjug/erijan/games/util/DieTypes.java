@@ -47,37 +47,37 @@ public enum DieTypes implements DieFactory {
   };
 
   class D4 extends GameDie {
-    public D4() {
+    private D4() {
       super(4);
     }
   }
 
   class D6 extends GameDie {
-    public D6() {
+    private D6() {
       super(6);
     }
   }
 
   class D8 extends GameDie {
-    public D8() {
+    private D8() {
       super(8);
     }
   }
 
   class D10 extends GameDie {
-    public D10() {
+    private D10() {
       super(10);
     }
   }
 
   class D12 extends GameDie {
-    public D12() {
+    private D12() {
       super(12);
     }
   }
 
   class D20 extends GameDie {
-    public D20() {
+    private D20() {
       super(20);
     }
   }

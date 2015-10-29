@@ -5,11 +5,12 @@ import java.util.Random;
 /**
  * Created by Janne on 27/10/15.
  */
+
 public abstract class GameDie {
   private final int noOfSides;
   private int sideUp;
 
-  public GameDie(int noOfSides){
+  GameDie(int noOfSides){
     this.noOfSides = noOfSides;
     this.sideUp = noOfSides;
   }

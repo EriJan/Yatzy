@@ -1,8 +1,9 @@
-package enjug.erijan;
+package enjug.erijan.games.yatzy.rules;
 
 /**
  * Created by Janne on 29/10/15.
  */
+
 public class YatzyRule implements ScoreRule {
   private final int yatzyScore;
 

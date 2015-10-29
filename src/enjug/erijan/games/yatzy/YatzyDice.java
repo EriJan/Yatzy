@@ -1,5 +1,6 @@
-package enjug.erijan;
+package enjug.erijan.games.yatzy;
 
+import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.util.DieTypes;
 import enjug.erijan.games.util.GameDie;
 
@@ -9,14 +10,15 @@ import java.util.List;
 /**
  * Created by Janne on 27/10/15.
  */
-public class FiveD6Handler implements DiceHandler {
+
+public class YatzyDice implements DiceHandler {
 
   List<GameDie> dice;
   DieTypes dieType;
 
-  public FiveD6Handler() {
+  public YatzyDice() {
     dice = new ArrayList<GameDie>();
-    dieType = DieTypes.D8;
+    dieType = DieTypes.D6;
     for (int i = 0; i < 5; i++) {
       //dice.add(DieTypes.D6.create());
       dice.add(dieType.create());
