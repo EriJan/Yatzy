@@ -17,7 +17,7 @@ public class YatzyScoreModel extends ScoreModel {
 
   private List<LocalObserver> observers;
 
-  YatzyScoreModel() {
+  public YatzyScoreModel() {
     scoreBoxMap = new EnumMap<YatzyBoxTypes,ScoreBox>(YatzyBoxTypes.class);
     for(YatzyBoxTypes box : YatzyBoxTypes.values()) {
       scoreBoxMap.put(box,box.createScoreBox());
@@ -85,7 +85,7 @@ public class YatzyScoreModel extends ScoreModel {
 
   @Override
   public Iterator getScoreIterator() {
-    return null;
+    return scoreBoxMap.entrySet().iterator();
   }
 
   @Override

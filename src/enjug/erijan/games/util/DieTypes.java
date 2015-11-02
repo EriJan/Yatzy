@@ -1,6 +1,7 @@
 package enjug.erijan.games.util;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Created by Janne on 27/10/15.
@@ -59,9 +60,12 @@ public enum DieTypes implements DieFactory {
       super(6);
       sideIcons = new ImageIcon[6];
       for (int i = 1; i <= 6; i++) {
-        sideIcons[i-1] = new ImageIcon(this.getClass().getResource
+        ImageIcon tmpIcon = new ImageIcon(this.getClass().getResource
             ("DiceIcons/d6-" + i + ".png"));
-      }
+        Image image = tmpIcon.getImage();
+        Image newimg = image.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
+        sideIcons[i-1] = new ImageIcon(newimg);
+        }
     }
   }
 
