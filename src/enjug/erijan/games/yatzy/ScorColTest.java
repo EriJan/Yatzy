@@ -10,13 +10,14 @@ public class ScorColTest {
     YatzyDice dice = new YatzyDice();
     //YatzyBoxTypes boxTypes = YatzyBoxTypes.ONES;
 
-    ScoreColumn tstCol = new ScoreColumn();
-
-    for(YatzyBoxTypes box : YatzyBoxTypes.values()) {
+    YatzyScoreModel tstCol = new YatzyScoreModel();
+    for (int i = 0; i < 10; i++) {
       dice.rollAllDice();
       System.out.println(dice.toString());
-      tstCol.enterResult(box,dice.getValues());
+      for(YatzyBoxTypes box : YatzyBoxTypes.values()) {
+        tstCol.enterResult(box,dice.getValues());
+      }
+      System.out.println(tstCol.toString());
     }
-    System.out.println(tstCol.toString());
   }
 }

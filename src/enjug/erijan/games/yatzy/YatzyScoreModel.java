@@ -3,21 +3,21 @@ package enjug.erijan.games.yatzy;
 import enjug.erijan.games.yatzy.rules.ScoreBox;
 import enjug.erijan.games.yatzy.rules.YatzyBoxTypes;
 
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Janne on 27/10/15.
  */
 
-public class ScoreColumn implements ScoreKeeper {
+public class YatzyScoreModel extends ScoreModel {
 
   Map scoreBoxMap;
-  private YatzyBoxTypes[] sumRange;
-  private YatzyBoxTypes[] totalRange;
+  private static YatzyBoxTypes[] sumRange;
+  private static YatzyBoxTypes[] totalRange;
 
+  private List<LocalObserver> observers;
 
-  ScoreColumn() {
+  YatzyScoreModel() {
     scoreBoxMap = new EnumMap<YatzyBoxTypes,ScoreBox>(YatzyBoxTypes.class);
     for(YatzyBoxTypes box : YatzyBoxTypes.values()) {
       scoreBoxMap.put(box,box.createScoreBox());
@@ -38,11 +38,14 @@ public class ScoreColumn implements ScoreKeeper {
         YatzyBoxTypes.THREE_OF_SAME,
         YatzyBoxTypes.FOUR_OF_SAME,
         YatzyBoxTypes.FULL_HOUSE,
-        YatzyBoxTypes.SMALL_STRAIGHT
+        YatzyBoxTypes.SMALL_STRAIGHT,
         YatzyBoxTypes.BIG_STRAIGHT,
         YatzyBoxTypes.YATZY,
         YatzyBoxTypes.CHANCE
     };
+
+    observers = new ArrayList<LocalObserver>();
+
   }
 
   @Override
@@ -53,13 +56,36 @@ public class ScoreColumn implements ScoreKeeper {
   }
 
   private void setSum() {
+    int localSum = 0;
+    ScoreBox localBox;
+    for(YatzyBoxTypes box : sumRange) {
+      localBox = (ScoreBox) scoreBoxMap.get(box);
+      localSum += localBox.getScore();
+    }
+    localBox = (ScoreBox) scoreBoxMap.get(YatzyBoxTypes.SUM);
+    localBox.setScore(localSum);
 
+    localBox = (ScoreBox) scoreBoxMap.get(YatzyBoxTypes.BONUS);
+    localBox.setScore(localSum);
+
+    localSum = 0;
+    for(YatzyBoxTypes box : totalRange) {
+      localBox = (ScoreBox) scoreBoxMap.get(box);
+      localSum += localBox.getScore();
+    }
+    localBox = (ScoreBox) scoreBoxMap.get(YatzyBoxTypes.TOTAL);
+    localBox.setScore(localSum);
   }
 
   @Override
   public int getScore(Enum scoreBox) {
     ScoreBox localBox = (ScoreBox) scoreBoxMap.get(scoreBox);
     return localBox.getScore();
+  }
+
+  @Override
+  public Iterator getScoreIterator() {
+    return null;
   }
 
   @Override
@@ -73,5 +99,22 @@ public class ScoreColumn implements ScoreKeeper {
 
     }
     return retString;
+  }
+
+  @Override
+  public void registerObserver(LocalObserver o) {
+    observers.add(o);
+  }
+
+  @Override
+  public void removeObserver(LocalObserver o) {
+    observers.remove(o);
+  }
+
+  @Override
+  public void notifyObservers() {
+    for (LocalObserver o : observers) {
+      o.update();
+    }
   }
 }

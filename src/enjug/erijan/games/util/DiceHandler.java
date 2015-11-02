@@ -1,5 +1,6 @@
 package enjug.erijan.games.util;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -8,5 +9,5 @@ import java.util.List;
 public interface DiceHandler {
   void rollDice(List<GameDie> activeDice);
   void rollAllDice();
-  List<GameDie> getDice();
+  Iterator<GameDie> getDice();
 }
