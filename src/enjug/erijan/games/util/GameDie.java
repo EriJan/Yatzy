@@ -11,6 +11,7 @@ public abstract class GameDie {
   private final int noOfSides;
   private int sideUp;
   protected static ImageIcon[] sideIcons;
+  protected static ImageIcon[] sideIconsAlt;
 
 
   GameDie(int noOfSides){
@@ -33,5 +34,9 @@ public abstract class GameDie {
 
   public ImageIcon getSideImage() {
     return sideIcons[sideUp-1];
+  }
+
+  public ImageIcon getSideImageAlt() {
+    return sideIconsAlt[sideUp-1];
   }
 }

@@ -1,8 +1,9 @@
 /**
  * Created by Janne on 27/10/15.
  */
+import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.util.GameDie;
-import enjug.erijan.games.yatzy.LocalObserver;
+import enjug.erijan.games.yatzy.ScoreObserver;
 import enjug.erijan.games.yatzy.ScoreModel;
 import enjug.erijan.games.yatzy.YatzyDice;
 import enjug.erijan.games.yatzy.YatzyScoreModel;
@@ -15,10 +16,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
 
-public class GuiTest implements LocalObserver {
+public class GuiTest implements ScoreObserver {
 
   JFrame jframe;
   static YatzyDice testDice = new YatzyDice();
+  JPanel diePanel = new JPanel();
 
   public GuiTest() {
     jframe = new JFrame("Dice");
@@ -29,7 +31,7 @@ public class GuiTest implements LocalObserver {
 
   }
 
-  public void addScore(ScoreModel scoreModel) {
+  public void addScoreSelection(ScoreModel scoreModel) {
     JPanel jPanel= new JPanel();
     jPanel.setLayout(new BoxLayout(jPanel,BoxLayout.Y_AXIS));
 
@@ -39,7 +41,7 @@ public class GuiTest implements LocalObserver {
     jframe.add(jPanel,c);
 
     ButtonGroup group = new ButtonGroup();
-    int row = 0;
+    int row = 1;
 
     //
     for(YatzyBoxTypes ybt : YatzyBoxTypes.values()) {
@@ -54,7 +56,16 @@ public class GuiTest implements LocalObserver {
       row++;
     }
 
-    row = 0;
+
+  }
+  public void addScore(ScoreModel scoreModel, int column) {
+    GridBagConstraints c = new GridBagConstraints();
+    c.gridy = 0;
+    c.gridx = column;
+    JButton namebotton = new JButton("Name");
+    jframe.add(namebotton,c);
+
+    int row = 1;
     Iterator<ScoreBox> scoreBoxIterator = scoreModel.getScoreIterator();
     while (scoreBoxIterator.hasNext()) {
 
@@ -64,11 +75,13 @@ public class GuiTest implements LocalObserver {
       ScoreBox scoreBox = (ScoreBox) thisEntry.getValue();
       //ScoreBox scoreBox = (ScoreBox) scoreBoxIterator.next();
       c.gridy = row;
-      c.gridx = 1;
+      c.anchor = GridBagConstraints.CENTER;
       JButton botton = new JButton(Integer.toString(scoreBox.getScore()));
       botton.setForeground(Color.BLACK);
-      botton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-      botton.setMargin(new Insets(2,2,2,2));
+      //botton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+      botton.setMargin(new Insets(5,5,5,5));
+      botton.setHorizontalTextPosition(JButton.CENTER);
+
       //botton.setPreferredSize(new Dimension());
       botton.addActionListener(new ActionListener() {
         @Override
@@ -87,24 +100,68 @@ public class GuiTest implements LocalObserver {
     jframe.setVisible(true);
   }
 
-  public void addDice(Iterator<GameDie> dice) {
-    JPanel jPanel= new JPanel();
-    jPanel.setLayout(new BoxLayout(jPanel,BoxLayout.Y_AXIS));
+  public void addDice(DiceHandler diceHandler, int column) {
+    Iterator<GameDie> dice = diceHandler.getDice();
+    //JPanel jPanel= new JPanel();
+    diePanel.removeAll();
+    diePanel.setLayout(new BoxLayout(diePanel,BoxLayout.Y_AXIS));
     while (dice.hasNext()) {
-      ImageIcon imageIcon = dice.next().getSideImage();
+      GameDie die = dice.next();
+      ImageIcon imageIcon;
+      if (diceHandler.isActiveDie(die)) {
+        imageIcon = die.getSideImage();
+      } else {
+        imageIcon = die.getSideImageAlt();
+      }
+      //JLabel label = new JLabel(imageIcon);
+//      JButton label = new JButton(imageIcon);
+      JButton label = new JButton(imageIcon);
+      label.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          diceHandler.toggleActiveDie(die);
+        }
+      });
 
-      JLabel label = new JLabel(imageIcon);
-      jPanel.add(label);
+      diePanel.add(label);
     }
     GridBagConstraints c = new GridBagConstraints();
-    c.gridx = 3;
+    c.gridx = column;
     c.gridy = 0;
     //c.fill = GridBagConstraints.VERTICAL;
     c.anchor = GridBagConstraints.CENTER;
     c.gridheight = 0;
-    jframe.getContentPane().add(jPanel,c);
+    c.gridwidth = 2;
+    jframe.getContentPane().add(diePanel,c);
     jframe.pack();
     jframe.setVisible(true);
+  }
+
+  public void addRollButton(DiceHandler diceHandler, int column, ScoreModel scoreModel) {
+    JButton button = new JButton("Roll");
+    button.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        diceHandler.rollActiveDice();
+        Iterator<GameDie> dieIterator = diceHandler.getDice();
+        int[] result = new int[5];
+        int i = 0;
+        while (dieIterator.hasNext()) {
+          GameDie die = dieIterator.next();
+          result[i] = die.getSideUp();
+          i++;
+        }
+        for(YatzyBoxTypes ybt : YatzyBoxTypes.values()) {
+          scoreModel.enterResult(ybt,result);
+        }
+        addScore(scoreModel,0);
+      }
+    });
+    GridBagConstraints c = new GridBagConstraints();
+    c.gridx = column;
+    c.gridy = 16;
+    jframe.getContentPane().add(button,c);
+    jframe.pack();
   }
 
   public static void main(String[] args) {
@@ -124,13 +181,21 @@ public class GuiTest implements LocalObserver {
 
     GuiTest testGui = new GuiTest();
     ScoreModel scoreModel = new YatzyScoreModel();
+    ScoreModel scoreModel2 = new YatzyScoreModel();
+    //YatzyDice testDice = new YatzyDice();
     testDice.registerObserver(testGui);
     testDice.rollAllDice();
-    testGui.addScore(scoreModel);
+    testGui.addScoreSelection(scoreModel);
+    testGui.addScore(scoreModel,1);
+    testGui.addScore(scoreModel2,2);
+    testGui.addRollButton(testDice,3,scoreModel);
+
+
   }
 
   @Override
   public void update() {
-    addDice(testDice.getDice());
+    addDice(testDice,3);
+    //addScore(scoreModel,2);
   }
 }

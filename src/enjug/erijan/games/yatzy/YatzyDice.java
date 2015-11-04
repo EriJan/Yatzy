@@ -12,36 +12,57 @@ import java.util.List;
  * Created by Janne on 27/10/15.
  */
 
-public class YatzyDice implements DiceHandler, LocalSubject {
+public class YatzyDice implements DiceHandler, DiceObservable {
 
   List<GameDie> dice;
+  List<GameDie> activeDice;
   DieTypes dieType;
-  List<LocalObserver> observers;
+  List<ScoreObserver> observers;
 
   public YatzyDice() {
     dice = new ArrayList<GameDie>();
+    activeDice = new ArrayList<GameDie>();
     dieType = DieTypes.D6;
     for (int i = 0; i < 5; i++) {
       //dice.add(DieTypes.D6.create());
       dice.add(dieType.create());
     }
-    observers = new ArrayList<LocalObserver>();
-  }
-
-  int[] getValues() {
-    int[] retValues = new int[dice.size()];
-    for (int i = 0; i < dice.size(); i++) {
-      retValues[i] = dice.get(i).getSideUp();
-
+    for(GameDie d : dice) {
+      activeDice.add(d);
     }
-    return retValues;
+    observers = new ArrayList<ScoreObserver>();
   }
+
+//  int[] getValues() {
+//    int[] retValues = new int[dice.size()];
+//    for (int i = 0; i < dice.size(); i++) {
+//      retValues[i] = dice.get(i).getSideUp();
+//
+//    }
+//    return retValues;
+//  }
 
   @Override
-  public void rollDice(List<GameDie> activeDice) {
+  public void rollActiveDice() {
     for (GameDie d : activeDice) {
       d.rollDie();
     }
+    notifyObservers();
+  }
+
+  @Override
+  public void toggleActiveDie(GameDie die) {
+    if (activeDice.contains(die)) {
+      activeDice.remove(die);
+    } else {
+      activeDice.add(die);
+    }
+    notifyObservers();
+  }
+
+  @Override
+  public boolean isActiveDie(GameDie die) {
+    return activeDice.contains(die);
   }
 
   @Override
@@ -67,18 +88,18 @@ public class YatzyDice implements DiceHandler, LocalSubject {
   }
 
   @Override
-  public void registerObserver(LocalObserver o) {
+  public void registerObserver(ScoreObserver o) {
     observers.add(o);
   }
 
   @Override
-  public void removeObserver(LocalObserver o) {
+  public void removeObserver(ScoreObserver o) {
     observers.remove(o);
   }
 
   @Override
   public void notifyObservers() {
-    for (LocalObserver o : observers) {
+    for (ScoreObserver o : observers) {
       o.update();
     }
   }

@@ -59,12 +59,19 @@ public enum DieTypes implements DieFactory {
     private D6() {
       super(6);
       sideIcons = new ImageIcon[6];
+      sideIconsAlt = new ImageIcon[6];
       for (int i = 1; i <= 6; i++) {
         ImageIcon tmpIcon = new ImageIcon(this.getClass().getResource
             ("DiceIcons/d6-" + i + ".png"));
         Image image = tmpIcon.getImage();
         Image newimg = image.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
         sideIcons[i-1] = new ImageIcon(newimg);
+
+        ImageIcon tmpIconAlt = new ImageIcon(this.getClass().getResource
+            ("DiceIcons/d6-" + i + "-bow.png"));
+        Image imageAlt = tmpIconAlt.getImage();
+        Image newimgAlt = imageAlt.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
+        sideIconsAlt[i-1] = new ImageIcon(newimgAlt);
         }
     }
   }

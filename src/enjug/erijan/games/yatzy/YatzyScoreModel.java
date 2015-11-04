@@ -15,7 +15,7 @@ public class YatzyScoreModel extends ScoreModel {
   private static YatzyBoxTypes[] sumRange;
   private static YatzyBoxTypes[] totalRange;
 
-  private List<LocalObserver> observers;
+  private List<ScoreObserver> observers;
 
   public YatzyScoreModel() {
     scoreBoxMap = new EnumMap<YatzyBoxTypes,ScoreBox>(YatzyBoxTypes.class);
@@ -44,7 +44,7 @@ public class YatzyScoreModel extends ScoreModel {
         YatzyBoxTypes.CHANCE
     };
 
-    observers = new ArrayList<LocalObserver>();
+    observers = new ArrayList<ScoreObserver>();
 
   }
 
@@ -102,18 +102,18 @@ public class YatzyScoreModel extends ScoreModel {
   }
 
   @Override
-  public void registerObserver(LocalObserver o) {
+  public void registerObserver(ScoreObserver o) {
     observers.add(o);
   }
 
   @Override
-  public void removeObserver(LocalObserver o) {
+  public void removeObserver(ScoreObserver o) {
     observers.remove(o);
   }
 
   @Override
   public void notifyObservers() {
-    for (LocalObserver o : observers) {
+    for (ScoreObserver o : observers) {
       o.update();
     }
   }
