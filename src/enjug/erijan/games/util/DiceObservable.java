@@ -1,4 +1,4 @@
-package enjug.erijan.games.yatzy;
+package enjug.erijan.games.util;
 
 /**
  * Created by Janne on 30/10/15.

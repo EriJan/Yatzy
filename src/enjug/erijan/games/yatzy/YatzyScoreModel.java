@@ -11,15 +11,19 @@ import java.util.*;
 
 public class YatzyScoreModel extends ScoreModel {
 
-  Map scoreBoxMap;
+
   private static YatzyBoxTypes[] sumRange;
   private static YatzyBoxTypes[] totalRange;
 
+  private Map scoreBoxMap;
+  private Player player;
   private List<ScoreObserver> observers;
 
-  public YatzyScoreModel() {
+  public YatzyScoreModel(Player player) {
+    this.player = player;
+
     scoreBoxMap = new EnumMap<YatzyBoxTypes,ScoreBox>(YatzyBoxTypes.class);
-    for(YatzyBoxTypes box : YatzyBoxTypes.values()) {
+    for (YatzyBoxTypes box : YatzyBoxTypes.values()) {
       scoreBoxMap.put(box,box.createScoreBox());
     }
 
@@ -49,10 +53,11 @@ public class YatzyScoreModel extends ScoreModel {
   }
 
   @Override
-  public void enterResult(Enum scoreBox, int... result) {
+  public void setResult(Enum scoreBox, int... result) {
     //YatzyBoxTypes boxKey = (YatzyBoxTypes) scoreBox;
     ScoreBox localBox = (ScoreBox) scoreBoxMap.get(scoreBox);
     localBox.setScore(result);
+    notifyObservers();
   }
 
   private void setSum() {
@@ -114,7 +119,11 @@ public class YatzyScoreModel extends ScoreModel {
   @Override
   public void notifyObservers() {
     for (ScoreObserver o : observers) {
-      o.update();
+      o.update(this);
     }
+  }
+
+  public Player getPlayer() {
+    return player;
   }
 }

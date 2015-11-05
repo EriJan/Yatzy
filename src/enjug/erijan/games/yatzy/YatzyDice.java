@@ -1,8 +1,6 @@
 package enjug.erijan.games.yatzy;
 
-import enjug.erijan.games.util.DiceHandler;
-import enjug.erijan.games.util.DieTypes;
-import enjug.erijan.games.util.GameDie;
+import enjug.erijan.games.util.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,7 +15,7 @@ public class YatzyDice implements DiceHandler, DiceObservable {
   List<GameDie> dice;
   List<GameDie> activeDice;
   DieTypes dieType;
-  List<ScoreObserver> observers;
+  List<DiceObserver> observers;
 
   public YatzyDice() {
     dice = new ArrayList<GameDie>();
@@ -30,7 +28,7 @@ public class YatzyDice implements DiceHandler, DiceObservable {
     for(GameDie d : dice) {
       activeDice.add(d);
     }
-    observers = new ArrayList<ScoreObserver>();
+    observers = new ArrayList<DiceObserver>();
   }
 
 //  int[] getValues() {
@@ -88,19 +86,19 @@ public class YatzyDice implements DiceHandler, DiceObservable {
   }
 
   @Override
-  public void registerObserver(ScoreObserver o) {
+  public void registerObserver(DiceObserver o) {
     observers.add(o);
   }
 
   @Override
-  public void removeObserver(ScoreObserver o) {
+  public void removeObserver(DiceObserver o) {
     observers.remove(o);
   }
 
   @Override
   public void notifyObservers() {
-    for (ScoreObserver o : observers) {
-      o.update();
+    for (DiceObserver o : observers) {
+      o.update(this);
     }
   }
 }

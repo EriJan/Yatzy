@@ -6,12 +6,11 @@ import java.util.Iterator;
  * Created by Janne on 27/10/15.
  */
 
-public abstract class ScoreModel implements DiceObservable {
+public abstract class ScoreModel implements ScoreObservable {
 
-  public abstract void enterResult(Enum scoreBox, int... result);
+  public abstract void setResult(Enum scoreBox, int... result);
 
   public abstract int getScore(Enum scoreBox);
 
   public abstract Iterator getScoreIterator();
-
 }
