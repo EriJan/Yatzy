@@ -57,6 +57,16 @@ public class YatzyScoreModel extends ScoreModel {
     //YatzyBoxTypes boxKey = (YatzyBoxTypes) scoreBox;
     ScoreBox localBox = (ScoreBox) scoreBoxMap.get(scoreBox);
     localBox.setScore(result);
+    setSum();
+    notifyObservers();
+  }
+
+  @Override
+  public void setTempScores(int... result) {
+    for (YatzyBoxTypes ybt : YatzyBoxTypes.values()) {
+      ScoreBox localBox = (ScoreBox) scoreBoxMap.get(ybt);
+      localBox.setTempScore(result);
+    }
     notifyObservers();
   }
 
@@ -89,8 +99,20 @@ public class YatzyScoreModel extends ScoreModel {
   }
 
   @Override
+  public int getTempScore(Enum scoreBox) {
+    ScoreBox localBox = (ScoreBox) scoreBoxMap.get(scoreBox);
+    return localBox.getTempScore();
+  }
+
+  @Override
   public Iterator getScoreIterator() {
     return scoreBoxMap.entrySet().iterator();
+  }
+
+  @Override
+  public boolean isScoreSet(Enum scoreBox) {
+    ScoreBox localBox = (ScoreBox) scoreBoxMap.get(scoreBox);
+    return localBox.isScoreSet();
   }
 
   @Override

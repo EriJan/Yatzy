@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Janne on 27/10/15.
  */
 
-public class YatzyDice implements DiceHandler, DiceObservable {
+public class YatzyDice implements DiceHandler {
 
   List<GameDie> dice;
   List<GameDie> activeDice;
@@ -31,14 +31,15 @@ public class YatzyDice implements DiceHandler, DiceObservable {
     observers = new ArrayList<DiceObserver>();
   }
 
-//  int[] getValues() {
-//    int[] retValues = new int[dice.size()];
-//    for (int i = 0; i < dice.size(); i++) {
-//      retValues[i] = dice.get(i).getSideUp();
-//
-//    }
-//    return retValues;
-//  }
+  @Override
+  public int[] getValues() {
+    int[] retValues = new int[dice.size()];
+    for (int i = 0; i < dice.size(); i++) {
+      retValues[i] = dice.get(i).getSideUp();
+
+    }
+    return retValues;
+  }
 
   @Override
   public void rollActiveDice() {
@@ -55,6 +56,13 @@ public class YatzyDice implements DiceHandler, DiceObservable {
     } else {
       activeDice.add(die);
     }
+    notifyObservers();
+  }
+
+  @Override
+  public void setAllDiceActive() {
+    activeDice.removeAll(activeDice);
+    activeDice.addAll(dice);
     notifyObservers();
   }
 
