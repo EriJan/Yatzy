@@ -78,13 +78,16 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
 
     for (Enum key : yatzyBoxTypes) {
       if (Arrays.binarySearch(YatzyScoreModel.DERIVED_SCORES, key) >= 0) {
-        JLabel radButton = new JLabel(key.name());
+        JLabel jLabel = new JLabel(key.name());
+        Font font = jLabel.getFont();
+        Font boldFont = new Font(font.getFontName(), Font.BOLD, font.getSize());
+        jLabel.setFont(boldFont);
         c.gridx = 0;
         c.gridy = row;
         c.anchor = GridBagConstraints.CENTER;
-        jFrame.add(radButton, c);
+        jFrame.add(jLabel, c);
         row++;
-        scoreSelection.put(key, radButton);
+        scoreSelection.put(key, jLabel);
       } else {
         JRadioButton radButton = new JRadioButton(key.name());
         scoreSelectionButtons.add(radButton);
@@ -135,8 +138,11 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
     String name = scoreModel.getPlayer().getName();
     JLabel nameLabel = new JLabel(name);
     nameLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+    nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
     nameLabel.setPreferredSize(new Dimension(60,25));
-
+    Font font = nameLabel.getFont();
+    Font boldFont = new Font(font.getFontName(), Font.BOLD, font.getSize());
+    nameLabel.setFont(boldFont);
     jFrame.add(nameLabel,c);
 
     int row = 1;

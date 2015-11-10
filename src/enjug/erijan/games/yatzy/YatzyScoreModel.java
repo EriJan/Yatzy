@@ -66,9 +66,11 @@ public class YatzyScoreModel implements ScoreModel {
   @Override
   public void setTempScores(int... result) {
     for (YatzyBoxTypes ybt : YatzyBoxTypes.values()) {
-      ScoreBox localBox = (ScoreBox) scoreBoxMap.get(ybt);
-      localBox.setTempScore(result);
-      //setSum();
+      if (Arrays.binarySearch(DERIVED_SCORES, ybt) < 0) {
+        ScoreBox localBox = (ScoreBox) scoreBoxMap.get(ybt);
+        localBox.setTempScore(result);
+        //setSum();
+      }
     }
     notifyObservers();
   }
