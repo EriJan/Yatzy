@@ -1,5 +1,8 @@
 package enjug.erijan.games.yatzy.rules;
 
+import java.util.ArrayList;
+import java.util.stream.IntStream;
+
 /**
  * Created by Janne on 29/10/15.
  */
@@ -7,6 +10,7 @@ package enjug.erijan.games.yatzy.rules;
 public class NSameRule implements ScoreRule {
   private final int nSame;
   private final int maxVal;
+
   public NSameRule(int nSame) {
     this.nSame = nSame;
     this.maxVal = 6;
@@ -19,20 +23,23 @@ public class NSameRule implements ScoreRule {
 
   @Override
   public int calculateScore(int... result) {
-    int highest = 0;
-    for (int i = maxVal; i >= 1; i--) {
-      int count = 0;
-      for (int j : result) {
-        if (j == i) {
-          count++;
+    //int highest = 0;
+    int score = 0;
+
+    int[] uniqueValues = IntStream.of(result).distinct().sorted().toArray();
+    int i = uniqueValues.length - 1;
+    boolean matchFound = false;
+    while (i >= 0 && !matchFound) {
+      int uniq = uniqueValues[i];
+      if (uniqueValues[i] <= maxVal) {
+        long noHits = IntStream.of(result).filter(val -> val == uniq).count();
+        if (noHits == nSame) {
+          score = IntStream.of(result).filter(val -> val == uniq).sum();
+          matchFound = true;
         }
       }
-      if (count >= nSame && highest < i) {
-        highest = i;
-      }
+      i--;
     }
-
-    int score = nSame*highest;
     return score;
   }
 }

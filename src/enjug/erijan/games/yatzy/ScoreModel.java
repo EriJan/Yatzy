@@ -6,17 +6,21 @@ import java.util.Iterator;
  * Created by Janne on 27/10/15.
  */
 
-public abstract class ScoreModel implements ScoreObservable {
+public interface ScoreModel extends ScoreObservable {
 
-  public abstract void setResult(Enum scoreBox, int... result);
+  void setResult(Enum scoreBox, int... result);
 
-  public abstract void setTempScores(int... result);
+  void setTempScores(int... result);
 
-  public abstract int getScore(Enum scoreBox);
+  void clearTempScores();
 
-  public abstract int getTempScore(Enum scoreBox);
+  int getScore(Enum scoreBox);
 
-  public abstract Iterator getScoreIterator();
+  int getTempScore(Enum scoreBox);
 
-  public abstract boolean isScoreSet(Enum scoreBox);
+  Iterator getScoreIterator();
+
+  boolean isScoreSet(Enum scoreBox);
+
+  Player getPlayer();
 }

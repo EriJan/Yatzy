@@ -1,5 +1,7 @@
 package enjug.erijan.games.yatzy.rules;
 
+import java.util.stream.IntStream;
+
 /**
  * Created by Janne on 29/10/15.
  */
@@ -13,12 +15,8 @@ public class SumOfNsRule implements ScoreRule {
 
   @Override
   public int calculateScore(int... result) {
-    int score = 0;
-    for(int i : result) {
-      if (i == targetNumber) {
-        score += i;
-      }
-    }
+    int score = IntStream.of(result)
+        .filter(val -> val == targetNumber).sum();
     return score;
   }
 }

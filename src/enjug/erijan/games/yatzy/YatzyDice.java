@@ -14,7 +14,7 @@ public class YatzyDice implements DiceHandler {
 
   List<GameDie> dice;
   List<GameDie> activeDice;
-  DieTypes dieType;
+  DieFactory dieType;
   List<DiceObserver> observers;
 
   public YatzyDice() {

@@ -2,22 +2,53 @@ package enjug.erijan.games.yatzy;
 
 import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.util.GameDie;
-import enjug.erijan.games.yatzy.rules.YatzyBoxTypes;
 
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * Created by Janne on 27/10/15.
  */
 public class YatzyAgent implements YatzyAgentInterface {
   private DiceHandler dice;
-  private ScoreModel scoreColumn;
+  private List players;
+
+  private Iterator turnIterator;
+  private List scoreColumns;
+  private ScoreModel activeScoreColumn;
   private static final int noOfRolls = 2;
   private int rollsDone;
 
   public YatzyAgent() {
-    //this.dice = dice;
-    scoreColumn = new YatzyScoreModel(new Player("Test"));
+    players = new ArrayList<Player>();
+    scoreColumns = new ArrayList<ScoreModel>();
+    dice = new YatzyDice();
+    addPlayers();
+    turnIterator = scoreColumns.listIterator();
+    //activePlayer = (Player) turnIterator.next();
+    activeScoreColumn = (ScoreModel) turnIterator.next();
+    YatzyGui yatzyGui = new YatzyGui(this,dice);
+  }
+
+  private void addPlayers() {
+    int playerCounter = 1;
+    boolean morePlayers = true;
+    while (morePlayers) {
+      String playerInputStr = YatzyGui.userInput(
+          "What is the name of player " + playerCounter + " ?");
+
+      if ( playerInputStr.isEmpty()) {
+        if (playerCounter > 1) {
+          morePlayers = false;
+        } else {
+          YatzyGui.gameMessage("Please add at least one player.");
+        }
+      } else {
+        Player newPlayer = new Player(playerInputStr);
+        players.add(newPlayer);
+        scoreColumns.add(new YatzyScoreModel(newPlayer));
+        playerCounter++;
+      }
+    }
   }
 
   @Override
@@ -36,9 +67,16 @@ public class YatzyAgent implements YatzyAgentInterface {
 
   @Override
   public void setScore(Enum targetBox) {
-    scoreColumn.setResult(targetBox,dice.getValues());
+    activeScoreColumn.clearTempScores();
+    activeScoreColumn.setResult(targetBox, dice.getValues());
     dice.setAllDiceActive();
     rollsDone = 0;
+    if (turnIterator.hasNext()) {
+      activeScoreColumn = (ScoreModel) turnIterator.next();
+    } else {
+      turnIterator = scoreColumns.listIterator();
+      activeScoreColumn = (ScoreModel) turnIterator.next();
+    }
   }
 
   @Override
@@ -53,8 +91,13 @@ public class YatzyAgent implements YatzyAgentInterface {
   }
 
   @Override
-  public ScoreModel getScoreColumn() {
-    return scoreColumn;
+  public ScoreModel getActiveScoreColumn() {
+    return activeScoreColumn;
+  }
+
+  @Override
+  public Iterator getScoreColumns() {
+    return scoreColumns.listIterator();
   }
 
   public void setTempScore() {
@@ -66,6 +109,6 @@ public class YatzyAgent implements YatzyAgentInterface {
       result[i] = die.getSideUp();
       i++;
     }
-    scoreColumn.setTempScores(result);
+    activeScoreColumn.setTempScores(result);
   }
 }

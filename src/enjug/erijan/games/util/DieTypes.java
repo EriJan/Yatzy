@@ -14,6 +14,7 @@ public enum DieTypes implements DieFactory {
       return new D4();
     }
   },
+
   D6 {
     @Override
     public GameDie create() {

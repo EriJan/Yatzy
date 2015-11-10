@@ -1,5 +1,7 @@
 package enjug.erijan.games.yatzy.rules;
 
+import java.util.stream.IntStream;
+
 /**
  * Created by Janne on 29/10/15.
  */
@@ -14,18 +16,15 @@ public class FullHouse implements ScoreRule {
   @Override
   public int calculateScore(int... result) {
 
+
     nSameRule = new NSameRule(3);
     int score = nSameRule.calculateScore(result);
     int firstPairVal = score/3;
 
-    nSameRule = new NSameRule(2,firstPairVal-1);
+    result = IntStream.of(result).filter(val -> val != firstPairVal).toArray();
+    nSameRule = new NSameRule(2);
     score = nSameRule.calculateScore(result);
     int secondPairVal = score/2;
-    if (secondPairVal > 0) {
-      nSameRule = new NSameRule(2);
-      score = nSameRule.calculateScore(result);
-      secondPairVal = score/2;
-    }
 
     if (firstPairVal*secondPairVal > 0) {
       score = 3*firstPairVal + 2*secondPairVal;
