@@ -82,6 +82,7 @@ public class YatzyScoreModel implements ScoreModel {
       localBox.setTempScore(0);
       //setSum();
     }
+    notifyObservers();
   }
 
   private void setSum() {

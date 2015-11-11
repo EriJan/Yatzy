@@ -52,12 +52,17 @@ public class YatzyAgent implements YatzyAgentInterface {
   }
 
   @Override
-  public void rollActiveDice() {
+  public String rollActiveDice() {
+    String message;
     if (rollsDone <= noOfRolls) {
       rollsDone++;
       dice.rollActiveDice();
       setTempScore();
+      message = activeScoreColumn.getPlayer().getName() + " rolled some dice.";
+    } else {
+      message = "No more rolls alowed.";
     }
+    return message;
   }
 
   @Override
@@ -66,17 +71,26 @@ public class YatzyAgent implements YatzyAgentInterface {
   }
 
   @Override
-  public void setScore(Enum targetBox) {
-    activeScoreColumn.clearTempScores();
-    activeScoreColumn.setResult(targetBox, dice.getValues());
-    dice.setAllDiceActive();
-    rollsDone = 0;
-    if (turnIterator.hasNext()) {
-      activeScoreColumn = (ScoreModel) turnIterator.next();
+  public String setScore(Enum targetBox) {
+    String messageString = "";
+    if (!activeScoreColumn.isScoreSet(targetBox)) {
+      activeScoreColumn.clearTempScores();
+      activeScoreColumn.setResult(targetBox, dice.getValues());
+      dice.setAllDiceActive();
+      rollsDone = 0;
+
+      if (turnIterator.hasNext()) {
+        activeScoreColumn = (ScoreModel) turnIterator.next();
+      } else {
+        turnIterator = scoreColumns.listIterator();
+        activeScoreColumn = (ScoreModel) turnIterator.next();
+      }
+
+      messageString = "Score set on " + targetBox.name();
     } else {
-      turnIterator = scoreColumns.listIterator();
-      activeScoreColumn = (ScoreModel) turnIterator.next();
+      messageString = "This score is already set, try again";
     }
+    return messageString;
   }
 
   @Override

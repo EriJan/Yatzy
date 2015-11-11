@@ -12,9 +12,9 @@ import java.util.Set;
  */
 public interface YatzyAgentInterface {
 
-public void rollActiveDice();
+public String rollActiveDice();
   void toggleActiveDie(GameDie die);
-  void setScore(Enum targetBox);
+  String setScore(Enum targetBox);
   int getNoOfRoll();
   void yourTurn(DiceHandler dice);
   ScoreModel getActiveScoreColumn();

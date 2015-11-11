@@ -10,9 +10,6 @@ import java.util.Random;
 public abstract class GameDie {
   private final int noOfSides;
   private int sideUp;
-  protected static ImageIcon[] sideIcons;
-  protected static ImageIcon[] sideIconsAlt;
-
 
   GameDie(int noOfSides){
     this.noOfSides = noOfSides;
@@ -32,11 +29,4 @@ public abstract class GameDie {
     return sideUp;
   }
 
-  public ImageIcon getSideImage() {
-    return sideIcons[sideUp-1];
-  }
-
-  public ImageIcon getSideImageAlt() {
-    return sideIconsAlt[sideUp-1];
-  }
 }
