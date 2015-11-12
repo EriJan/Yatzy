@@ -12,11 +12,12 @@ import java.util.Set;
  */
 public interface YatzyAgentInterface {
 
-public String rollActiveDice();
+  public String rollActiveDice();
   void toggleActiveDie(GameDie die);
   String setScore(Enum targetBox);
-  int getNoOfRoll();
+  int rollsLeft();
   void yourTurn(DiceHandler dice);
   ScoreModel getActiveScoreColumn();
   Iterator getScoreColumns();
+  void setTempScore();
 }

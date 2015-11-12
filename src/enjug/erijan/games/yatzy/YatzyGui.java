@@ -15,51 +15,60 @@ import java.util.List;
 /**
  * Created by Janne on 03/11/15.
  */
+
+
 public class YatzyGui implements ScoreObserver, DiceObserver {
 
-  private static final ImageIcon[] selectedDieIcons = new ImageIcon[6];
-  private static final ImageIcon[] unselectedDieIcons = new ImageIcon[6];
+  private static final ImageIcon[] selectedDieIcons;
+  private static final ImageIcon[] unselectedDieIcons;
+  private static EnumSet<YatzyBoxTypes> yatzyBoxTypes;
 
   private JFrame jFrame;
   private JPanel diePanel;
   private JPanel selectedDicePanel;
   private JLabel infoLabel;
   private YatzyAgentInterface yatzyAgent;
-  //private DiceHandler diceHandler;
   private Map scoreColumnPerPlayer;
   private Map playerLabels;
   private Map scoreSelection;
   private List dieButtons;
-  //private List diceButtonCords;
   private ButtonGroup scoreSelectionButtons;
-  private static EnumSet<YatzyBoxTypes> yatzyBoxTypes;
+
 
   static {
     yatzyBoxTypes = EnumSet.allOf(YatzyBoxTypes.class);
-  }
-
-  public YatzyGui(YatzyAgentInterface yatzyAgent, DiceHandler diceHandler) {
+    selectedDieIcons = new ImageIcon[6];
+    unselectedDieIcons = new ImageIcon[6];
     for (int i = 1; i <= 6; i++) {
-      ImageIcon tmpIcon = new ImageIcon(this.getClass().getResource
+      ImageIcon tmpIcon = new ImageIcon(YatzyGui.class.getResource
           ("../util/DiceIcons/d6-" + i + ".png"));
       Image image = tmpIcon.getImage();
       Image newimg = image.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
       unselectedDieIcons[i-1] = new ImageIcon(newimg);
 
-      ImageIcon tmpIconAlt = new ImageIcon(this.getClass().getResource
+      ImageIcon tmpIconAlt = new ImageIcon(YatzyGui.class.getResource
           ("../util/DiceIcons/d6-" + i + "-bow.png"));
       Image imageAlt = tmpIconAlt.getImage();
       Image newimgAlt = imageAlt.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
       selectedDieIcons[i-1] = new ImageIcon(newimgAlt);
     }
+  }
 
+  /**
+   * Constructor to YatzyGui
+   *
+   * @param yatzyAgent
+   * @param diceHandler
+   */
+  public YatzyGui(YatzyAgentInterface yatzyAgent, DiceHandler diceHandler) {
     diePanel = new JPanel();
     selectedDicePanel = new JPanel();
     jFrame = new JFrame("Yatzy");
-    infoLabel = new JLabel();
     jFrame.setLayout(new GridBagLayout());
     jFrame.setVisible(true);
     jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+    infoLabel = new JLabel();
     scoreSelectionButtons = new ButtonGroup();
 
     playerLabels = new HashMap<String,JLabel>();
@@ -209,7 +218,7 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
     }
     jFrame.validate();
     jFrame.repaint();
-    jFrame.pack();
+    //jFrame.pack();
   }
 
   public void addDice(DiceHandler diceHandler, int column) {
@@ -247,7 +256,10 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
 
       dieButtons.add(new GuiDie(die,button,new int[] {row,col}));
       diePanel.add(button, c);
+      diePanel.remove(button);
+      selectedDicePanel.add(button);
     }
+
     GridBagConstraints c = new GridBagConstraints();
     c.gridx = column;
     c.gridy = 0;
@@ -264,15 +276,12 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
     selectedDicePanel.setLayout(new GridLayout(5,1));
     jFrame.getContentPane().add(selectedDicePanel,c);
 
+    selectedDicePanel.setVisible(true);
     jFrame.pack();
     jFrame.setVisible(true);
   }
 
   public void updateDice(DiceHandler diceHandler) {
-
-    //diePanel.removeAll();
-
-    //Iterator<GameDie> dice = diceHandler.getDice();
 
     for (Object o : dieButtons) {
       GuiDie guiDie = (GuiDie) o;
@@ -303,15 +312,21 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
     }
     diePanel.validate();
     diePanel.repaint();
-    jFrame.pack();
+    selectedDicePanel.validate();
+    selectedDicePanel.repaint();
+    //jFrame.pack();
   }
 
   public void addRollButton(DiceHandler diceHandler, int column) {
     JButton button = new JButton("Roll");
     button.addActionListener(e -> {
-      moveActiveDice(diceHandler);
-      String message = yatzyAgent.rollActiveDice();
-      updateInfoText(message);
+      if (yatzyAgent.rollsLeft() > 0) {
+        moveActiveDice(diceHandler);
+        String message = yatzyAgent.rollActiveDice();
+        updateInfoText(message);
+      } else {
+        updateInfoText("No more rolls!");
+      }
     });
 
     GridBagConstraints c = new GridBagConstraints();
@@ -350,15 +365,18 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
         c.anchor = GridBagConstraints.CENTER;
         diePanel.remove(jButton);
         diePanel.add(jButton,c);
-        diePanel.validate();
-        diePanel.repaint();
+
       }
 
       guiDie.setLastPostion(new int[] {row,col});
       rowPicker++;
       colPicker++;
     }
-    jFrame.pack();
+    diePanel.validate();
+    diePanel.repaint();
+    selectedDicePanel.validate();
+    selectedDicePanel.repaint();
+    //jFrame.pack();
   }
 
   public void addSetScoreButton(int column) {

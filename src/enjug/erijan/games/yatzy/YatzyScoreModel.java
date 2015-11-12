@@ -134,8 +134,11 @@ public class YatzyScoreModel implements ScoreModel {
     // Loop unil a score is found to not be set
     while (scoreKeyIterator.hasNext() && setScoreFound) {
       Enum key = scoreKeyIterator.next();
-      ScoreBox localBox = (ScoreBox) scoreBoxMap.get(key);
-      setScoreFound = !localBox.isScoreSet();
+      // No check on the derived scores
+      if (Arrays.binarySearch(DERIVED_SCORES, key) < 0) {
+        ScoreBox localBox = (ScoreBox) scoreBoxMap.get(key);
+        setScoreFound = localBox.isScoreSet();
+      }
     }
     // setScoreFound will be false as soon as an unset score found
     return  setScoreFound;

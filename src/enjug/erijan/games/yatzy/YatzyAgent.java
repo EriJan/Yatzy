@@ -15,7 +15,7 @@ public class YatzyAgent implements YatzyAgentInterface {
   private Iterator turnIterator;
   private List scoreColumns;
   private ScoreModel activeScoreColumn;
-  private static final int noOfRolls = 2;
+  private static final int noOfRolls = 3;
   private int rollsDone;
 
   public YatzyAgent() {
@@ -94,8 +94,8 @@ public class YatzyAgent implements YatzyAgentInterface {
   }
 
   @Override
-  public int getNoOfRoll() {
-    return 0;
+  public int rollsLeft() {
+    return noOfRolls - rollsDone;
   }
 
   @Override
@@ -114,6 +114,7 @@ public class YatzyAgent implements YatzyAgentInterface {
     return scoreColumns.listIterator();
   }
 
+  @Override
   public void setTempScore() {
     Iterator<GameDie> dieIterator = dice.getDice();
     int[] result = new int[5];
