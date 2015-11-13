@@ -9,93 +9,91 @@ public enum YatzyBoxTypes implements ScoreBoxFactory {
   ONES {
     @Override
     public ScoreBox createScoreBox() {
-      return new ScoreBox(new SumOfNsRule(1));
+       return new ScoreBox(result -> YatzyRuleBook.SumOfNs(1, result));
     }
   },
   TWOS {
     @Override
     public ScoreBox createScoreBox() {
-      return new ScoreBox(new SumOfNsRule(2));
+      return new ScoreBox(result -> YatzyRuleBook.SumOfNs(2, result));
     }
   },
   THREES {
     @Override
     public ScoreBox createScoreBox() {
-      return new ScoreBox(new SumOfNsRule(3));
+      return new ScoreBox(result -> YatzyRuleBook.SumOfNs(3, result));
     }
   },
   FOURS {
     @Override
     public ScoreBox createScoreBox() {
-      return new ScoreBox(new SumOfNsRule(4));
+      return new ScoreBox(result -> YatzyRuleBook.SumOfNs(4, result));
     }
   },
   FIVES {
     @Override
     public ScoreBox createScoreBox() {
-      return new ScoreBox(new SumOfNsRule(5));
+      return new ScoreBox(result -> YatzyRuleBook.SumOfNs(5, result));
     }
   },
   SIXES {
     @Override
     public ScoreBox createScoreBox() {
-      return new ScoreBox(new SumOfNsRule(6));
+      return new ScoreBox(result -> YatzyRuleBook.SumOfNs(6, result));
     }
   },
   SUM {
     @Override
     public ScoreBox createScoreBox() {
-      return new ScoreBox(new TotalSumRule());
+      return new ScoreBox(YatzyRuleBook::TotalSum);
     }
   },
   BONUS {
     @Override
     public ScoreBox createScoreBox() {
-      //return new ScoreBox(new BonusRule(63,50));
-      //return new ScoreBox(YatzyRuleBook::YatzyBonusRule);
-      return new ScoreBox((int... result) -> YatzyRuleBook.YatzyBonusRule(result));
+      return new ScoreBox(result -> YatzyRuleBook.YatzyBonus(63, 50, result));
     }
   },
   ONE_PAIR {
     @Override
     public ScoreBox createScoreBox() {
-      return new ScoreBox(new NSameRule(2));
+      return new ScoreBox(result -> YatzyRuleBook.NSame(2, 6, result));
     }
   },
   TWO_PAIR {
     @Override
     public ScoreBox createScoreBox() {
-      return new ScoreBox(new TwoPairRule());
+      return new ScoreBox(result -> YatzyRuleBook.TwoPair(result));
     }
   },
   THREE_OF_SAME {
     @Override
     public ScoreBox createScoreBox() {
-      return new ScoreBox(new NSameRule(3));
+      return new ScoreBox(result -> YatzyRuleBook.NSame(3, 6, result));
     }
   },
   FOUR_OF_SAME {
     @Override
     public ScoreBox createScoreBox() {
-      return new ScoreBox(new NSameRule(4));
+      return new ScoreBox(result -> YatzyRuleBook.NSame(4, 6, result));
     }
   },
   FULL_HOUSE {
     @Override
     public ScoreBox createScoreBox() {
-      return new ScoreBox(new FullHouse());
+      return new ScoreBox(result -> YatzyRuleBook.FullHouse(result));
     }
   },
   SMALL_STRAIGHT {
     @Override
     public ScoreBox createScoreBox() {
-      return new ScoreBox(new SmallStraightRule());
+      return new ScoreBox(result -> YatzyRuleBook.SmallStraight(result));
     }
   },
   BIG_STRAIGHT {
     @Override
     public ScoreBox createScoreBox() {
-      return new ScoreBox(new BigStraightRule());
+      return new ScoreBox(YatzyRuleBook::BigStraight);
     }
   },
   CHANCE {
@@ -107,13 +105,13 @@ public enum YatzyBoxTypes implements ScoreBoxFactory {
   YATZY {
     @Override
     public ScoreBox createScoreBox() {
-      return new ScoreBox(new YatzyRule());
+      return new ScoreBox(result -> YatzyRuleBook.NSame(5, 6, result));
     }
   },
   TOTAL {
     @Override
     public ScoreBox createScoreBox() {
-      return new ScoreBox(new TotalSumRule());
+      return new ScoreBox(YatzyRuleBook::TotalSum);
     }
   }
 }
