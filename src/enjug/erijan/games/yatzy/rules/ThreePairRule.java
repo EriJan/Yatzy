@@ -3,7 +3,7 @@ package enjug.erijan.games.yatzy.rules;
 import enjug.erijan.games.yatzy.ScoreModel;
 
 /**
- * Created by Janne on 09/11/15.
+ * Created by Jan Eriksson on 09/11/15.
  */
 public class ThreePairRule implements ScoreRule {
   private final int maxVal;

@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.List;
 
 /**
- * Created by Janne on 03/11/15.
+ * Created by Jan Eriksson on 03/11/15.
  */
 
 
@@ -66,7 +66,7 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
     jFrame = new JFrame("Yatzy");
     jFrame.setLayout(new GridBagLayout());
     jFrame.setVisible(true);
-    jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    jFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
     infoLabel = new JLabel();
     scoreSelectionButtons = new ButtonGroup();
@@ -77,7 +77,6 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
     dieButtons = new ArrayList<GuiDie>();
 
     this.yatzyAgent = yatzyAgent;
-    //this.diceHandler = diceHandler;
     addScoreSelection();
 
     int column = 1;
@@ -89,9 +88,12 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
       column++;
       scoreModel.registerObserver(this);
     }
-    addDice(diceHandler,column+1);
+    JLabel jLabel = getCurrentPlayerLabel();
+    jLabel.setBorder(BorderFactory.createRaisedSoftBevelBorder());
+    addDice(diceHandler, column + 1);
     addRollButton(diceHandler,column);
     addSetScoreButton(column);
+    addNewGameButton(column);
     addInfoText("Lets play some Yatzy");
 
     //yatzyAgent.getActiveScoreColumn().registerObserver(this);
@@ -192,6 +194,8 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
 
       row++;
     }
+
+
     jFrame.pack();
     scoreColumnPerPlayer.put(name,scoreColumn);
   }
@@ -199,8 +203,7 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
   public void updateScore(ScoreModel scoreModel) {
     String name = scoreModel.getPlayer().getName();
     Map scoreColumn = (Map) scoreColumnPerPlayer.get(name);
-    JLabel nameLabel = (JLabel) playerLabels.get(name);
-
+    //JLabel nameLabel = (JLabel) playerLabels.get(name);
     for (YatzyBoxTypes ybt : YatzyBoxTypes.values()) {
       JLabel button = (JLabel) scoreColumn.get(ybt);
       if (scoreModel.isScoreSet(ybt)) {
@@ -250,14 +253,12 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
       c.anchor = GridBagConstraints.CENTER;
 
       GameDie die = dice.next();
-      ImageIcon imageIcon = unselectedDieIcons[die.getSideUp() - 1];
+      ImageIcon imageIcon = unselectedDieIcons[die.getFace() - 1];
       JButton button = new JButton(imageIcon);
       button.addActionListener(e -> yatzyAgent.toggleActiveDie(die));
 
       dieButtons.add(new GuiDie(die,button,new int[] {row,col}));
       diePanel.add(button, c);
-      diePanel.remove(button);
-      selectedDicePanel.add(button);
     }
 
     GridBagConstraints c = new GridBagConstraints();
@@ -291,7 +292,7 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
       ImageIcon imageIcon;
 
       if (diceHandler.isActiveDie(die)) {
-        imageIcon = unselectedDieIcons[die.getSideUp() - 1];
+        imageIcon = unselectedDieIcons[die.getFace() - 1];
 
         int[] cord = guiDie.getLastPostion();
         GridBagConstraints c = new GridBagConstraints();
@@ -302,7 +303,7 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
         diePanel.add(jButton,c);
 
       } else {
-        imageIcon = selectedDieIcons[die.getSideUp() - 1];
+        imageIcon = selectedDieIcons[die.getFace() - 1];
 
         diePanel.remove(jButton);
         selectedDicePanel.add(jButton);
@@ -314,19 +315,15 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
     diePanel.repaint();
     selectedDicePanel.validate();
     selectedDicePanel.repaint();
-    //jFrame.pack();
+    jFrame.pack();
   }
 
   public void addRollButton(DiceHandler diceHandler, int column) {
     JButton button = new JButton("Roll");
     button.addActionListener(e -> {
-      if (yatzyAgent.rollsLeft() > 0) {
-        moveActiveDice(diceHandler);
-        String message = yatzyAgent.rollActiveDice();
-        updateInfoText(message);
-      } else {
-        updateInfoText("No more rolls!");
-      }
+      moveActiveDice(diceHandler);
+      String message = yatzyAgent.rollActiveDice();
+      updateInfoText(message);
     });
 
     GridBagConstraints c = new GridBagConstraints();
@@ -384,12 +381,20 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
     button.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
+
+        JLabel nameLabel = getCurrentPlayerLabel();
+        nameLabel.setBorder(null);
+
         String messageString;
         Enum selected = YatzyBoxTypes.
             valueOf(scoreSelectionButtons.getSelection().
                 getActionCommand());
         messageString = yatzyAgent.setScore(selected);
         updateInfoText(messageString);
+
+        nameLabel = getCurrentPlayerLabel();
+        nameLabel.setBorder(BorderFactory.createRaisedSoftBevelBorder());
+
       }
     });
 
@@ -397,7 +402,25 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
     c.gridx = column;
     c.gridy = 2;
     jFrame.getContentPane().add(button,c);
-    jFrame.pack();
+    //jFrame.pack();
+  }
+
+  public void addNewGameButton(int column) {
+    JButton jButton = new JButton("New game");
+    jButton.addActionListener(e -> {
+      yatzyAgent.newGame(jFrame);
+    });
+
+    GridBagConstraints c = new GridBagConstraints();
+    c.gridx = column;
+    c.gridy = 17;
+    jFrame.getContentPane().add(jButton,c);
+  }
+
+  private JLabel getCurrentPlayerLabel() {
+    ScoreModel scoreModel = yatzyAgent.getActiveScoreColumn();
+    String name = scoreModel.getPlayer().getName();
+    return  (JLabel) playerLabels.get(name);
   }
 
   public void addInfoText(String str) {

@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by Janne on 27/10/15.
+ * Created by Jan Eriksson on 27/10/15.
  */
 
 public class YatzyDice implements DiceHandler {
@@ -35,7 +35,7 @@ public class YatzyDice implements DiceHandler {
   public int[] getValues() {
     int[] retValues = new int[dice.size()];
     for (int i = 0; i < dice.size(); i++) {
-      retValues[i] = dice.get(i).getSideUp();
+      retValues[i] = dice.get(i).getFace();
 
     }
     return retValues;
@@ -67,6 +67,12 @@ public class YatzyDice implements DiceHandler {
   }
 
   @Override
+  public void deActivateAllDice() {
+    activeDice.removeAll(activeDice);
+    notifyObservers();
+  }
+
+  @Override
   public boolean isActiveDie(GameDie die) {
     return activeDice.contains(die);
   }
@@ -83,7 +89,7 @@ public class YatzyDice implements DiceHandler {
   public String toString() {
     String tmpStr = "";
     for (GameDie d : dice) {
-      tmpStr += d.getSideUp() + " ";
+      tmpStr += d.getFace() + " ";
     }
     return tmpStr;
   }

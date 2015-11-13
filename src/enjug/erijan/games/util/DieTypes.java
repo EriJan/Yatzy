@@ -1,10 +1,16 @@
 package enjug.erijan.games.util;
 
-import javax.swing.*;
-import java.awt.*;
-
 /**
- * Created by Janne on 27/10/15.
+ * Created by Jan Eriksson on 27/10/15.
+ * This is a enum factory to create
+ * different kinds of dice.
+ * The Dn classes are defined locally and
+ * extends GameDie.
+ *
+ * Example:
+ * To create a 8 sided die, D8:
+ * GameDie d8 = DieTypes.D8.create();
+ *
  */
 public enum DieTypes implements DieFactory {
 

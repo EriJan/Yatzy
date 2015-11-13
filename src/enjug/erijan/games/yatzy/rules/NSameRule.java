@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 /**
- * Created by Janne on 29/10/15.
+ * Created by Jan Eriksson on 29/10/15.
  */
 
 public class NSameRule implements ScoreRule {
@@ -33,8 +33,9 @@ public class NSameRule implements ScoreRule {
       int uniq = uniqueValues[i];
       if (uniqueValues[i] <= maxVal) {
         long noHits = IntStream.of(result).filter(val -> val == uniq).count();
-        if (noHits == nSame) {
+        if (noHits >= nSame) {
           score = IntStream.of(result).filter(val -> val == uniq).sum();
+          score = uniq*nSame;
           matchFound = true;
         }
       }

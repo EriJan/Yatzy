@@ -3,7 +3,7 @@ package enjug.erijan.games.yatzy;
 import java.util.Iterator;
 
 /**
- * Created by Janne on 27/10/15.
+ * Created by Jan Eriksson on 27/10/15.
  */
 
 public interface ScoreModel extends ScoreObservable {
@@ -19,6 +19,8 @@ public interface ScoreModel extends ScoreObservable {
   int getTempScore(Enum scoreBox);
 
   Iterator getScoreIterator();
+
+  boolean isAllScoreSet();
 
   boolean isScoreSet(Enum scoreBox);
 

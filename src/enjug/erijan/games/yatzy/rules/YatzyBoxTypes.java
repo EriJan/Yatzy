@@ -1,8 +1,10 @@
 package enjug.erijan.games.yatzy.rules;
 
 /**
- * Created by Janne on 27/10/15.
+ * Created by Jan Eriksson on 27/10/15.
+ *
  */
+
 public enum YatzyBoxTypes implements ScoreBoxFactory {
   ONES {
     @Override
@@ -49,7 +51,9 @@ public enum YatzyBoxTypes implements ScoreBoxFactory {
   BONUS {
     @Override
     public ScoreBox createScoreBox() {
-      return new ScoreBox(new BonusRule(63,50));
+      //return new ScoreBox(new BonusRule(63,50));
+      //return new ScoreBox(YatzyRuleBook::YatzyBonusRule);
+      return new ScoreBox((int... result) -> YatzyRuleBook.YatzyBonusRule(result));
     }
   },
   ONE_PAIR {
@@ -97,7 +101,7 @@ public enum YatzyBoxTypes implements ScoreBoxFactory {
   CHANCE {
     @Override
     public ScoreBox createScoreBox() {
-      return new ScoreBox(new TotalSumRule());
+      return new ScoreBox(YatzyRuleBook::TotalSum);
     }
   },
   YATZY {
@@ -111,5 +115,5 @@ public enum YatzyBoxTypes implements ScoreBoxFactory {
     public ScoreBox createScoreBox() {
       return new ScoreBox(new TotalSumRule());
     }
-  };
+  }
 }

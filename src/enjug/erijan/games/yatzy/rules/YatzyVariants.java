@@ -4,7 +4,7 @@ import enjug.erijan.games.yatzy.YatzyAgent;
 import enjug.erijan.games.yatzy.YatzyAgentInterface;
 
 /**
- * Created by Janne on 29/10/15.
+ * Created by Jan Eriksson on 29/10/15.
  */
 public enum YatzyVariants implements YatzyVariantFactory {
   YATZY {

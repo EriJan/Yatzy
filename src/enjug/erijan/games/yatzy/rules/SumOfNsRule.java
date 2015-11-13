@@ -3,7 +3,7 @@ package enjug.erijan.games.yatzy.rules;
 import java.util.stream.IntStream;
 
 /**
- * Created by Janne on 29/10/15.
+ * Created by Jan Eriksson on 29/10/15.
  */
 public class SumOfNsRule implements ScoreRule {
 

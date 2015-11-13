@@ -1,7 +1,7 @@
 package enjug.erijan.games.yatzy;
 
 /**
- * Created by Janne on 30/10/15.
+ * Created by Jan Eriksson on 30/10/15.
  */
 
 public interface ScoreObservable {

@@ -1,12 +1,11 @@
 package enjug.erijan.games.util;
 
 import java.util.Iterator;
-import java.util.List;
 
 /**
- * Created by Janne on 27/10/15.
- * This interface is supposed to handle
- * a collection of gamedice, this is both a controller and a model
+ * Created by Jan Eriksson on 27/10/15.
+ * This interface is supposed to handle a collection of GameDice,
+ * this is both a controller and a model
  *
  */
 
@@ -17,6 +16,12 @@ public interface DiceHandler extends DiceObservable {
    */
   void rollActiveDice();
 
+
+  /**
+   * Toggle the active state of a die.
+   * @param die A reference to a GameDie object that exist in the
+   *            model.
+   */
   void toggleActiveDie(GameDie die);
 
   /**
@@ -27,26 +32,29 @@ public interface DiceHandler extends DiceObservable {
 
   /**
    * Query of a specific die references is active.
-   * @param die A GameDie reference in the
-   * @return
+   * @param die A GameDie reference from the die obejects handled in
+   *            the DiceHandler.
+   * @return Returns true if die is handled as active die.
    */
   boolean isActiveDie(GameDie die);
 
 
   /**
-   *
+   * Roll all dice regardless of any active state.
    */
   void rollAllDice();
 
 
   /**
-   * @return
+   * @return Returns an iterator over all GameDie objects.
    */
   Iterator<GameDie> getDice();
 
 
   /**
-   * @return
+   * @return Returns the face values of all GameDie objects as a list of int.
    */
   int[] getValues();
+
+  void deActivateAllDice();
 }

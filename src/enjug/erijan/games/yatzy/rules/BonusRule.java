@@ -1,7 +1,7 @@
 package enjug.erijan.games.yatzy.rules;
 
 /**
- * Created by Janne on 29/10/15.
+ * Created by Jan Eriksson on 29/10/15.
  */
 public class BonusRule implements ScoreRule {
 

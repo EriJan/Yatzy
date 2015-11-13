@@ -2,13 +2,15 @@ package enjug.erijan.games.yatzy;
 
 import enjug.erijan.games.yatzy.rules.YatzyVariants;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * Created by Janne on 08/11/15.
+ * Created by Jan Eriksson on 08/11/15.
  */
 public class YatzyMain {
+
   private static YatzyVariants selectGameVariant() {
     String[] ruleSets;
     ruleSets = Stream.of(YatzyVariants.values()).map(YatzyVariants::name)

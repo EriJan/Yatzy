@@ -6,7 +6,7 @@ import enjug.erijan.games.yatzy.rules.YatzyBoxTypes;
 import java.util.*;
 
 /**
- * Created by Janne on 27/10/15.
+ * Created by Jan Eriksson on 27/10/15.
  */
 
 public class YatzyScoreModel implements ScoreModel {
@@ -127,6 +127,7 @@ public class YatzyScoreModel implements ScoreModel {
     return scoreBoxMap.entrySet().iterator();
   }
 
+  @Override
   public boolean isAllScoreSet() {
     boolean setScoreFound = true;
     Iterator<Enum> scoreKeyIterator = scoreBoxMap.keySet().iterator();

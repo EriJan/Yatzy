@@ -3,14 +3,19 @@ package enjug.erijan.games.yatzy;
 import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.util.GameDie;
 
+import javax.swing.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 /**
- * Created by Janne on 27/10/15.
+ * Created by Jan Eriksson on 27/10/15.
  */
 public interface YatzyAgentInterface {
+
+  void newGame();
+
+  void newGame(JFrame oldFrame);
 
   public String rollActiveDice();
   void toggleActiveDie(GameDie die);
@@ -20,4 +25,5 @@ public interface YatzyAgentInterface {
   ScoreModel getActiveScoreColumn();
   Iterator getScoreColumns();
   void setTempScore();
+  String getWinner();
 }

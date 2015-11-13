@@ -3,8 +3,8 @@ package enjug.erijan.games.yatzy.rules;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
-/**
- * Created by Janne on 29/10/15.
+/** Big straight rule.
+ * Created by Jan Eriksson on 29/10/15.
  */
 public class BigStraightRule implements ScoreRule {
 
@@ -17,9 +17,9 @@ public class BigStraightRule implements ScoreRule {
   @Override
   public int calculateScore(int... result) {
     Arrays.sort(result);
-
-    int score = IntStream.of(result).sum();
-    if (result[0] == 2 && score == bigStraightScore) {
+    long uniqueValues = IntStream.of(result).distinct().sorted().count();
+    int score;
+    if (result[0] == 2 && uniqueValues == 5) {
       score = bigStraightScore;
     } else {
       score = 0;

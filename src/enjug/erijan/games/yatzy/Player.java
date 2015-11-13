@@ -1,7 +1,7 @@
 package enjug.erijan.games.yatzy;
 
 /**
- * Created by Janne on 04/11/15.
+ * Created by Jan Eriksson on 04/11/15.
  */
 public class Player {
   private final String name;

@@ -1,32 +1,40 @@
 package enjug.erijan.games.util;
 
-import javax.swing.*;
 import java.util.Random;
 
 /**
- * Created by Janne on 27/10/15.
+ * Created by Jan Eriksson on 27/10/15.
+ * Abstract class describing a general
+ * n sided die.
  */
 
 public abstract class GameDie {
-  private final int noOfSides;
-  private int sideUp;
+  private final int noOfFaces;
+  private int face;
 
-  GameDie(int noOfSides){
-    this.noOfSides = noOfSides;
-    this.sideUp = noOfSides;
+  /**
+   * @param noOfFaces Set the number of sides on the die.
+   */
+
+  GameDie(int noOfFaces) {
+    this.noOfFaces = noOfFaces;
+    this.face = noOfFaces;
   }
 
+  /**
+   * Randomize the current face of the die.
+   * The range is 1 up to and including noOfFaces.
+   */
   public void rollDie() {
     Random random = new Random();
-    sideUp = random.nextInt(noOfSides) + 1;
+    face = random.nextInt(noOfFaces) + 1;
   }
 
-  public int getNoOfSides() {
-    return noOfSides;
-  }
-
-  public int getSideUp() {
-    return sideUp;
+  /**
+   * @return
+   */
+  public int getFace() {
+    return face;
   }
 
 }
