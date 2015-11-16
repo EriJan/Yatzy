@@ -3,125 +3,45 @@ package enjug.erijan.games.yatzy.rules;
 /**
  * Created by Jan Eriksson on 27/10/15.
  */
-public enum MaxiYatzyBoxTypes implements ScoreBoxFactory {
-  ONES {
-    @Override
-    public ScoreBox createScoreBox() {
-      return new ScoreBox(new SumOfNsRule(1));
-    }
-  },
-  TWOS {
-    @Override
-    public ScoreBox createScoreBox() {
-      return new ScoreBox(new SumOfNsRule(2));
-    }
-  },
-  THREES {
-    @Override
-    public ScoreBox createScoreBox() {
-      return new ScoreBox(new SumOfNsRule(3));
-    }
-  },
-  FOURS {
-    @Override
-    public ScoreBox createScoreBox() {
-      return new ScoreBox(new SumOfNsRule(4));
-    }
-  },
-  FIVES {
-    @Override
-    public ScoreBox createScoreBox() {
-      return new ScoreBox(new SumOfNsRule(5));
-    }
-  },
-  SIXES {
-    @Override
-    public ScoreBox createScoreBox() {
-      return new ScoreBox(new SumOfNsRule(6));
-    }
-  },
-  SUM {
-    @Override
-    public ScoreBox createScoreBox() {
-      return new ScoreBox(new TotalSumRule());
-    }
-  },
-  BONUS {
-    @Override
-    public ScoreBox createScoreBox() {
-      return new ScoreBox(new BonusRule(63,50));
-    }
-  },
-  ONE_PAIR {
-    @Override
-    public ScoreBox createScoreBox() {
-      return new ScoreBox(new NSameRule(2));
-    }
-  },
-  TWO_PAIR {
-    @Override
-    public ScoreBox createScoreBox() {
-      return new ScoreBox(new TwoPairRule());
-    }
-  },
-  THREE_PAIR {
-    @Override
-    public ScoreBox createScoreBox() {
-      return new ScoreBox(new ThreePairRule());
-    }
-  },
-  THREE_OF_SAME {
-    @Override
-    public ScoreBox createScoreBox() {
-      return new ScoreBox(new NSameRule(3));
-    }
-  },
-  FOUR_OF_SAME {
-    @Override
-    public ScoreBox createScoreBox() {
-      return new ScoreBox(new NSameRule(4));
-    }
-  },
-  FIVE_OF_SAME {
-    @Override
-    public ScoreBox createScoreBox() {
-      return new ScoreBox(new NSameRule(5));
-    }
-  },
-  FULL_HOUSE {
-    @Override
-    public ScoreBox createScoreBox() {
-      return new ScoreBox(new FullHouse());
-    }
-  },
-  SMALL_STRAIGHT {
-    @Override
-    public ScoreBox createScoreBox() {
-      return new ScoreBox(new SmallStraightRule());
-    }
-  },
-  BIG_STRAIGHT {
-    @Override
-    public ScoreBox createScoreBox() {
-      return new ScoreBox(new BigStraightRule());
-    }
-  },
-  CHANCE {
-    @Override
-    public ScoreBox createScoreBox() {
-      return new ScoreBox(new TotalSumRule());
-    }
-  },
-  YATZY {
-    @Override
-    public ScoreBox createScoreBox() {
-      return new ScoreBox(new YatzyRule());
-    }
-  },
-  TOTAL {
-    @Override
-    public ScoreBox createScoreBox() {
-      return new ScoreBox(new TotalSumRule());
-    }
-  };
+public enum MaxiYatzyBoxTypes implements ScoreRule, ScoreBoxFactory {
+  ONES (result -> YatzyRuleBook.sumOfNs(1,result)),
+  TWOS (result -> YatzyRuleBook.sumOfNs(2, result)),
+  THREES (result -> YatzyRuleBook.sumOfNs(3, result)),
+  FOURS (result -> YatzyRuleBook.sumOfNs(4, result)),
+  FIVES (result -> YatzyRuleBook.sumOfNs(5, result)),
+  SIXES (result -> YatzyRuleBook.sumOfNs(6, result)),
+  SUM (result -> YatzyRuleBook.totalSum(result)),
+  BONUS (result -> YatzyRuleBook.yatzyBonus(63, 50, result)),
+  ONE_PAIR (result -> YatzyRuleBook.nSame(2, 6, result)),
+  TWO_PAIR (result -> YatzyRuleBook.twoPair(result)),
+  THREE_OF_SAME (result -> YatzyRuleBook.nSame(3, 6, result)),
+  FOUR_OF_SAME (result -> YatzyRuleBook.nSame(4, 6, result)),
+  FIVE_OF_SAME (result -> YatzyRuleBook.nSame(5, 6, result)),
+  FULL_HOUSE (result -> YatzyRuleBook.fullHouse(result)),
+  SMALL_STRAIGHT (result -> YatzyRuleBook.smallStraight(result)),
+  BIG_STRAIGHT (result -> YatzyRuleBook.bigStraight(result)),
+  CHANCE (result -> YatzyRuleBook.totalSum(result)),
+  YATZY (result -> YatzyRuleBook.nSame(6, 6, result)),
+  TOTAL (result -> YatzyRuleBook.totalSum(result));
+
+  private static final YatzyVariants yatzyVariant = YatzyVariants.MAXI_YATZY;
+  private final ScoreRule scoreRule;
+
+  private MaxiYatzyBoxTypes(ScoreRule scoreRule) {
+    this.scoreRule = scoreRule;
+  }
+
+  public static YatzyVariants getYatzyVariant() {
+    return yatzyVariant;
+  }
+
+  @Override
+  public int calculateScore(int... result) {
+    return scoreRule.calculateScore(result);
+  }
+
+  @Override
+  public ScoreBox createScoreBox() {
+    return new ScoreBox(this);
+  }
 }

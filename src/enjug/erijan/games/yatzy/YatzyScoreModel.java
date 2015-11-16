@@ -1,7 +1,8 @@
 package enjug.erijan.games.yatzy;
 
 import enjug.erijan.games.yatzy.rules.ScoreBox;
-import enjug.erijan.games.yatzy.rules.YatzyBoxTypes;
+import enjug.erijan.games.yatzy.rules.ScoreBoxFactory;
+import enjug.erijan.games.yatzy.rules.YatzyRuleBook;
 
 import java.util.*;
 
@@ -9,53 +10,37 @@ import java.util.*;
  * Created by Jan Eriksson on 27/10/15.
  */
 
-public class YatzyScoreModel implements ScoreModel {
-
-  public static final YatzyBoxTypes[] DERIVED_SCORES= new YatzyBoxTypes[] {
-      YatzyBoxTypes.SUM,
-      YatzyBoxTypes.BONUS,
-      YatzyBoxTypes.TOTAL};
-
-  private static final YatzyBoxTypes[] SUM_RANGE= new YatzyBoxTypes[] {
-      YatzyBoxTypes.ONES,
-      YatzyBoxTypes.TWOS,
-      YatzyBoxTypes.THREES,
-      YatzyBoxTypes.FOURS,
-      YatzyBoxTypes.FIVES,
-      YatzyBoxTypes.SIXES};
-
-  private static final YatzyBoxTypes[] TOTAL_RANGE = new YatzyBoxTypes[] {
-      YatzyBoxTypes.SUM,
-      YatzyBoxTypes.ONE_PAIR,
-      YatzyBoxTypes.TWO_PAIR,
-      YatzyBoxTypes.THREE_OF_SAME,
-      YatzyBoxTypes.FOUR_OF_SAME,
-      YatzyBoxTypes.FULL_HOUSE,
-      YatzyBoxTypes.SMALL_STRAIGHT,
-      YatzyBoxTypes.BIG_STRAIGHT,
-      YatzyBoxTypes.YATZY,
-      YatzyBoxTypes.CHANCE
-  };
-
-  private Map scoreBoxMap;
+public class YatzyScoreModel<T extends Enum<T> & ScoreBoxFactory> implements ScoreModel {
+  private EnumMap<T,ScoreBox> scoreBoxMap;
   private Player player;
   private List<ScoreObserver> observers;
+  //private EnumSet<T> yatzyBoxTypes;
+  private Class<T> boxTypes;
+  private EnumSet<T> derivedScores;
+  private EnumSet<T> sumRange;
+  private EnumSet<T> totalRange;
 
-  public YatzyScoreModel(Player player) {
+  public YatzyScoreModel(Class<T> boxTypes, Player player) {
     this.player = player;
-
-    scoreBoxMap = new EnumMap<YatzyBoxTypes,ScoreBox>(YatzyBoxTypes.class);
-    for (YatzyBoxTypes box : YatzyBoxTypes.values()) {
+    this.boxTypes = boxTypes;
+    //yatzyBoxTypes = EnumSet.allOf(boxTypes);
+    scoreBoxMap = new EnumMap<T,ScoreBox>(boxTypes);
+    for (T box : boxTypes.getEnumConstants()) {
       scoreBoxMap.put(box,box.createScoreBox());
     }
 
     observers = new ArrayList<ScoreObserver>();
 
+    derivedScores = EnumSet.of(Enum.valueOf(boxTypes,"SUM"),
+        Enum.valueOf(boxTypes,"BONUS"), Enum.valueOf(boxTypes,"TOTAL"));
+
+    sumRange = EnumSet.range(Enum.valueOf(boxTypes,"ONES"),Enum.valueOf(boxTypes,"SIXES"));
+    totalRange = EnumSet.range(Enum.valueOf(boxTypes,"SUM"),Enum.valueOf(boxTypes,"YATZY"));
   }
 
   @Override
   public void setResult(Enum scoreBox, int... result) {
-    ScoreBox localBox = (ScoreBox) scoreBoxMap.get(scoreBox);
+    ScoreBox localBox = scoreBoxMap.get(scoreBox);
     if (!localBox.isScoreSet()) {
       localBox.setScore(result);
       setSum();
@@ -65,9 +50,9 @@ public class YatzyScoreModel implements ScoreModel {
 
   @Override
   public void setTempScores(int... result) {
-    for (YatzyBoxTypes ybt : YatzyBoxTypes.values()) {
-      if (Arrays.binarySearch(DERIVED_SCORES, ybt) < 0) {
-        ScoreBox localBox = (ScoreBox) scoreBoxMap.get(ybt);
+    for (T ybt : boxTypes.getEnumConstants()) {
+      if (!derivedScores.contains(ybt)) {
+        ScoreBox localBox = scoreBoxMap.get(ybt);
         localBox.setTempScore(result);
         //setSum();
       }
@@ -77,8 +62,8 @@ public class YatzyScoreModel implements ScoreModel {
 
   @Override
   public void clearTempScores() {
-    for (YatzyBoxTypes ybt : YatzyBoxTypes.values()) {
-      ScoreBox localBox = (ScoreBox) scoreBoxMap.get(ybt);
+    for (T ybt : boxTypes.getEnumConstants()) {
+      ScoreBox localBox = scoreBoxMap.get(ybt);
       localBox.setTempScore(0);
       //setSum();
     }
@@ -88,37 +73,37 @@ public class YatzyScoreModel implements ScoreModel {
   private void setSum() {
     int localSum = 0;
     ScoreBox localBox;
-    for(YatzyBoxTypes box : SUM_RANGE) {
-      localBox = (ScoreBox) scoreBoxMap.get(box);
+    for(Enum box : sumRange) {
+      localBox = scoreBoxMap.get(box);
       localSum += localBox.getScore();
     }
-    localBox = (ScoreBox) scoreBoxMap.get(YatzyBoxTypes.SUM);
+    localBox = scoreBoxMap.get(Enum.valueOf(boxTypes,"SUM"));
     localBox.setScore(localSum);
 
-    localBox = (ScoreBox) scoreBoxMap.get(YatzyBoxTypes.BONUS);
+    localBox = scoreBoxMap.get(Enum.valueOf(boxTypes,"BONUS"));
     localBox.setScore(localSum);
 
     localSum = 0;
 
     if (isAllScoreSet()) {
-      for (YatzyBoxTypes box : TOTAL_RANGE) {
-        localBox = (ScoreBox) scoreBoxMap.get(box);
+      for (Enum box : totalRange) {
+        localBox = scoreBoxMap.get(box);
         localSum += localBox.getScore();
       }
-      localBox = (ScoreBox) scoreBoxMap.get(YatzyBoxTypes.TOTAL);
+      localBox = scoreBoxMap.get(Enum.valueOf(boxTypes,"TOTAL"));
       localBox.setScore(localSum);
     }
   }
 
   @Override
   public int getScore(Enum scoreBox) {
-    ScoreBox localBox = (ScoreBox) scoreBoxMap.get(scoreBox);
+    ScoreBox localBox = scoreBoxMap.get(scoreBox);
     return localBox.getScore();
   }
 
   @Override
   public int getTempScore(Enum scoreBox) {
-    ScoreBox localBox = (ScoreBox) scoreBoxMap.get(scoreBox);
+    ScoreBox localBox = scoreBoxMap.get(scoreBox);
     return localBox.getTempScore();
   }
 
@@ -130,13 +115,13 @@ public class YatzyScoreModel implements ScoreModel {
   @Override
   public boolean isAllScoreSet() {
     boolean setScoreFound = true;
-    Iterator<Enum> scoreKeyIterator = scoreBoxMap.keySet().iterator();
+    Iterator<T> scoreKeyIterator = scoreBoxMap.keySet().iterator();
 
     // Loop unil a score is found to not be set
     while (scoreKeyIterator.hasNext() && setScoreFound) {
       Enum key = scoreKeyIterator.next();
       // No check on the derived scores
-      if (Arrays.binarySearch(DERIVED_SCORES, key) < 0) {
+      if (!derivedScores.contains(key)) {
         ScoreBox localBox = (ScoreBox) scoreBoxMap.get(key);
         setScoreFound = localBox.isScoreSet();
       }
@@ -152,10 +137,15 @@ public class YatzyScoreModel implements ScoreModel {
   }
 
   @Override
+  public boolean isDerivedScore(Enum scoreBox) {
+    return derivedScores.contains(scoreBox);
+  }
+
+  @Override
   public String toString() {
     String retString = "";
 
-    for(YatzyBoxTypes box : YatzyBoxTypes.values()) {
+    for(T box : boxTypes.getEnumConstants()) {
       ScoreBox localBox = (ScoreBox) scoreBoxMap.get(box);
 
       retString += box.toString() + " " + localBox.getScore() + " \n";

@@ -10,19 +10,19 @@ public enum YatzyVariants implements YatzyVariantFactory {
   YATZY {
     @Override
     public YatzyAgentInterface create() {
-      return new YatzyAgent();
+      return new YatzyAgent<YatzyBoxTypes>(YatzyBoxTypes.class,this);
     }
   },
   YATZEE {
     @Override
     public YatzyAgentInterface create() {
-      return new YatzyAgent();
+      return new YatzyAgent<YatzyBoxTypes>(YatzyBoxTypes.class,this);
     }
   },
   MAXI_YATZY {
     @Override
       public YatzyAgentInterface create() {
-        return new YatzyAgent();
+        return new YatzyAgent<MaxiYatzyBoxTypes>(MaxiYatzyBoxTypes.class,this);
       }
   }
 }

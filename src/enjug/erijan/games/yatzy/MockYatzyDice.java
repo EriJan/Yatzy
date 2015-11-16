@@ -10,18 +10,18 @@ import java.util.List;
  * Created by Jan Eriksson on 27/10/15.
  */
 
-public class YatzyDice implements DiceHandler {
+public class MockYatzyDice implements DiceHandler {
 
   List<GameDie> dice;
   List<GameDie> activeDice;
   DieFactory dieType;
   List<DiceObserver> observers;
 
-  public YatzyDice(int numberOfDice) {
+  public MockYatzyDice() {
     dice = new ArrayList<GameDie>();
     activeDice = new ArrayList<GameDie>();
     dieType = DieTypes.D6;
-    for (int i = 0; i < numberOfDice; i++) {
+    for (int i = 0; i < 5; i++) {
       //dice.add(DieTypes.D6.create());
       dice.add(dieType.create());
     }

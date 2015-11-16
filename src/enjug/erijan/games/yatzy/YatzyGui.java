@@ -4,7 +4,7 @@ import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.util.DiceObserver;
 import enjug.erijan.games.util.GameDie;
 import enjug.erijan.games.yatzy.rules.ScoreRule;
-import enjug.erijan.games.yatzy.rules.YatzyBoxTypes;
+import enjug.erijan.games.yatzy.rules.YatzyRuleBook;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,6 +23,7 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> implements ScoreObserver, D
   private static final ImageIcon[] selectedDieIcons;
   private static final ImageIcon[] unselectedDieIcons;
   private EnumSet<T> yatzyBoxTypes;
+  private Class<T> boxClass;
 
   private JFrame jFrame;
   private JPanel diePanel;
@@ -37,7 +38,6 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> implements ScoreObserver, D
 
 
   static {
-    //yatzyBoxTypes = EnumSet.allOf(YatzyBoxTypes.class);
     selectedDieIcons = new ImageIcon[6];
     unselectedDieIcons = new ImageIcon[6];
     for (int i = 1; i <= 6; i++) {
@@ -62,6 +62,8 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> implements ScoreObserver, D
    * @param diceHandler
    */
   public YatzyGui(Class<T> boxTypes, YatzyAgentInterface yatzyAgent, DiceHandler diceHandler) {
+    boxClass = boxTypes;
+    yatzyBoxTypes = EnumSet.allOf(boxTypes);
     diePanel = new JPanel();
     selectedDicePanel = new JPanel();
     jFrame = new JFrame("Yatzy");
@@ -78,13 +80,13 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> implements ScoreObserver, D
     dieButtons = new ArrayList<GuiDie>();
 
     this.yatzyAgent = yatzyAgent;
-    addScoreSelection();
+    addScoreSelection(yatzyAgent.getActiveScoreColumn());
 
     int column = 1;
-    Iterator colIterator = yatzyAgent.getScoreColumns();
+    Iterator<ScoreModel> colIterator = yatzyAgent.getScoreColumns();
 
     while (colIterator.hasNext()) {
-      ScoreModel scoreModel = (ScoreModel) colIterator.next();
+      ScoreModel scoreModel = colIterator.next();
       addScore(scoreModel, column);
       column++;
       scoreModel.registerObserver(this);
@@ -102,15 +104,16 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> implements ScoreObserver, D
     jFrame.pack();
   }
 
-  public void addScoreSelection() {
+  public void addScoreSelection(ScoreModel scoreModel) {
 
     GridBagConstraints c = new GridBagConstraints();
     c.gridx = 0;
     c.gridy = 0;
     int row = 1;
 
-    for (Enum key : yatzyBoxTypes) {
-      if (Arrays.binarySearch(YatzyScoreModel.DERIVED_SCORES, key) >= 0) {
+    for (T key : yatzyBoxTypes) {
+      if (scoreModel.isDerivedScore(key)) {
+//      if (YatzyRuleBook.DERIVED_MAP.get().contains(key)) {
         JLabel jLabel = new JLabel(key.name());
         Font font = jLabel.getFont();
         Font boldFont = new Font(font.getFontName(), Font.BOLD, font.getSize());
@@ -136,15 +139,15 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> implements ScoreObserver, D
     }
 
     // Top Radio button is ONES
-    JRadioButton button = (JRadioButton) scoreSelection.get(YatzyBoxTypes.ONES);
-    scoreSelectionButtons.clearSelection();
+    JRadioButton button = (JRadioButton) scoreSelection.get(Enum.valueOf(boxClass,"ONES"));
+       scoreSelectionButtons.clearSelection();
     button.setSelected(true);
   }
 
   public void updateScoreSelection(ScoreModel scoreModel) {
 
-    for (YatzyBoxTypes key : YatzyBoxTypes.values()) {
-      if (Arrays.binarySearch(YatzyScoreModel.DERIVED_SCORES, key) < 0) {
+    for (Enum key : yatzyBoxTypes) {
+      if (!scoreModel.isDerivedScore(key)) {
         JRadioButton button = (JRadioButton) scoreSelection.get(key);
         if (scoreModel.isScoreSet(key)) {
           button.setEnabled(false);
@@ -162,7 +165,7 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> implements ScoreObserver, D
   }
 
   public void addScore(ScoreModel scoreModel, int column) {
-    Map scoreColumn = new EnumMap<YatzyBoxTypes,JButton>(YatzyBoxTypes.class);
+    EnumMap<T,JComponent> scoreColumn = new EnumMap<T,JComponent>(boxClass);
 
     GridBagConstraints c = new GridBagConstraints();
     c.gridy = 0;
@@ -180,7 +183,7 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> implements ScoreObserver, D
     jFrame.add(nameLabel,c);
 
     int row = 1;
-    for (YatzyBoxTypes ybt : YatzyBoxTypes.values()) {
+    for (T ybt : yatzyBoxTypes) {
       c.gridy = row;
       c.anchor = GridBagConstraints.CENTER;
       JLabel button = new JLabel(Integer.toString(scoreModel.getScore(ybt)));
@@ -205,7 +208,7 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> implements ScoreObserver, D
     String name = scoreModel.getPlayer().getName();
     Map scoreColumn = (Map) scoreColumnPerPlayer.get(name);
     //JLabel nameLabel = (JLabel) playerLabels.get(name);
-    for (YatzyBoxTypes ybt : YatzyBoxTypes.values()) {
+    for (T ybt : yatzyBoxTypes) {
       JLabel button = (JLabel) scoreColumn.get(ybt);
       if (scoreModel.isScoreSet(ybt)) {
         button.setText(Integer.toString(scoreModel.getScore(ybt)));
@@ -273,7 +276,7 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> implements ScoreObserver, D
     c = new GridBagConstraints();
     c.gridx = column - 1;
     c.gridy = 3;
-    c.gridheight = 10;
+    c.gridheight = 3;
     c.gridwidth = 1;
     selectedDicePanel.setLayout(new GridLayout(5,1));
     jFrame.getContentPane().add(selectedDicePanel,c);
@@ -304,7 +307,7 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> implements ScoreObserver, D
         diePanel.add(jButton,c);
 
       } else {
-        imageIcon = selectedDieIcons[die.getFace() - 1];
+        imageIcon = unselectedDieIcons[die.getFace() - 1];
 
         diePanel.remove(jButton);
         selectedDicePanel.add(jButton);
@@ -326,6 +329,12 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> implements ScoreObserver, D
       String message = yatzyAgent.rollActiveDice();
       updateInfoText(message);
     });
+
+//    button.setOpaque(true);
+//    button.setForeground(Color.GREEN);
+////    button.setBackground(Color.red);
+//    button.setOpaque(true);
+//    button.setBorderPainted(false);
 
     GridBagConstraints c = new GridBagConstraints();
     c.gridx = column;
@@ -387,8 +396,7 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> implements ScoreObserver, D
         nameLabel.setBorder(null);
 
         String messageString;
-        Enum selected = YatzyBoxTypes.
-            valueOf(scoreSelectionButtons.getSelection().
+        T selected = Enum.valueOf(boxClass,scoreSelectionButtons.getSelection().
                 getActionCommand());
         messageString = yatzyAgent.setScore(selected);
         updateInfoText(messageString);

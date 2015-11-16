@@ -2,8 +2,8 @@ package enjug.erijan.games.yatzy;
 
 import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.util.GameDie;
-import enjug.erijan.games.yatzy.rules.YatzyBoxTypes;
-import enjug.erijan.games.yatzy.rules.YatzyBoxTypesVariant;
+import enjug.erijan.games.yatzy.rules.ScoreRule;
+import enjug.erijan.games.yatzy.rules.YatzyVariants;
 
 import javax.swing.*;
 import java.awt.event.WindowEvent;
@@ -12,29 +12,41 @@ import java.util.*;
 /**
  * Created by Jan Eriksson on 27/10/15.
  */
-public class YatzyAgent implements YatzyAgentInterface {
+public class YatzyAgent <T extends Enum<T> & ScoreRule> implements YatzyAgentInterface {
   private DiceHandler dice;
   private List<Player> players;
 
-  private Iterator turnIterator;
+  private Iterator<ScoreModel> turnIterator;
   private List<ScoreModel> scoreColumns;
   private ScoreModel activeScoreColumn;
   private static final int noOfReRolls = 2;
   private int rollsDone;
+  private YatzyVariants yatzyVariants;
+  private Class<T> boxTypes;
 
-  public YatzyAgent() {
+  public YatzyAgent(Class<T> boxTypes, YatzyVariants yatzyVariants) {
+
+    this.yatzyVariants = yatzyVariants;
+    this.boxTypes = boxTypes;
     newGame();
   }
 
   @Override
   public void newGame() {
+
     players = new ArrayList<Player>();
     scoreColumns = new ArrayList<ScoreModel>();
-    dice = new YatzyDice();
+
+    if (yatzyVariants == YatzyVariants.MAXI_YATZY) {
+      dice = new YatzyDice(6);
+    } else {
+      dice = new YatzyDice(5);
+    }
     addPlayers();
     turnIterator = scoreColumns.listIterator();
-    activeScoreColumn = (ScoreModel) turnIterator.next();
-    YatzyGui<YatzyBoxTypesVariant> yatzyGui = new YatzyGui(YatzyBoxTypesVariant.class,this,dice);
+    activeScoreColumn = turnIterator.next();
+
+    YatzyGui<T> yatzyGui = new YatzyGui(boxTypes,this,dice);
     dice.deActivateAllDice();
   }
 
@@ -60,7 +72,7 @@ public class YatzyAgent implements YatzyAgentInterface {
       } else {
         Player newPlayer = new Player(playerInputStr);
         players.add(newPlayer);
-        scoreColumns.add(new YatzyScoreModel(newPlayer));
+        scoreColumns.add(new YatzyScoreModel(boxTypes,newPlayer));
         playerCounter++;
       }
     }
@@ -134,7 +146,7 @@ public class YatzyAgent implements YatzyAgentInterface {
     String winner = "";
     int highScore = 0;
     for (ScoreModel scoreModel: scoreColumns) {
-      int totScore = scoreModel.getScore(YatzyBoxTypes.TOTAL);
+      int totScore = scoreModel.getScore(Enum.valueOf(boxTypes, "TOTAL"));
       if (totScore > highScore) {
         highScore = totScore;
         winner = scoreModel.getPlayer().getName();

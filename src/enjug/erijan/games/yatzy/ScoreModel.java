@@ -24,5 +24,7 @@ public interface ScoreModel extends ScoreObservable {
 
   boolean isScoreSet(Enum scoreBox);
 
+  boolean isDerivedScore(Enum scoreBox);
+
   Player getPlayer();
 }

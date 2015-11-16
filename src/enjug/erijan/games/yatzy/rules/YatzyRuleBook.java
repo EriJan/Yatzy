@@ -1,12 +1,17 @@
 package enjug.erijan.games.yatzy.rules;
 
 import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.stream.IntStream;
 
 /**
  * Created by Jan Eriksson on 13/11/15.
  */
 public abstract class YatzyRuleBook {
+
+  private YatzyRuleBook() {
+  }
 
   public static int totalSum(int... result) {
     int score = IntStream.of(result).sum();
