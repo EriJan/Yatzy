@@ -8,26 +8,26 @@ import java.util.stream.IntStream;
  */
 public abstract class YatzyRuleBook {
 
-  public static int TotalSum(int... result) {
+  public static int totalSum(int... result) {
     int score = IntStream.of(result).sum();
     return score;
   }
 
-  public static int YatzyBonus(int limit, int bonus, int... result) {
+  public static int yatzyBonus(int limit, int bonus, int... result) {
     int score = 0;
-    if (TotalSum(result) >= limit) {
+    if (totalSum(result) >= limit) {
       score = bonus;
     }
     return score;
   }
 
-  public static int SumOfNs(int targetNumber, int... result) {
+  public static int sumOfNs(int targetNumber, int... result) {
     int score = IntStream.of(result)
         .filter(val -> val == targetNumber).sum();
     return score;
   }
 
-  public static int NSame(int nSame, int maxVal, int... result) {
+  public static int nSame(int nSame, int maxVal, int... result) {
 
     int score = 0;
 
@@ -48,11 +48,11 @@ public abstract class YatzyRuleBook {
     return score;
   }
 
-  public static int TwoPair(int... result) {
+  public static int twoPair(int... result) {
 
-    int score = NSame(2, 6, result);
+    int score = nSame(2, 6, result);
     int firstPairVal = score/2;
-    score = NSame(2, firstPairVal = 1, result);
+    score = nSame(2, firstPairVal - 1, result);
     int secondPairVal = score/2;
 
     if (firstPairVal*secondPairVal > 0) {
@@ -64,13 +64,13 @@ public abstract class YatzyRuleBook {
     return score;
   }
 
-  public static int FullHouse(int... result) {
+  public static int fullHouse(int... result) {
 
-    int score = NSame(3, 6, result);
+    int score = nSame(3, 6, result);
     int firstPairVal = score/3;
 
     result = IntStream.of(result).filter(val -> val != firstPairVal).toArray();
-    score = NSame(2, 6, result);
+    score = nSame(2, 6, result);
     int secondPairVal = score/2;
 
     if (firstPairVal*secondPairVal > 0) {
@@ -82,32 +82,34 @@ public abstract class YatzyRuleBook {
     return score;
   }
 
-  public static int SmallStraight(int... result) {
+  public static int smallStraight(int... result) {
 
     Arrays.sort(result);
 
     int[] uniqueValues = IntStream.of(result).distinct().sorted().toArray();
     long noUniqVals =  IntStream.of(uniqueValues).distinct().count();
-    int score;
-    if (uniqueValues[0] == 1 && uniqueValues[4] == 5 && noUniqVals >= 5) {
-      score = IntStream.of(1,2,3,4,5).sum();
-    } else {
-      score = 0;
+    int score = 0;
+    if (noUniqVals >= 5) {
+      if (uniqueValues[0] == 1 && uniqueValues[4] == 5) {
+        score = IntStream.of(1, 2, 3, 4, 5).sum();
+      }
     }
     return score;
   }
-  public static int BigStraight(int... result) {
+
+  public static int bigStraight(int... result) {
 
     Arrays.sort(result);
 
     int[] uniqueValues = IntStream.of(result).distinct().sorted().toArray();
     long noUniqVals =  IntStream.of(uniqueValues).distinct().count();
-    int score;
-    if (uniqueValues[0] == 2 && uniqueValues[4] == 6 && noUniqVals >= 5) {
-      score = IntStream.of(2,3,4,5,6).sum();
-    } else {
-      score = 0;
+    int score = 0;
+    if (noUniqVals >= 5) {
+      if (uniqueValues[0] == 2 && uniqueValues[4] == 6) {
+        score = IntStream.of(2,3,4,5,6).sum();
+      }
     }
     return score;
   }
+
 }

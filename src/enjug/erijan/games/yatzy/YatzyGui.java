@@ -3,6 +3,7 @@ package enjug.erijan.games.yatzy;
 import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.util.DiceObserver;
 import enjug.erijan.games.util.GameDie;
+import enjug.erijan.games.yatzy.rules.ScoreRule;
 import enjug.erijan.games.yatzy.rules.YatzyBoxTypes;
 
 import javax.swing.*;
@@ -17,11 +18,11 @@ import java.util.List;
  */
 
 
-public class YatzyGui implements ScoreObserver, DiceObserver {
+public class YatzyGui<T extends Enum<T> & ScoreRule> implements ScoreObserver, DiceObserver {
 
   private static final ImageIcon[] selectedDieIcons;
   private static final ImageIcon[] unselectedDieIcons;
-  private static EnumSet<YatzyBoxTypes> yatzyBoxTypes;
+  private EnumSet<T> yatzyBoxTypes;
 
   private JFrame jFrame;
   private JPanel diePanel;
@@ -36,7 +37,7 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
 
 
   static {
-    yatzyBoxTypes = EnumSet.allOf(YatzyBoxTypes.class);
+    //yatzyBoxTypes = EnumSet.allOf(YatzyBoxTypes.class);
     selectedDieIcons = new ImageIcon[6];
     unselectedDieIcons = new ImageIcon[6];
     for (int i = 1; i <= 6; i++) {
@@ -60,7 +61,7 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
    * @param yatzyAgent
    * @param diceHandler
    */
-  public YatzyGui(YatzyAgentInterface yatzyAgent, DiceHandler diceHandler) {
+  public YatzyGui(Class<T> boxTypes, YatzyAgentInterface yatzyAgent, DiceHandler diceHandler) {
     diePanel = new JPanel();
     selectedDicePanel = new JPanel();
     jFrame = new JFrame("Yatzy");
@@ -73,7 +74,7 @@ public class YatzyGui implements ScoreObserver, DiceObserver {
 
     playerLabels = new HashMap<String,JLabel>();
     scoreColumnPerPlayer = new HashMap<String,Map>();
-    scoreSelection = new EnumMap<YatzyBoxTypes,JRadioButton>(YatzyBoxTypes.class);
+    scoreSelection = new EnumMap<T,JRadioButton>(boxTypes);
     dieButtons = new ArrayList<GuiDie>();
 
     this.yatzyAgent = yatzyAgent;

@@ -3,6 +3,7 @@ package enjug.erijan.games.yatzy;
 import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.util.GameDie;
 import enjug.erijan.games.yatzy.rules.YatzyBoxTypes;
+import enjug.erijan.games.yatzy.rules.YatzyBoxTypesVariant;
 
 import javax.swing.*;
 import java.awt.event.WindowEvent;
@@ -33,7 +34,7 @@ public class YatzyAgent implements YatzyAgentInterface {
     addPlayers();
     turnIterator = scoreColumns.listIterator();
     activeScoreColumn = (ScoreModel) turnIterator.next();
-    YatzyGui yatzyGui = new YatzyGui(this,dice);
+    YatzyGui<YatzyBoxTypesVariant> yatzyGui = new YatzyGui(YatzyBoxTypesVariant.class,this,dice);
     dice.deActivateAllDice();
   }
 
