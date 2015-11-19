@@ -2,51 +2,58 @@ package enjug.erijan.games.yatzy;
 
 import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.util.GameDie;
-import enjug.erijan.games.yatzy.rules.ScoreRule;
-import enjug.erijan.games.yatzy.rules.YatzyVariants;
 
 import javax.swing.*;
 import java.awt.event.WindowEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
- * Created by Jan Eriksson on 27/10/15.
+ * Created by Jan Eriksson on 16/11/15.
  */
-public class YatzyAgent <T extends Enum<T> & ScoreRule> implements YatzyAgentInterface {
-  private DiceHandler dice;
-  private List<Player> players;
+public class YatzyAgent implements YatzyAgentInterface {
 
-  private Iterator<ScoreModel> turnIterator;
-  private List<ScoreModel> scoreColumns;
-  private ScoreModel activeScoreColumn;
   private static final int noOfReRolls = 2;
   private int rollsDone;
-  private YatzyVariants yatzyVariants;
-  private Class<T> boxTypes;
 
-  public YatzyAgent(Class<T> boxTypes, YatzyVariants yatzyVariants) {
+  //private Class<T> boxTypes;
+  private YatzyVariants yatzyVariant;
 
-    this.yatzyVariants = yatzyVariants;
-    this.boxTypes = boxTypes;
-    newGame();
+  private DiceHandler dice;
+  private List<Player> players;
+  private List<ScoreModel> scoreColumns;
+
+  private Iterator<ScoreModel> turnIterator;
+  private ScoreModel activeScoreColumn;
+
+  private ScoreSelectionBehavior scoreSelectionBehavior;
+  private RollingBehaviour rollingBehaviour;
+
+  public YatzyAgent() {
+     newGame();
   }
+
+  private static YatzyVariants selectGameVariant() {
+    String[] ruleSets;
+    ruleSets = Stream.of(YatzyVariants.values()).map(YatzyVariants::name)
+        .toArray(String[]::new);
+    int retVal = YatzyGui.userInputFromMenu("What ruleset?", ruleSets);
+    return YatzyVariants.valueOf(ruleSets[retVal]);
+  }
+
 
   @Override
   public void newGame() {
+    yatzyVariant = selectGameVariant();
+    dice = yatzyVariant.getDice();
 
-    players = new ArrayList<Player>();
-    scoreColumns = new ArrayList<ScoreModel>();
-
-    if (yatzyVariants == YatzyVariants.MAXI_YATZY) {
-      dice = new YatzyDice(6);
-    } else {
-      dice = new YatzyDice(5);
-    }
     addPlayers();
     turnIterator = scoreColumns.listIterator();
     activeScoreColumn = turnIterator.next();
 
-    YatzyGui<T> yatzyGui = new YatzyGui(boxTypes,this,dice);
+    YatzyGui yatzyGui = yatzyVariant.getGui(this, dice);
     dice.deActivateAllDice();
   }
 
@@ -56,7 +63,11 @@ public class YatzyAgent <T extends Enum<T> & ScoreRule> implements YatzyAgentInt
     newGame();
   }
 
+  //TODO check for uniqe names
   private void addPlayers() {
+    players = new ArrayList<Player>();
+    scoreColumns = new ArrayList<ScoreModel>();
+
     int playerCounter = 1;
     boolean morePlayers = true;
     while (morePlayers) {
@@ -72,10 +83,79 @@ public class YatzyAgent <T extends Enum<T> & ScoreRule> implements YatzyAgentInt
       } else {
         Player newPlayer = new Player(playerInputStr);
         players.add(newPlayer);
-        scoreColumns.add(new YatzyScoreModel(boxTypes,newPlayer));
+        scoreColumns.add(yatzyVariant.getScoreModel(newPlayer));
         playerCounter++;
       }
     }
+  }
+
+  @Override
+  public void toggleActiveDie(GameDie die) {
+    dice.toggleActiveDie(die);
+  }
+
+  @Override
+  public String setScore(Enum targetBox) {
+    String messageString = "";
+    if (rollsDone == 0) {
+      messageString = "You have to roll at least once.";
+    } else if (!activeScoreColumn.isScoreSet(targetBox)) {
+      activeScoreColumn.clearTempScores();
+      activeScoreColumn.setResult(targetBox, dice.getValues());
+      dice.deActivateAllDice();
+      rollsDone = 0;
+      if (turnIterator.hasNext()) {
+        activeScoreColumn = turnIterator.next();
+      } else {
+        if (activeScoreColumn.isAllScoreSet()) {
+          messageString = getWinner() + " wins the game!";
+          YatzyGui.gameMessage(messageString);
+        } else {
+          turnIterator = scoreColumns.listIterator();
+          activeScoreColumn = (ScoreModel) turnIterator.next();
+        }
+      }
+      messageString = "Score set on " + targetBox.name();
+
+    } else {
+      messageString = "This score is already set, try again";
+    }
+    return messageString;
+  }
+
+  @Override
+  public String getWinner() {
+    String winner = "";
+    int highScore = 0;
+    for (ScoreModel scoreModel: scoreColumns) {
+      int totScore = scoreModel.getTotal();
+      if (totScore > highScore) {
+        highScore = totScore;
+        winner = scoreModel.getPlayer().getName();
+      }
+    }
+    return winner;
+  }
+
+  @Override
+  public int rollsLeft() {
+    return noOfReRolls - rollsDone;
+  }
+
+  @Override
+  public void yourTurn(DiceHandler dice) {
+    this.dice = dice;
+
+  }
+
+  @Override
+  public ScoreModel getActiveScoreColumn() {
+    return activeScoreColumn;
+  }
+
+  @Override
+  public Iterator getScoreColumns() {
+    return scoreColumns.listIterator();
   }
 
   @Override
@@ -107,85 +187,27 @@ public class YatzyAgent <T extends Enum<T> & ScoreRule> implements YatzyAgentInt
     return message;
   }
 
-  @Override
-  public void toggleActiveDie(GameDie die) {
-    dice.toggleActiveDie(die);
-  }
 
-  @Override
-  public String setScore(Enum targetBox) {
-    String messageString = "";
-    if (rollsDone == 0) {
-      messageString = "You have to roll at least once.";
-    } else if (!activeScoreColumn.isScoreSet(targetBox)) {
-      activeScoreColumn.clearTempScores();
-      activeScoreColumn.setResult(targetBox, dice.getValues());
-      dice.deActivateAllDice();
-      rollsDone = 0;
-      if (turnIterator.hasNext()) {
-        activeScoreColumn = (ScoreModel) turnIterator.next();
-      } else {
-        if (activeScoreColumn.isAllScoreSet()) {
-          messageString = getWinner() + " wins the game!";
-          YatzyGui.gameMessage(messageString);
-        } else {
-          turnIterator = scoreColumns.listIterator();
-          activeScoreColumn = (ScoreModel) turnIterator.next();
-        }
-      }
-      messageString = "Score set on " + targetBox.name();
-
-    } else {
-      messageString = "This score is already set, try again";
-    }
-    return messageString;
-  }
-
-  @Override
-  public String getWinner() {
-    String winner = "";
-    int highScore = 0;
-    for (ScoreModel scoreModel: scoreColumns) {
-      int totScore = scoreModel.getScore(Enum.valueOf(boxTypes, "TOTAL"));
-      if (totScore > highScore) {
-        highScore = totScore;
-        winner = scoreModel.getPlayer().getName();
-      }
-    }
-    return winner;
-  }
-
-  @Override
-  public int rollsLeft() {
-    return noOfReRolls - rollsDone;
-  }
-
-  @Override
-  public void yourTurn(DiceHandler dice) {
-    this.dice = dice;
-
-  }
-
-  @Override
-  public ScoreModel getActiveScoreColumn() {
-    return activeScoreColumn;
-  }
-
-  @Override
-  public Iterator getScoreColumns() {
-    return scoreColumns.listIterator();
-  }
 
   @Override
   public void setTempScore() {
-    Iterator<GameDie> dieIterator = dice.getDice();
-    int[] result = new int[5];
-    int i = 0;
-    while (dieIterator.hasNext()) {
-      GameDie die = dieIterator.next();
-      result[i] = die.getFace();
-      i++;
-    }
-    activeScoreColumn.setTempScores(result);
+//    Iterator<GameDie> dieIterator = dice.getDice();
+//    int diceCount = dice.getValues().length;
+//    int[] result = new int[5];
+//    int i = 0;
+//    while (dieIterator.hasNext()) {
+//      GameDie die = dieIterator.next();
+//      result[i] = die.getFace();
+//      i++;
+//    }
+    activeScoreColumn.setTempScores(dice.getValues());
+  }
+
+  public void setScoreSelectionBehavior(ScoreSelectionBehavior scoreSelectionBehavior) {
+    this.scoreSelectionBehavior = scoreSelectionBehavior;
+  }
+
+  public void setRollingBehaviour(RollingBehaviour rollingBehaviour) {
+    this.rollingBehaviour = rollingBehaviour;
   }
 }

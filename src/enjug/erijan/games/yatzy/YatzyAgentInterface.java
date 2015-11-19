@@ -14,9 +14,7 @@ import java.util.Set;
 public interface YatzyAgentInterface {
 
   void newGame();
-
   void newGame(JFrame oldFrame);
-
   public String rollActiveDice();
   void toggleActiveDie(GameDie die);
   String setScore(Enum targetBox);
@@ -26,4 +24,5 @@ public interface YatzyAgentInterface {
   Iterator getScoreColumns();
   void setTempScore();
   String getWinner();
+
 }

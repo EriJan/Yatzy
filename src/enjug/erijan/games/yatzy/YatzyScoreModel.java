@@ -1,45 +1,60 @@
 package enjug.erijan.games.yatzy;
 
 import enjug.erijan.games.yatzy.rules.ScoreBox;
-import enjug.erijan.games.yatzy.rules.ScoreBoxFactory;
-import enjug.erijan.games.yatzy.rules.YatzyRuleBook;
 
 import java.util.*;
+
 
 /**
  * Created by Jan Eriksson on 27/10/15.
  */
 
-public class YatzyScoreModel<T extends Enum<T> & ScoreBoxFactory> implements ScoreModel {
+public class YatzyScoreModel<T extends Enum<T>> implements ScoreModel<T> {
   private EnumMap<T,ScoreBox> scoreBoxMap;
   private Player player;
   private List<ScoreObserver> observers;
-  //private EnumSet<T> yatzyBoxTypes;
   private Class<T> boxTypes;
   private EnumSet<T> derivedScores;
   private EnumSet<T> sumRange;
   private EnumSet<T> totalRange;
+  private Set<T> keySet;
+  private T sumKey;
+  private T bonusKey;
+  private T totalKey;
 
   public YatzyScoreModel(Class<T> boxTypes, Player player) {
     this.player = player;
     this.boxTypes = boxTypes;
-    //yatzyBoxTypes = EnumSet.allOf(boxTypes);
-    scoreBoxMap = new EnumMap<T,ScoreBox>(boxTypes);
-    for (T box : boxTypes.getEnumConstants()) {
-      scoreBoxMap.put(box,box.createScoreBox());
-    }
-
     observers = new ArrayList<ScoreObserver>();
-
-    derivedScores = EnumSet.of(Enum.valueOf(boxTypes,"SUM"),
-        Enum.valueOf(boxTypes,"BONUS"), Enum.valueOf(boxTypes,"TOTAL"));
-
-    sumRange = EnumSet.range(Enum.valueOf(boxTypes,"ONES"),Enum.valueOf(boxTypes,"SIXES"));
-    totalRange = EnumSet.range(Enum.valueOf(boxTypes,"SUM"),Enum.valueOf(boxTypes,"YATZY"));
   }
 
   @Override
-  public void setResult(Enum scoreBox, int... result) {
+  public void setScoreBoxMap(EnumMap<T, ScoreBox> scoreBoxMap) {
+    this.scoreBoxMap = scoreBoxMap;
+    keySet = scoreBoxMap.keySet();
+  }
+
+  @Override
+  public void setDerivedScores(EnumSet<T> derivedScores) {
+    this.derivedScores = derivedScores;
+    Iterator derivedIter = this.derivedScores.iterator();
+    sumKey = (T) derivedIter.next();
+    bonusKey = (T) derivedIter.next();
+    totalKey = (T) derivedIter.next();
+  }
+
+  @Override
+  public void setSumRange(EnumSet<T> sumRange) {
+    this.sumRange = sumRange;
+  }
+
+  @Override
+  public void setTotalRange(EnumSet<T> totalRange) {
+    this.totalRange = totalRange;
+  }
+
+  @Override
+  public void setResult(T scoreBox, int... result) {
     ScoreBox localBox = scoreBoxMap.get(scoreBox);
     if (!localBox.isScoreSet()) {
       localBox.setScore(result);
@@ -96,13 +111,19 @@ public class YatzyScoreModel<T extends Enum<T> & ScoreBoxFactory> implements Sco
   }
 
   @Override
-  public int getScore(Enum scoreBox) {
+  public int getScore(T scoreBox) {
     ScoreBox localBox = scoreBoxMap.get(scoreBox);
     return localBox.getScore();
   }
 
   @Override
-  public int getTempScore(Enum scoreBox) {
+  public int getTotal() {
+    ScoreBox localBox = scoreBoxMap.get(totalKey);
+    return localBox.getScore();
+  }
+
+  @Override
+  public int getTempScore(T scoreBox) {
     ScoreBox localBox = scoreBoxMap.get(scoreBox);
     return localBox.getTempScore();
   }
@@ -119,7 +140,7 @@ public class YatzyScoreModel<T extends Enum<T> & ScoreBoxFactory> implements Sco
 
     // Loop unil a score is found to not be set
     while (scoreKeyIterator.hasNext() && setScoreFound) {
-      Enum key = scoreKeyIterator.next();
+      T key = scoreKeyIterator.next();
       // No check on the derived scores
       if (!derivedScores.contains(key)) {
         ScoreBox localBox = (ScoreBox) scoreBoxMap.get(key);
@@ -131,13 +152,13 @@ public class YatzyScoreModel<T extends Enum<T> & ScoreBoxFactory> implements Sco
   }
 
   @Override
-  public boolean isScoreSet(Enum scoreBox) {
-    ScoreBox localBox = (ScoreBox) scoreBoxMap.get(scoreBox);
+  public boolean isScoreSet(T scoreBox) {
+    ScoreBox localBox = scoreBoxMap.get(scoreBox);
     return localBox.isScoreSet();
   }
 
   @Override
-  public boolean isDerivedScore(Enum scoreBox) {
+  public boolean isDerivedScore(T scoreBox) {
     return derivedScores.contains(scoreBox);
   }
 
@@ -161,6 +182,7 @@ public class YatzyScoreModel<T extends Enum<T> & ScoreBoxFactory> implements Sco
 
   @Override
   public void removeObserver(ScoreObserver o) {
+
     observers.remove(o);
   }
 

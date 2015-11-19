@@ -4,7 +4,6 @@ import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.util.DiceObserver;
 import enjug.erijan.games.util.GameDie;
 import enjug.erijan.games.yatzy.rules.ScoreRule;
-import enjug.erijan.games.yatzy.rules.YatzyRuleBook;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,19 +79,15 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> implements ScoreObserver, D
     dieButtons = new ArrayList<GuiDie>();
 
     this.yatzyAgent = yatzyAgent;
-    addScoreSelection(yatzyAgent.getActiveScoreColumn());
+      int column = 1;
 
-    int column = 1;
-    Iterator<ScoreModel> colIterator = yatzyAgent.getScoreColumns();
+    GridBagConstraints c = new GridBagConstraints();
+    c.gridx = 0;
+    c.gridy = 0;
+    //c.anchor = GridBagConstraints.CENTER;
+    JPanel scorePanel = new ScorePanel<T>(boxClass,yatzyAgent);
+    jFrame.add(scorePanel,c);
 
-    while (colIterator.hasNext()) {
-      ScoreModel scoreModel = colIterator.next();
-      addScore(scoreModel, column);
-      column++;
-      scoreModel.registerObserver(this);
-    }
-    JLabel jLabel = getCurrentPlayerLabel();
-    jLabel.setBorder(BorderFactory.createRaisedSoftBevelBorder());
     addDice(diceHandler, column + 1);
     addRollButton(diceHandler,column);
     addSetScoreButton(column);
@@ -113,7 +108,7 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> implements ScoreObserver, D
 
     for (T key : yatzyBoxTypes) {
       if (scoreModel.isDerivedScore(key)) {
-//      if (YatzyRuleBook.DERIVED_MAP.get().contains(key)) {
+//      if (ScoreCalculator.DERIVED_MAP.get().contains(key)) {
         JLabel jLabel = new JLabel(key.name());
         Font font = jLabel.getFont();
         Font boldFont = new Font(font.getFontName(), Font.BOLD, font.getSize());

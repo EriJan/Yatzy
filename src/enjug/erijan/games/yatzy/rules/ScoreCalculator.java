@@ -1,17 +1,14 @@
 package enjug.erijan.games.yatzy.rules;
 
 import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.stream.IntStream;
 
 /**
  * Created by Jan Eriksson on 13/11/15.
  */
-public abstract class YatzyRuleBook {
+public abstract class ScoreCalculator {
 
-  private YatzyRuleBook() {
-  }
+  private ScoreCalculator() {}
 
   public static int totalSum(int... result) {
     int score = IntStream.of(result).sum();
@@ -87,6 +84,42 @@ public abstract class YatzyRuleBook {
     return score;
   }
 
+  public static int villa(int... result) {
+
+    int score = nSame(3, 6, result);
+    int firstPairVal = score/3;
+
+    result = IntStream.of(result).filter(val -> val != firstPairVal).toArray();
+    score = nSame(3, 6, result);
+    int secondPairVal = score/3;
+
+    if (firstPairVal*secondPairVal > 0) {
+      score = 3*firstPairVal + 3*secondPairVal;
+    } else {
+      score = 0;
+    }
+
+    return score;
+  }
+
+  public static int tower(int... result) {
+
+    int score = nSame(4, 6, result);
+    int firstMatch = score/4;
+
+    result = IntStream.of(result).filter(val -> val != firstMatch).toArray();
+    score = nSame(2, 6, result);
+    int secondMatch = score/2;
+
+    if (firstMatch*secondMatch > 0) {
+      score = 4*firstMatch + 2*secondMatch;
+    } else {
+      score = 0;
+    }
+
+    return score;
+  }
+
   public static int smallStraight(int... result) {
 
     Arrays.sort(result);
@@ -117,4 +150,33 @@ public abstract class YatzyRuleBook {
     return score;
   }
 
+  public static int fullStraight(int... result) {
+
+    Arrays.sort(result);
+
+    int[] uniqueValues = IntStream.of(result).distinct().sorted().toArray();
+    long noUniqVals =  IntStream.of(uniqueValues).distinct().count();
+    int score = 0;
+    if (noUniqVals >= 6) {
+      score = IntStream.of(1,2,3,4,5,6).sum();
+    }
+    return score;
+  }
+
+  public static int threePair(int[] result) {
+    int score = nSame(2, 6, result);
+    int firstPairVal = score/2;
+    score = nSame(2, firstPairVal - 1, result);
+    int secondPairVal = score/2;
+    score = nSame(2, secondPairVal - 1, result);
+    int thirdPairVal = score/2;
+
+    if (firstPairVal*secondPairVal*thirdPairVal > 0) {
+      score = 2*(firstPairVal + secondPairVal + thirdPairVal);
+    } else {
+      score = 0;
+    }
+
+    return score;
+  }
 }

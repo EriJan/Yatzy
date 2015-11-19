@@ -4,5 +4,5 @@ package enjug.erijan.games.yatzy.rules;
  * Created by Jan Eriksson on 29/10/15.
  */
 public interface ScoreBoxFactory {
-  ScoreBox createScoreBox();
+  ScoreBox getScoreBox();
 }
