@@ -8,7 +8,7 @@ import java.util.Random;
  * n sided die.
  */
 
-public abstract class GameDie {
+public abstract class GameDie implements Comparable<GameDie> {
   private final int noOfFaces;
   private int face;
 
@@ -37,4 +37,8 @@ public abstract class GameDie {
     return face;
   }
 
+  @Override
+  public int compareTo(GameDie o) {
+    return this.getFace() - o.getFace();
+  }
 }

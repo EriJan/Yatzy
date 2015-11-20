@@ -23,6 +23,7 @@ public class DicePanel extends JPanel implements DiceObserver {
 
 
   // TODO fix dice without run time resize
+  // TODO Add fillers so that dice panel no resized.
   static {
     selectedDieIcons = new ImageIcon[6];
     unselectedDieIcons = new ImageIcon[6];
@@ -63,35 +64,19 @@ public class DicePanel extends JPanel implements DiceObserver {
     Iterator<GameDie> dice = diceHandler.getDice();
     diePanel.setLayout(new GridBagLayout());
 
-    Integer[] allowedPosArr = {0,1,2,3,4,5,6,7,8,9};
-    ArrayList colRands = new ArrayList<Integer>(Arrays.asList(allowedPosArr));
-    Collections.shuffle(colRands);
-    ArrayList rowRands = new ArrayList<Integer>(Arrays.asList(allowedPosArr));
-    Collections.shuffle(rowRands);
-
-    int rowPicker = 0;
-    int colPicker = 0;
     while (dice.hasNext()) {
-
-      int row = (int) rowRands.get(rowPicker);
-      int col = (int) colRands.get(colPicker);
-      rowPicker++;
-      colPicker++;
-
-      GridBagConstraints c = new GridBagConstraints();
-      c.gridx = col;
-      c.gridy = row;
-      c.anchor = GridBagConstraints.CENTER;
 
       GameDie die = dice.next();
       ImageIcon imageIcon = unselectedDieIcons[die.getFace() - 1];
+
       JButton button = new JButton(imageIcon);
       button.addActionListener(e -> yatzyAgent.toggleActiveDie(die));
       button.setOpaque(false);
       button.setContentAreaFilled(false);
       button.setBorderPainted(false);
-      dieButtons.add(new GuiDie(die,button,new int[] {row,col}));
-      diePanel.add(button, c);
+
+      dieButtons.add(new GuiDie(die,button,new int[] {0,0}));
+      selectedDicePanel.add(button);
     }
     this.add(selectedDicePanel);
     this.add(diePanel);
@@ -100,7 +85,7 @@ public class DicePanel extends JPanel implements DiceObserver {
   }
 
   public void updateDice(DiceHandler diceHandler) {
-
+    Collections.sort(dieButtons);
     for (Object o : dieButtons) {
       GuiDie guiDie = (GuiDie) o;
       GameDie die = guiDie.getDie();
@@ -182,8 +167,7 @@ public class DicePanel extends JPanel implements DiceObserver {
      updateDice(diceHandler);
    }
 
-
-  private class GuiDie {
+  private class GuiDie implements Comparable<GuiDie>{
     GameDie die;
     JButton jButton;
     int[] lastPostion;
@@ -212,6 +196,11 @@ public class DicePanel extends JPanel implements DiceObserver {
 
     public int[] getLastPostion() {
       return lastPostion;
+    }
+
+    @Override
+    public int compareTo(GuiDie o) {
+      return this.die.getFace() - o.getDie().getFace();
     }
   }
 
