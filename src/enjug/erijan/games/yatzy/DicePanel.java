@@ -21,6 +21,8 @@ public class DicePanel extends JPanel implements DiceObserver {
   private YatzyAgentInterface yatzyAgent;
   private List<GuiDie> dieButtons;
 
+
+  // TODO fix dice without run time resize
   static {
     selectedDieIcons = new ImageIcon[6];
     unselectedDieIcons = new ImageIcon[6];
@@ -57,10 +59,8 @@ public class DicePanel extends JPanel implements DiceObserver {
     selectedDicePanel.setPreferredSize(new Dimension(600,60));
     diePanel.setPreferredSize(new Dimension(600,600));
 
-    //diePanel.removeAll();
 
     Iterator<GameDie> dice = diceHandler.getDice();
-    //diePanel.setLayout(new BoxLayout(diePanel,BoxLayout.Y_AXIS));
     diePanel.setLayout(new GridBagLayout());
 
     Integer[] allowedPosArr = {0,1,2,3,4,5,6,7,8,9};
@@ -87,7 +87,9 @@ public class DicePanel extends JPanel implements DiceObserver {
       ImageIcon imageIcon = unselectedDieIcons[die.getFace() - 1];
       JButton button = new JButton(imageIcon);
       button.addActionListener(e -> yatzyAgent.toggleActiveDie(die));
-
+      button.setOpaque(false);
+      button.setContentAreaFilled(false);
+      button.setBorderPainted(false);
       dieButtons.add(new GuiDie(die,button,new int[] {row,col}));
       diePanel.add(button, c);
     }

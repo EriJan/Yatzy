@@ -39,12 +39,8 @@ public class ScorePanel<T extends Enum<T> & ScoreRule> extends JPanel implements
     while (colIterator.hasNext()) {
       ScoreModel scoreModel = colIterator.next();
       addScore(scoreModel, column);
-      System.out.println("Innan registrering " + column + " "
-          + scoreModel.toString());
-      column++;
-      System.out.println(this.toString());
       scoreModel.registerObserver(this);
-      System.out.println("Efter reg " + column);
+      column++;
     }
     JLabel jLabel = getCurrentPlayerLabel();
     jLabel.setBorder(BorderFactory.createRaisedSoftBevelBorder());
