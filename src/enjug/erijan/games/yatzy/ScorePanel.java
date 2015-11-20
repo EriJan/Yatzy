@@ -50,12 +50,11 @@ public class ScorePanel<T extends Enum<T> & ScoreRule> extends JPanel implements
     jLabel.setBorder(BorderFactory.createRaisedSoftBevelBorder());
   }
 
-  private JLabel getCurrentPlayerLabel() {
+  public JLabel getCurrentPlayerLabel() {
     ScoreModel scoreModel = yatzyAgent.getActiveScoreColumn();
     String name = scoreModel.getPlayer().getName();
     return  (JLabel) playerLabels.get(name);
   }
-
 
   public void addScoreSelection(ScoreModel scoreModel) {
     GridBagConstraints c = new GridBagConstraints();
@@ -112,6 +111,11 @@ public class ScorePanel<T extends Enum<T> & ScoreRule> extends JPanel implements
     }
     this.validate();
     this.repaint();
+  }
+
+  public T getSelected() {
+    return Enum.valueOf(boxClass,scoreSelectionButtons.getSelection().
+        getActionCommand());
   }
 
   public void addScore(ScoreModel scoreModel, int column) {

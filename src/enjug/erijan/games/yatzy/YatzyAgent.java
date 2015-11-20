@@ -29,7 +29,7 @@ public class YatzyAgent implements YatzyAgentInterface {
   private ScoreModel activeScoreColumn;
 
   private ScoreSelectionBehavior scoreSelectionBehavior;
-  private RollingBehaviour rollingBehaviour;
+  private RollingControlling rollingControlling;
 
   public YatzyAgent() {
      newGame();
@@ -191,15 +191,6 @@ public class YatzyAgent implements YatzyAgentInterface {
 
   @Override
   public void setTempScore() {
-//    Iterator<GameDie> dieIterator = dice.getDice();
-//    int diceCount = dice.getValues().length;
-//    int[] result = new int[5];
-//    int i = 0;
-//    while (dieIterator.hasNext()) {
-//      GameDie die = dieIterator.next();
-//      result[i] = die.getFace();
-//      i++;
-//    }
     activeScoreColumn.setTempScores(dice.getValues());
   }
 
@@ -207,7 +198,7 @@ public class YatzyAgent implements YatzyAgentInterface {
     this.scoreSelectionBehavior = scoreSelectionBehavior;
   }
 
-  public void setRollingBehaviour(RollingBehaviour rollingBehaviour) {
-    this.rollingBehaviour = rollingBehaviour;
+  public void setRollingControlling(RollingControlling rollingControlling) {
+    this.rollingControlling = rollingControlling;
   }
 }
