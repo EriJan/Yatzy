@@ -78,6 +78,17 @@ public class DicePanel extends JPanel implements DiceObserver {
       dieButtons.add(new GuiDie(die,button,new int[] {0,0}));
       selectedDicePanel.add(button);
     }
+    // Add empty spacers in diePanel
+    for (int i = 0; i < 10; i++) {
+      for (int j = 0; j < 10; j++) {
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = i;
+        c.gridy = j;
+        c.anchor = GridBagConstraints.CENTER;
+        diePanel.add(Box.createRigidArea(new Dimension(60,60)),c);
+
+      }
+    }
     this.add(selectedDicePanel);
     this.add(diePanel);
 
@@ -131,7 +142,6 @@ public class DicePanel extends JPanel implements DiceObserver {
     int rowPicker = 0;
     int colPicker = 0;
 
-    //for (int i = 0; i < dieButtons.size(); i++) {
     for (Object o : dieButtons) {
       GuiDie guiDie = (GuiDie) o;
       GameDie die = guiDie.getDie();
@@ -155,6 +165,8 @@ public class DicePanel extends JPanel implements DiceObserver {
       rowPicker++;
       colPicker++;
     }
+
+
     diePanel.validate();
     diePanel.repaint();
     selectedDicePanel.validate();
