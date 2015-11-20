@@ -28,7 +28,7 @@ public class YatzyAgent implements YatzyAgentInterface {
   private Iterator<ScoreModel> turnIterator;
   private ScoreModel activeScoreColumn;
 
-  private ScoreSelectionBehavior scoreSelectionBehavior;
+  private Scoring scoring;
   private RollingControlling rollingControlling;
 
   public YatzyAgent() {
@@ -194,8 +194,8 @@ public class YatzyAgent implements YatzyAgentInterface {
     activeScoreColumn.setTempScores(dice.getValues());
   }
 
-  public void setScoreSelectionBehavior(ScoreSelectionBehavior scoreSelectionBehavior) {
-    this.scoreSelectionBehavior = scoreSelectionBehavior;
+  public void setScoring(Scoring scoring) {
+    this.scoring = scoring;
   }
 
   public void setRollingControlling(RollingControlling rollingControlling) {

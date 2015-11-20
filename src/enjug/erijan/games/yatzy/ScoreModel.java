@@ -9,7 +9,7 @@ import java.util.Iterator;
  * Created by Jan Eriksson on 27/10/15.
  */
 
-public interface ScoreModel<T extends Enum<T>> extends ScoreObservable {
+public interface ScoreModel<T extends Enum<T>> extends ScoreSubject {
 
   void setScoreBoxMap(EnumMap<T, ScoreBox> scoreBoxMap);
 

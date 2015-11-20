@@ -3,7 +3,7 @@ package enjug.erijan.games.yatzy;
 /**
  * Created by Jan Eriksson on 16/11/15.
  */
-public class YatzyScoreSelection implements ScoreSelectionBehavior {
+public class YatzyScoreSelection implements Scoring {
   @Override
   public String setScore(Enum targetBox) {
     String messageString = "";
