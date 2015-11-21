@@ -1,8 +1,9 @@
-package enjug.erijan.games.yatzy;
+package enjug.erijan.games.yatzy.view;
 
 import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.util.DiceObserver;
 import enjug.erijan.games.util.GameDie;
+import enjug.erijan.games.yatzy.GameControlInterface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +19,7 @@ public class DicePanel extends JPanel implements DiceObserver {
 
   private JPanel diePanel;
   private JPanel selectedDicePanel;
-  private YatzyAgentInterface yatzyAgent;
+  private GameControlInterface yatzyAgent;
   private List<GuiDie> dieButtons;
 
 
@@ -29,20 +30,20 @@ public class DicePanel extends JPanel implements DiceObserver {
     unselectedDieIcons = new ImageIcon[6];
     for (int i = 1; i <= 6; i++) {
       ImageIcon tmpIcon = new ImageIcon(YatzyGui.class.getResource
-          ("../util/DiceIcons/d6-" + i + ".png"));
+          ("DiceIcons/d6-" + i + ".png"));
       Image image = tmpIcon.getImage();
       Image newimg = image.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
       unselectedDieIcons[i-1] = new ImageIcon(newimg);
 
       ImageIcon tmpIconAlt = new ImageIcon(YatzyGui.class.getResource
-          ("../util/DiceIcons/d6-" + i + "-bow.png"));
+          ("DiceIcons/d6-" + i + "-bow.png"));
       Image imageAlt = tmpIconAlt.getImage();
       Image newimgAlt = imageAlt.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
       selectedDieIcons[i-1] = new ImageIcon(newimgAlt);
     }
   }
 
-  public DicePanel(YatzyAgentInterface yatzyAgent, DiceHandler diceHandler) {
+  public DicePanel(GameControlInterface yatzyAgent, DiceHandler diceHandler) {
     this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     this.yatzyAgent = yatzyAgent;
     dieButtons = new ArrayList<GuiDie>();
@@ -59,6 +60,7 @@ public class DicePanel extends JPanel implements DiceObserver {
 
     selectedDicePanel.setPreferredSize(new Dimension(600,60));
     diePanel.setPreferredSize(new Dimension(600,600));
+    Dimension prefSize = new Dimension(60,60);
 
 
     Iterator<GameDie> dice = diceHandler.getDice();
@@ -74,7 +76,7 @@ public class DicePanel extends JPanel implements DiceObserver {
       button.setOpaque(false);
       button.setContentAreaFilled(false);
       button.setBorderPainted(false);
-
+      button.setPreferredSize(prefSize);
       dieButtons.add(new GuiDie(die,button,new int[] {0,0}));
       selectedDicePanel.add(button);
     }
@@ -85,7 +87,7 @@ public class DicePanel extends JPanel implements DiceObserver {
         c.gridx = i;
         c.gridy = j;
         c.anchor = GridBagConstraints.CENTER;
-        diePanel.add(Box.createRigidArea(new Dimension(60,60)),c);
+        diePanel.add(Box.createRigidArea(prefSize),c);
 
       }
     }

@@ -2,6 +2,7 @@ package enjug.erijan.games.yatzy;
 
 import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.util.GameDie;
+import enjug.erijan.games.yatzy.view.YatzyGui;
 
 import javax.swing.*;
 import java.awt.event.WindowEvent;
@@ -13,7 +14,7 @@ import java.util.stream.Stream;
 /**
  * Created by Jan Eriksson on 16/11/15.
  */
-public class YatzyAgent implements YatzyAgentInterface {
+public class GameControl implements GameControlInterface {
 
   private static final int noOfReRolls = 2;
   private int rollsDone;
@@ -31,7 +32,7 @@ public class YatzyAgent implements YatzyAgentInterface {
   private Scoring scoring;
   private RollingControlling rollingControlling;
 
-  public YatzyAgent() {
+  public GameControl() {
      newGame();
   }
 

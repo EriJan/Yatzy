@@ -1,4 +1,4 @@
-package enjug.erijan.games.yatzy;
+package enjug.erijan.games.yatzy.view;
 
 /**
  * Created by Jan Eriksson on 19/11/15.

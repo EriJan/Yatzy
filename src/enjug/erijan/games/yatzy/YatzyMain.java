@@ -14,6 +14,6 @@ public class YatzyMain {
       e.printStackTrace();
     }
 
-    YatzyAgent agent = new YatzyAgent();
+    GameControl agent = new GameControl();
   }
 }

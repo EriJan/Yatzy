@@ -5,6 +5,7 @@ import enjug.erijan.games.yatzy.rules.MaxiYatzyBoxes;
 import enjug.erijan.games.yatzy.rules.ScoreBox;
 import enjug.erijan.games.yatzy.rules.YatzyBoxes;
 import enjug.erijan.games.yatzy.rules.YatzyFactory;
+import enjug.erijan.games.yatzy.view.YatzyGui;
 
 import java.util.EnumMap;
 import java.util.EnumSet;
@@ -40,7 +41,7 @@ public enum YatzyVariants implements YatzyFactory {
     }
 
     @Override
-    public YatzyGui getGui(YatzyAgentInterface yatzyAgent, DiceHandler dice) {
+    public YatzyGui getGui(GameControlInterface yatzyAgent, DiceHandler dice) {
       return new YatzyGui<YatzyBoxes>(YatzyBoxes.class, yatzyAgent, dice);
     }
   },
@@ -56,7 +57,7 @@ public enum YatzyVariants implements YatzyFactory {
     }
 
     @Override
-    public YatzyGui getGui(YatzyAgentInterface yatzyAgent, DiceHandler dice) {
+    public YatzyGui getGui(GameControlInterface yatzyAgent, DiceHandler dice) {
       return null;
     }
   },
@@ -88,7 +89,7 @@ public enum YatzyVariants implements YatzyFactory {
     }
 
     @Override
-    public YatzyGui getGui(YatzyAgentInterface yatzyAgent, DiceHandler dice) {
+    public YatzyGui getGui(GameControlInterface yatzyAgent, DiceHandler dice) {
       return new YatzyGui<MaxiYatzyBoxes>(MaxiYatzyBoxes.class,yatzyAgent,dice);
     }
   }

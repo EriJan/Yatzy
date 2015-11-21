@@ -1,6 +1,7 @@
-package enjug.erijan.games.yatzy;
+package enjug.erijan.games.yatzy.view;
 
 import enjug.erijan.games.util.DiceHandler;
+import enjug.erijan.games.yatzy.GameControlInterface;
 import enjug.erijan.games.yatzy.rules.ScoreRule;
 
 import javax.swing.*;
@@ -24,7 +25,7 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
   private ScorePanel scorePanel;
   private DicePanel dicePanel;
   private ButtonsPanel buttonsPanel;
-  private YatzyAgentInterface yatzyAgent;
+  private GameControlInterface yatzyAgent;
 
   /**
    * Constructor to YatzyGui
@@ -32,7 +33,7 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
    * @param yatzyAgent
    * @param diceHandler
    */
-  public YatzyGui(Class<T> boxTypes, YatzyAgentInterface yatzyAgent, DiceHandler diceHandler) {
+  public YatzyGui(Class<T> boxTypes, GameControlInterface yatzyAgent, DiceHandler diceHandler) {
     boxClass = boxTypes;
     yatzyBoxTypes = EnumSet.allOf(boxTypes);
 

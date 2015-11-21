@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * Created by Jan Eriksson on 27/10/15.
  */
-public interface YatzyAgentInterface {
+public interface GameControlInterface {
 
   void newGame();
   void newGame(JFrame oldFrame);

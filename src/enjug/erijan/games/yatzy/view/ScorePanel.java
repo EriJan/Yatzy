@@ -1,5 +1,8 @@
-package enjug.erijan.games.yatzy;
+package enjug.erijan.games.yatzy.view;
 
+import enjug.erijan.games.yatzy.GameControlInterface;
+import enjug.erijan.games.yatzy.ScoreModel;
+import enjug.erijan.games.yatzy.ScoreObserver;
 import enjug.erijan.games.yatzy.rules.ScoreRule;
 
 import javax.swing.*;
@@ -16,9 +19,9 @@ public class ScorePanel<T extends Enum<T> & ScoreRule> extends JPanel implements
   private Map playerLabels;
   private Map scoreSelection;
   private ButtonGroup scoreSelectionButtons;
-  private YatzyAgentInterface yatzyAgent;
+  private GameControlInterface yatzyAgent;
 
-  public ScorePanel(Class<T> boxClass, YatzyAgentInterface yatzyAgent) {
+  public ScorePanel(Class<T> boxClass, GameControlInterface yatzyAgent) {
     this.boxClass = boxClass;
     yatzyBoxTypes = EnumSet.allOf(boxClass);
     this.yatzyAgent = yatzyAgent;
