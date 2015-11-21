@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Jan Eriksson on 16/11/15.
  */
-public class YatzyRolling implements RollingControlling {
+public class RollControlMaxiYatzy implements RollControl {
 
   private static final int maxRerolls = 2;
 
@@ -16,7 +16,7 @@ public class YatzyRolling implements RollingControlling {
   private int reRolls;
 //  Map<String,Integer> rolls
 
-  YatzyRolling(List<Player> players, DiceHandler diceHandler) {
+  RollControlMaxiYatzy(List<Player> players, DiceHandler diceHandler) {
     this.players = players;
     this.diceHandler = diceHandler;
   }

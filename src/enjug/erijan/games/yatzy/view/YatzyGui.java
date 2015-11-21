@@ -1,7 +1,7 @@
 package enjug.erijan.games.yatzy.view;
 
 import enjug.erijan.games.util.DiceHandler;
-import enjug.erijan.games.yatzy.GameControlInterface;
+import enjug.erijan.games.yatzy.GameControl;
 import enjug.erijan.games.yatzy.rules.ScoreRule;
 
 import javax.swing.*;
@@ -25,7 +25,7 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
   private ScorePanel scorePanel;
   private DicePanel dicePanel;
   private ButtonsPanel buttonsPanel;
-  private GameControlInterface yatzyAgent;
+  private GameControl yatzyAgent;
 
   /**
    * Constructor to YatzyGui
@@ -33,7 +33,7 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
    * @param yatzyAgent
    * @param diceHandler
    */
-  public YatzyGui(Class<T> boxTypes, GameControlInterface yatzyAgent, DiceHandler diceHandler) {
+  public YatzyGui(Class<T> boxTypes, GameControl yatzyAgent, DiceHandler diceHandler) {
     boxClass = boxTypes;
     yatzyBoxTypes = EnumSet.allOf(boxTypes);
 
@@ -120,6 +120,8 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
   // Todo, add space between buttons
   private class ButtonsPanel extends JPanel {
 
+    private final Dimension preferedButtonSize = new Dimension(100,40);
+
     public ButtonsPanel() {
       this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
       addRollButton(diceHandler);
@@ -131,6 +133,8 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
     public void addRollButton(DiceHandler diceHandler) {
       JButton button = new JButton("Roll");
       button.setAlignmentX(Component.CENTER_ALIGNMENT);
+      button.setPreferredSize(preferedButtonSize);
+
       button.addActionListener(e -> {
         dicePanel.moveActiveDice(diceHandler);
         String message = yatzyAgent.rollActiveDice();
@@ -143,6 +147,7 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
     public void addSetScoreButton() {
       JButton button = new JButton("Set Score");
       button.setAlignmentX(Component.CENTER_ALIGNMENT);
+      button.setPreferredSize(preferedButtonSize);
 
       button.addActionListener(new ActionListener() {
         @Override
@@ -165,12 +170,20 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
     }
 
     public void addNewGameButton() {
-      JButton jButton = new JButton("New game");
-      jButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-      jButton.addActionListener(e -> {
+
+      for (int j = 0; j < 5; j++) {
+        this.add(Box.createRigidArea(preferedButtonSize));
+
+      }
+
+      JButton button = new JButton("New game");
+      button.setAlignmentX(Component.CENTER_ALIGNMENT);
+      button.setPreferredSize(preferedButtonSize);
+
+      button.addActionListener(e -> {
         yatzyAgent.newGame(jFrame);
       });
-      this.add(jButton);
+      this.add(button);
     }
   }
 

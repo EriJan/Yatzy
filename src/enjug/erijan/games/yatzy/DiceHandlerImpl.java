@@ -11,14 +11,14 @@ import java.util.List;
  * Created by Jan Eriksson on 27/10/15.
  */
 
-public class YatzyDice implements DiceHandler {
+public class DiceHandlerImpl implements DiceHandler {
 
   List<GameDie> dice;
   List<GameDie> activeDice;
   DieFactory dieType;
   List<DiceObserver> observers;
 
-  public YatzyDice(int numberOfDice) {
+  public DiceHandlerImpl(int numberOfDice) {
     dice = new ArrayList<GameDie>();
     activeDice = new ArrayList<GameDie>();
     dieType = DieTypes.D6;

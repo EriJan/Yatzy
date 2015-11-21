@@ -3,7 +3,7 @@ package enjug.erijan.games.yatzy;
 /**
  * Created by Jan Eriksson on 16/11/15.
  */
-public class YatzyScoreSelection implements Scoring {
+public class SelectiveScoreSelection implements Scoring {
   @Override
   public String setScore(Enum targetBox) {
     String messageString = "";
@@ -15,14 +15,14 @@ public class YatzyScoreSelection implements Scoring {
 //      dice.deActivateAllDice();
 //      rollsDone = 0;
 //      if (turnIterator.hasNext()) {
-//        activeScoreColumn = (ScoreModel) turnIterator.next();
+//        activeScoreColumn = (ScoreColumn) turnIterator.next();
 //      } else {
 //        if (activeScoreColumn.isAllScoreSet()) {
 //          messageString = getWinner() + " wins the game!";
 //          YatzyGui.gameMessage(messageString);
 //        } else {
 //          turnIterator = scoreColumns.listIterator();
-//          activeScoreColumn = (ScoreModel) turnIterator.next();
+//          activeScoreColumn = (ScoreColumn) turnIterator.next();
 //        }
 //      }
 //      messageString = "Score set on " + targetBox.name();

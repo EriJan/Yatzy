@@ -5,6 +5,6 @@ package enjug.erijan.games.yatzy;
  */
 
 public interface ScoreObserver {
-  public void update(ScoreModel scoreModel);
+  public void update(ScoreColumn scoreColumn);
 }
 

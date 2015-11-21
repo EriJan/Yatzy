@@ -3,7 +3,7 @@ package enjug.erijan.games.yatzy.view;
 import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.util.DiceObserver;
 import enjug.erijan.games.util.GameDie;
-import enjug.erijan.games.yatzy.GameControlInterface;
+import enjug.erijan.games.yatzy.GameControl;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +19,7 @@ public class DicePanel extends JPanel implements DiceObserver {
 
   private JPanel diePanel;
   private JPanel selectedDicePanel;
-  private GameControlInterface yatzyAgent;
+  private GameControl yatzyAgent;
   private List<GuiDie> dieButtons;
 
 
@@ -43,7 +43,7 @@ public class DicePanel extends JPanel implements DiceObserver {
     }
   }
 
-  public DicePanel(GameControlInterface yatzyAgent, DiceHandler diceHandler) {
+  public DicePanel(GameControl yatzyAgent, DiceHandler diceHandler) {
     this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     this.yatzyAgent = yatzyAgent;
     dieButtons = new ArrayList<GuiDie>();

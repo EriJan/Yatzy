@@ -9,7 +9,7 @@ import java.util.*;
  * Created by Jan Eriksson on 27/10/15.
  */
 
-public class YatzyScoreModel<T extends Enum<T>> implements ScoreModel<T> {
+public class ScoreColumnImpl<T extends Enum<T>> implements ScoreColumn<T> {
   private EnumMap<T,ScoreBox> scoreBoxMap;
   private Player player;
   private List<ScoreObserver> observers;
@@ -22,7 +22,7 @@ public class YatzyScoreModel<T extends Enum<T>> implements ScoreModel<T> {
   private T bonusKey;
   private T totalKey;
 
-  public YatzyScoreModel(Class<T> boxTypes, Player player) {
+  public ScoreColumnImpl(Class<T> boxTypes, Player player) {
     this.player = player;
     this.boxTypes = boxTypes;
     observers = new ArrayList<ScoreObserver>();

@@ -1,7 +1,7 @@
 package enjug.erijan.games.yatzy.view;
 
-import enjug.erijan.games.yatzy.GameControlInterface;
-import enjug.erijan.games.yatzy.ScoreModel;
+import enjug.erijan.games.yatzy.GameControl;
+import enjug.erijan.games.yatzy.ScoreColumn;
 import enjug.erijan.games.yatzy.ScoreObserver;
 import enjug.erijan.games.yatzy.rules.ScoreRule;
 
@@ -19,9 +19,9 @@ public class ScorePanel<T extends Enum<T> & ScoreRule> extends JPanel implements
   private Map playerLabels;
   private Map scoreSelection;
   private ButtonGroup scoreSelectionButtons;
-  private GameControlInterface yatzyAgent;
+  private GameControl yatzyAgent;
 
-  public ScorePanel(Class<T> boxClass, GameControlInterface yatzyAgent) {
+  public ScorePanel(Class<T> boxClass, GameControl yatzyAgent) {
     this.boxClass = boxClass;
     yatzyBoxTypes = EnumSet.allOf(boxClass);
     this.yatzyAgent = yatzyAgent;
@@ -37,12 +37,12 @@ public class ScorePanel<T extends Enum<T> & ScoreRule> extends JPanel implements
     addScoreSelection(yatzyAgent.getActiveScoreColumn());
 
     int column = 1;
-    Iterator<ScoreModel> colIterator = yatzyAgent.getScoreColumns();
+    Iterator<ScoreColumn> colIterator = yatzyAgent.getScoreColumns();
 
     while (colIterator.hasNext()) {
-      ScoreModel scoreModel = colIterator.next();
-      addScore(scoreModel, column);
-      scoreModel.registerObserver(this);
+      ScoreColumn scoreColumn = colIterator.next();
+      addScore(scoreColumn, column);
+      scoreColumn.registerObserver(this);
       column++;
     }
     JLabel jLabel = getCurrentPlayerLabel();
@@ -50,19 +50,19 @@ public class ScorePanel<T extends Enum<T> & ScoreRule> extends JPanel implements
   }
 
   public JLabel getCurrentPlayerLabel() {
-    ScoreModel scoreModel = yatzyAgent.getActiveScoreColumn();
-    String name = scoreModel.getPlayer().getName();
+    ScoreColumn scoreColumn = yatzyAgent.getActiveScoreColumn();
+    String name = scoreColumn.getPlayer().getName();
     return  (JLabel) playerLabels.get(name);
   }
 
-  public void addScoreSelection(ScoreModel scoreModel) {
+  public void addScoreSelection(ScoreColumn scoreColumn) {
     GridBagConstraints c = new GridBagConstraints();
     c.gridx = 0;
     c.gridy = 0;
     int row = 1;
 
     for (T key : yatzyBoxTypes) {
-      if (scoreModel.isDerivedScore(key)) {
+      if (scoreColumn.isDerivedScore(key)) {
         JLabel jLabel = new JLabel(key.name());
         Font font = jLabel.getFont();
         Font boldFont = new Font(font.getFontName(), Font.BOLD, font.getSize());
@@ -93,12 +93,12 @@ public class ScorePanel<T extends Enum<T> & ScoreRule> extends JPanel implements
     button.setSelected(true);
   }
 
-  public void updateScoreSelection(ScoreModel scoreModel) {
+  public void updateScoreSelection(ScoreColumn scoreColumn) {
 
     for (Enum key : yatzyBoxTypes) {
-      if (!scoreModel.isDerivedScore(key)) {
+      if (!scoreColumn.isDerivedScore(key)) {
         JRadioButton button = (JRadioButton) scoreSelection.get(key);
-        if (scoreModel.isScoreSet(key)) {
+        if (scoreColumn.isScoreSet(key)) {
           button.setEnabled(false);
         } else {
           button.setEnabled(true);
@@ -117,7 +117,7 @@ public class ScorePanel<T extends Enum<T> & ScoreRule> extends JPanel implements
         getActionCommand());
   }
 
-  public void addScore(ScoreModel scoreModel, int column) {
+  public void addScore(ScoreColumn scoreModel, int column) {
     EnumMap<T,JComponent> scoreColumn = new EnumMap<T,JComponent>(boxClass);
 
     GridBagConstraints c = new GridBagConstraints();
@@ -154,7 +154,7 @@ public class ScorePanel<T extends Enum<T> & ScoreRule> extends JPanel implements
     scoreColumnPerPlayer.put(name,scoreColumn);
   }
 
-  public void updateScore(ScoreModel scoreModel) {
+  public void updateScore(ScoreColumn scoreModel) {
     String name = scoreModel.getPlayer().getName();
     Map scoreColumn = (Map) scoreColumnPerPlayer.get(name);
     //JLabel nameLabel = (JLabel) playerLabels.get(name);
@@ -180,8 +180,8 @@ public class ScorePanel<T extends Enum<T> & ScoreRule> extends JPanel implements
 
 
   @Override
-  public void update(ScoreModel scoreModel) {
-    updateScoreSelection(scoreModel);
-    updateScore(scoreModel);
+  public void update(ScoreColumn scoreColumn) {
+    updateScoreSelection(scoreColumn);
+    updateScore(scoreColumn);
   }
 }

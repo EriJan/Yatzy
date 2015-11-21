@@ -4,7 +4,6 @@ import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.yatzy.rules.MaxiYatzyBoxes;
 import enjug.erijan.games.yatzy.rules.ScoreBox;
 import enjug.erijan.games.yatzy.rules.YatzyBoxes;
-import enjug.erijan.games.yatzy.rules.YatzyFactory;
 import enjug.erijan.games.yatzy.view.YatzyGui;
 
 import java.util.EnumMap;
@@ -13,83 +12,83 @@ import java.util.EnumSet;
 /**
  * Created by Jan Eriksson on 29/10/15.
  */
-public enum YatzyVariants implements YatzyFactory {
+public enum VariantsFactoryImpl implements VariantFactory {
   YATZY {
     @Override
-    public ScoreModel getScoreModel(Player player) {
-      ScoreModel scoreModel;
-      scoreModel = new YatzyScoreModel<YatzyBoxes>(YatzyBoxes.class,player);
+    public ScoreColumn getScoreModel(Player player) {
+      ScoreColumn scoreColumn;
+      scoreColumn = new ScoreColumnImpl<YatzyBoxes>(YatzyBoxes.class,player);
 
       EnumMap<YatzyBoxes, ScoreBox> scoreBoxMap;
       scoreBoxMap = new EnumMap<YatzyBoxes,ScoreBox>(YatzyBoxes.class);
       for (YatzyBoxes box : YatzyBoxes.values()) {
         scoreBoxMap.put(box,box.getScoreBox());
       }
-      scoreModel.setScoreBoxMap(scoreBoxMap);
+      scoreColumn.setScoreBoxMap(scoreBoxMap);
 
-      scoreModel.setDerivedScores(EnumSet.of(YatzyBoxes.SUM, YatzyBoxes.BONUS,
+      scoreColumn.setDerivedScores(EnumSet.of(YatzyBoxes.SUM, YatzyBoxes.BONUS,
           YatzyBoxes.TOTAL));
-      scoreModel.setSumRange(EnumSet.range(YatzyBoxes.ONES, YatzyBoxes.SIXES));
-      scoreModel.setTotalRange(EnumSet.range(YatzyBoxes.SUM, YatzyBoxes.YATZY));
+      scoreColumn.setSumRange(EnumSet.range(YatzyBoxes.ONES, YatzyBoxes.SIXES));
+      scoreColumn.setTotalRange(EnumSet.range(YatzyBoxes.SUM, YatzyBoxes.YATZY));
 
-      return scoreModel;
+      return scoreColumn;
     }
 
     @Override
     public DiceHandler getDice() {
-      return new YatzyDice(5);
+      return new DiceHandlerImpl(5);
     }
 
     @Override
-    public YatzyGui getGui(GameControlInterface yatzyAgent, DiceHandler dice) {
+    public YatzyGui getGui(GameControl yatzyAgent, DiceHandler dice) {
       return new YatzyGui<YatzyBoxes>(YatzyBoxes.class, yatzyAgent, dice);
     }
   },
   YATZEE {
     @Override
-    public ScoreModel getScoreModel(Player player) {
+    public ScoreColumn getScoreModel(Player player) {
       return null;
     }
 
     @Override
     public DiceHandler getDice() {
-      return new YatzyDice(5);
+      return new DiceHandlerImpl(5);
     }
 
     @Override
-    public YatzyGui getGui(GameControlInterface yatzyAgent, DiceHandler dice) {
+    public YatzyGui getGui(GameControl yatzyAgent, DiceHandler dice) {
       return null;
     }
   },
   MAXI_YATZY {
     @Override
-    public ScoreModel getScoreModel(Player player) {
-      ScoreModel scoreModel;
-      scoreModel = new YatzyScoreModel<MaxiYatzyBoxes>(MaxiYatzyBoxes.class,player);
+    public ScoreColumn getScoreModel(Player player) {
+      ScoreColumn scoreColumn;
+      scoreColumn = new ScoreColumnImpl<MaxiYatzyBoxes>(MaxiYatzyBoxes.class,player);
 
       EnumMap<MaxiYatzyBoxes, ScoreBox> scoreBoxMap;
       scoreBoxMap = new EnumMap<MaxiYatzyBoxes,ScoreBox>(MaxiYatzyBoxes.class);
       for (MaxiYatzyBoxes box : MaxiYatzyBoxes.values()) {
         scoreBoxMap.put(box,box.getScoreBox());
       }
-      scoreModel.setScoreBoxMap(scoreBoxMap);
+      scoreColumn.setScoreBoxMap(scoreBoxMap);
 
 
-      scoreModel.setDerivedScores(EnumSet.of(MaxiYatzyBoxes.SUM, MaxiYatzyBoxes.BONUS,
+      scoreColumn.setDerivedScores(EnumSet.of(MaxiYatzyBoxes.SUM, MaxiYatzyBoxes.BONUS,
           MaxiYatzyBoxes.TOTAL));
-      scoreModel.setSumRange(EnumSet.range(MaxiYatzyBoxes.ONES, MaxiYatzyBoxes.SIXES));
-      scoreModel.setTotalRange(EnumSet.range(MaxiYatzyBoxes.SUM, MaxiYatzyBoxes.YATZY));
+      scoreColumn.setSumRange(EnumSet.range(MaxiYatzyBoxes.ONES, MaxiYatzyBoxes.SIXES));
+      scoreColumn.setTotalRange(EnumSet.range(MaxiYatzyBoxes.SUM, MaxiYatzyBoxes.YATZY));
 
-      return scoreModel;
+      return scoreColumn;
     }
 
     @Override
     public DiceHandler getDice() {
-      return new YatzyDice(6);
+      return new DiceHandlerImpl(6);
     }
 
     @Override
-    public YatzyGui getGui(GameControlInterface yatzyAgent, DiceHandler dice) {
+    public YatzyGui getGui(GameControl yatzyAgent, DiceHandler dice) {
       return new YatzyGui<MaxiYatzyBoxes>(MaxiYatzyBoxes.class,yatzyAgent,dice);
     }
   }
