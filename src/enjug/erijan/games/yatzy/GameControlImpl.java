@@ -64,7 +64,6 @@ public class GameControlImpl implements GameControl {
     newGame();
   }
 
-  //TODO check for uniqe names
   private void addPlayers() {
     players = new ArrayList<Player>();
     scoreColumns = new ArrayList<ScoreColumn>();

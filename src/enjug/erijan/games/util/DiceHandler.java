@@ -9,7 +9,7 @@ import java.util.Iterator;
  *
  */
 
-public interface DiceHandler extends DiceObservable {
+public interface DiceHandler extends DiceSubject{
 
   /**
    * Roll a subset of the dice.

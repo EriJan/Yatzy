@@ -5,7 +5,7 @@ package enjug.erijan.games.util;
  * Observable subject for dicehandler
  */
 
-public interface DiceObservable {
+public interface DiceSubject {
   public void registerObserver(DiceObserver o);
   public void removeObserver(DiceObserver o);
   public void notifyObservers();
