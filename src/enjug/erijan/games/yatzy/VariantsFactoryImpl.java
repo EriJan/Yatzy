@@ -15,9 +15,9 @@ import java.util.EnumSet;
 public enum VariantsFactoryImpl implements VariantFactory {
   YATZY {
     @Override
-    public ScoreColumn getScoreModel(Player player) {
+    public ScoreReader getScoreModel(Player player) {
       ScoreColumn scoreColumn;
-      scoreColumn = new ScoreColumnImpl<YatzyBoxes>(YatzyBoxes.class,player);
+      scoreColumn = new ScoreColumn<YatzyBoxes>(YatzyBoxes.class,player);
 
       EnumMap<YatzyBoxes, ScoreBox> scoreBoxMap;
       scoreBoxMap = new EnumMap<YatzyBoxes,ScoreBox>(YatzyBoxes.class);
@@ -46,7 +46,7 @@ public enum VariantsFactoryImpl implements VariantFactory {
   },
   YATZEE {
     @Override
-    public ScoreColumn getScoreModel(Player player) {
+    public ScoreReader getScoreModel(Player player) {
       return null;
     }
 
@@ -62,9 +62,9 @@ public enum VariantsFactoryImpl implements VariantFactory {
   },
   MAXI_YATZY {
     @Override
-    public ScoreColumn getScoreModel(Player player) {
+    public ScoreReader getScoreModel(Player player) {
       ScoreColumn scoreColumn;
-      scoreColumn = new ScoreColumnImpl<MaxiYatzyBoxes>(MaxiYatzyBoxes.class,player);
+      scoreColumn = new ScoreColumn<MaxiYatzyBoxes>(MaxiYatzyBoxes.class,player);
 
       EnumMap<MaxiYatzyBoxes, ScoreBox> scoreBoxMap;
       scoreBoxMap = new EnumMap<MaxiYatzyBoxes,ScoreBox>(MaxiYatzyBoxes.class);

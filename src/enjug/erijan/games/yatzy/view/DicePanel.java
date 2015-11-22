@@ -3,7 +3,6 @@ package enjug.erijan.games.yatzy.view;
 import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.util.DiceObserver;
 import enjug.erijan.games.util.GameDie;
-import enjug.erijan.games.yatzy.GameControl;
 
 import javax.swing.*;
 import java.awt.*;

@@ -223,7 +223,7 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
       addScoreSelection(yatzyAgent.getActiveScoreColumn());
 
       int column = 1;
-      Iterator<ScoreColumn> colIterator = yatzyAgent.getScoreColumns();
+      Iterator<ScoreReader> colIterator = yatzyAgent.getScoreColumns();
 
       while (colIterator.hasNext()) {
         ScoreColumn scoreColumn = colIterator.next();
@@ -236,12 +236,12 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
     }
 
     public JLabel getCurrentPlayerLabel() {
-      ScoreColumn scoreColumn = yatzyAgent.getActiveScoreColumn();
+      ScoreReader scoreColumn = yatzyAgent.getActiveScoreColumn();
       String name = scoreColumn.getPlayer().getName();
       return  (JLabel) playerLabels.get(name);
     }
 
-    public void addScoreSelection(ScoreColumn scoreColumn) {
+    public void addScoreSelection(ScoreReader scoreColumn) {
       GridBagConstraints c = new GridBagConstraints();
       c.gridx = 0;
       c.gridy = 0;
@@ -279,7 +279,7 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
       button.setSelected(true);
     }
 
-    public void updateScoreSelection(ScoreColumn scoreColumn) {
+    public void updateScoreSelection(ScoreReader scoreColumn) {
 
       for (Enum key : yatzyBoxTypes) {
         if (!scoreColumn.isDerivedScore(key)) {
@@ -303,7 +303,7 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
           getActionCommand());
     }
 
-    public void addScore(ScoreColumn scoreModel, int column) {
+    public void addScore(ScoreReader scoreModel, int column) {
       EnumMap<T,JComponent> scoreColumn = new EnumMap<T,JComponent>(boxClass);
 
       GridBagConstraints c = new GridBagConstraints();
@@ -340,7 +340,7 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
       scoreColumnPerPlayer.put(name,scoreColumn);
     }
 
-    public void updateScore(ScoreColumn scoreModel) {
+    public void updateScore(ScoreReader scoreModel) {
       String name = scoreModel.getPlayer().getName();
       Map scoreColumn = (Map) scoreColumnPerPlayer.get(name);
       //JLabel nameLabel = (JLabel) playerLabels.get(name);
@@ -366,7 +366,7 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
 
 
     @Override
-    public void update(ScoreColumn scoreColumn) {
+    public void update(ScoreReader scoreColumn) {
       updateScoreSelection(scoreColumn);
       updateScore(scoreColumn);
     }
