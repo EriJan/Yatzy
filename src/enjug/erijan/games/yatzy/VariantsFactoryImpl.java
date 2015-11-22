@@ -40,8 +40,8 @@ public enum VariantsFactoryImpl implements VariantFactory {
     }
 
     @Override
-    public YatzyGui getGui(GameControl yatzyAgent, DiceHandler dice) {
-      return new YatzyGui<YatzyBoxes>(YatzyBoxes.class, yatzyAgent, dice);
+    public YatzyGui getGui(GameControl yatzyAgent, DiceHandler dice, StateInfo stateInfo) {
+      return new YatzyGui<YatzyBoxes>(YatzyBoxes.class, yatzyAgent, dice, stateInfo);
     }
   },
   YATZEE {
@@ -56,7 +56,7 @@ public enum VariantsFactoryImpl implements VariantFactory {
     }
 
     @Override
-    public YatzyGui getGui(GameControl yatzyAgent, DiceHandler dice) {
+    public YatzyGui getGui(GameControl yatzyAgent, DiceHandler dice, StateInfo stateInfo) {
       return null;
     }
   },
@@ -88,8 +88,8 @@ public enum VariantsFactoryImpl implements VariantFactory {
     }
 
     @Override
-    public YatzyGui getGui(GameControl yatzyAgent, DiceHandler dice) {
-      return new YatzyGui<MaxiYatzyBoxes>(MaxiYatzyBoxes.class,yatzyAgent,dice);
+    public YatzyGui getGui(GameControl yatzyAgent, DiceHandler dice, StateInfo stateInfo) {
+      return new YatzyGui<MaxiYatzyBoxes>(MaxiYatzyBoxes.class,yatzyAgent,dice,stateInfo);
     }
   }
 }

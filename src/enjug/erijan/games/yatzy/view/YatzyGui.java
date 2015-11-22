@@ -5,6 +5,7 @@ import enjug.erijan.games.yatzy.*;
 import enjug.erijan.games.yatzy.rules.ScoreRule;
 
 import javax.swing.*;
+import javax.swing.JLabel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,6 +27,8 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
   private DicePanel dicePanel;
   private ButtonsPanel buttonsPanel;
   private GameControl yatzyAgent;
+  private InfoPanel infoPanel;
+  //private StateInfo stateInfo;
 
   /**
    * Constructor to YatzyGui
@@ -33,7 +36,8 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
    * @param yatzyAgent
    * @param diceHandler
    */
-  public YatzyGui(Class<T> boxTypes, GameControl yatzyAgent, DiceHandler diceHandler) {
+  public YatzyGui(Class<T> boxTypes, GameControl yatzyAgent,
+                  DiceHandler diceHandler, StateInfo stateInfo) {
     boxClass = boxTypes;
     yatzyBoxTypes = EnumSet.allOf(boxTypes);
 
@@ -43,31 +47,39 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
     jFrame.setVisible(true);
     jFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-    infoLabel = new JLabel();
-
+    //infoLabel = new JLabel();
+    infoPanel = new InfoPanel(stateInfo);
     this.yatzyAgent = yatzyAgent;
     this.diceHandler = diceHandler;
 
     GridBagConstraints c = new GridBagConstraints();
     c.gridx = 0;
-    c.gridy = 0;
+    c.gridy = 1;
     scorePanel = new ScorePanel(yatzyAgent);
     jFrame.add(scorePanel,c);
 
     c = new GridBagConstraints();
     c.gridx = 1;
-    c.gridy = 0;
+    c.gridy = 1;
 
     buttonsPanel = new ButtonsPanel();
     jFrame.add(buttonsPanel,c);
 
     c = new GridBagConstraints();
     c.gridx = 2;
-    c.gridy = 0;
+    c.gridy = 1;
     dicePanel = new DicePanel(yatzyAgent, diceHandler);
     jFrame.add(dicePanel,c);
 
-    addInfoText("Lets play some Yatzy");
+    //addInfoText("Lets play some Yatzy");
+    c.gridx = 0;
+    c.gridy = 0;
+//    c.anchor = GridBagConstraints.CENTER;
+//    c.gridheight = 2;
+//    c.gridwidth = 0;
+//    c.ipady = 40;
+    jFrame.getContentPane().add(infoPanel,c);
+
     jFrame.pack();
   }
 
@@ -137,8 +149,8 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
 
       button.addActionListener(e -> {
         dicePanel.moveActiveDice(diceHandler);
-        String message = yatzyAgent.rollActiveDice();
-        updateInfoText(message);
+        yatzyAgent.rollActiveDice();
+        //updateInfoText(message);
       });
 
       this.add(button);
@@ -158,8 +170,8 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
 
           String messageString;
           Enum selected = scorePanel.getSelected();
-          messageString = yatzyAgent.setScore(selected);
-          updateInfoText(messageString);
+          yatzyAgent.setScore(selected);
+          //updateInfoText(messageString);
 
           nameLabel = scorePanel.getCurrentPlayerLabel();
           nameLabel.setBorder(BorderFactory.createRaisedSoftBevelBorder());
@@ -365,8 +377,19 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
    */
   public static class InfoPanel extends JPanel implements StateInfoObserver {
 
+    JLabel jLabel;
+    //StateInfo stateInfo;
+
+    public InfoPanel(StateInfo stateInfo) {
+      jLabel = new JLabel("Lets play some Yatzy!");
+      //this.stateInfo = stateInfo;
+      this.add(jLabel);
+      stateInfo.registerObserver(this);
+    }
+
     @Override
     public void update(StateInfo stateInfo) {
+      jLabel.setText(stateInfo.getStateMessage());
 
     }
   }

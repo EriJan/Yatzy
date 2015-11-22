@@ -25,6 +25,7 @@ public class GameStateInfo implements StateInfo {
   @Override
   public void setStateMessage(String stateMessage) {
     this.stateMessage = new StringBuffer(stateMessage);
+    notifyObservers();
   }
 
   @Override

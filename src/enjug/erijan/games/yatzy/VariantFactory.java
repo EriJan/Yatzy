@@ -9,5 +9,5 @@ import enjug.erijan.games.yatzy.view.YatzyGui;
 public interface VariantFactory {
   ScoreColumn getScoreModel(Player player);
   DiceHandler getDice();
-  YatzyGui getGui(GameControl yatzyAgent, DiceHandler diceHandler);
+  YatzyGui getGui(GameControl yatzyAgent, DiceHandler diceHandler, StateInfo stateInfo);
 }

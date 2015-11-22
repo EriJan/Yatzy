@@ -13,9 +13,9 @@ public interface GameControl {
 
   void newGame();
   void newGame(JFrame oldFrame);
-  public String rollActiveDice();
+  void rollActiveDice();
   void toggleActiveDie(GameDie die);
-  String setScore(Enum targetBox);
+  void setScore(Enum targetBox);
   int rollsLeft();
   void yourTurn(DiceHandler dice);
   ScoreColumn getActiveScoreColumn();

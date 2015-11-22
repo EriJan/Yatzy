@@ -28,6 +28,7 @@ public class GameControlImpl implements GameControl {
 
   private Iterator<ScoreColumn> turnIterator;
   private ScoreColumn activeScoreColumn;
+  private StateInfo stateInfo;
 
   private Scoring scoring;
   private RollControl rollControl;
@@ -49,12 +50,13 @@ public class GameControlImpl implements GameControl {
   public void newGame() {
     yatzyVariant = selectGameVariant();
     dice = yatzyVariant.getDice();
+    stateInfo = new GameStateInfo();
 
     addPlayers();
     turnIterator = scoreColumns.listIterator();
     activeScoreColumn = turnIterator.next();
 
-    YatzyGui yatzyGui = yatzyVariant.getGui(this, dice);
+    YatzyGui yatzyGui = yatzyVariant.getGui(this, dice, stateInfo);
     dice.deActivateAllDice();
   }
 
@@ -95,7 +97,7 @@ public class GameControlImpl implements GameControl {
   }
 
   @Override
-  public String setScore(Enum targetBox) {
+  public void setScore(Enum targetBox) {
     String messageString = "";
     if (rollsDone == 0) {
       messageString = "You have to roll at least once.";
@@ -120,7 +122,8 @@ public class GameControlImpl implements GameControl {
     } else {
       messageString = "This score is already set, try again";
     }
-    return messageString;
+    stateInfo.setStateMessage(messageString);
+    //return messageString;
   }
 
   @Override
@@ -159,7 +162,7 @@ public class GameControlImpl implements GameControl {
   }
 
   @Override
-  public String rollActiveDice() {
+  public void rollActiveDice() {
     String message;
     if (rollsDone == 0) {
       dice.setAllDiceActive();
@@ -184,7 +187,8 @@ public class GameControlImpl implements GameControl {
     } else {
       message = "No more rolls alowed.";
     }
-    return message;
+    //return message;
+    stateInfo.setStateMessage(message);
   }
 
 
