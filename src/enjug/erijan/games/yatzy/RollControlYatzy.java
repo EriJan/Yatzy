@@ -1,6 +1,7 @@
 package enjug.erijan.games.yatzy;
 
 import enjug.erijan.games.util.DiceHandler;
+import enjug.erijan.games.util.GameDie;
 
 import java.util.List;
 
@@ -9,51 +10,54 @@ import java.util.List;
  */
 public class RollControlYatzy implements RollControl {
 
-  private static final int maxRerolls = 3;
+  private static final int maxRerolls = 2;
 
   private DiceHandler diceHandler;
-  private List<Player> players;
-  private int reRolls;
   private int rollsDone;
-//  Map<String,Integer> rolls
+  private GameState gameState;
 
-  RollControlYatzy(DiceHandler diceHandle) {
+  RollControlYatzy(GameState gameState, DiceHandler diceHandler) {
     this.diceHandler = diceHandler;
+    this.gameState = gameState;
   }
 
   @Override
   public void rollActiveDice(String playerName) {
     String message;
-    if (rollsDone == 0) {
-      diceHandler.setAllDiceActive();
+    if (rollsDone < maxRerolls) {
       rollsDone++;
       diceHandler.rollActiveDice();
-      setTempScore();
+      gameState.setCurrentDiceValue(diceHandler.getValues());
+      gameState.setScoringAllowed(true);
       message = playerName + " rolled some dice.";
 
-    } else if (rollsDone < noOfReRolls) {
-      rollsDone++;
+    } else if (rollsDone == maxRerolls) {
       diceHandler.rollActiveDice();
-      setTempScore();
-      message = playerName + " rolled some dice.";
-
-    } else if (rollsDone == noOfReRolls) {
-      rollsDone++;
-      diceHandler.rollActiveDice();
-      setTempScore();
-      message = playerName + " rolled some dice.";
+      gameState.setCurrentDiceValue(diceHandler.getValues());
+      gameState.setRollingAllowed(false);
       diceHandler.deActivateAllDice();
+      rollsDone = 0;
+      message = playerName + " last roll.";
 
     } else {
       message = "No more rolls alowed.";
     }
-    //return message;
-    stateInfo.setStateMessage(message);
-    diceHandler.rollActiveDice();
+    gameState.setStateMessage(message);
+  }
+
+  @Override
+  public void resetDice() {
+    rollsDone = 0;
+    diceHandler.setAllDiceActive();
   }
 
   @Override
   public int rollsLeft() {
-    return maxRerolls - reRolls;
+    return maxRerolls - rollsDone;
+  }
+
+  @Override
+  public void toggleActiveDie(GameDie die) {
+    diceHandler.toggleActiveDie(die);
   }
 }

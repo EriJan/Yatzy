@@ -41,6 +41,6 @@ public enum MaxiYatzyBoxes implements ScoreRule, ScoreBoxFactory {
 
   @Override
   public ScoreBox getScoreBox() {
-    return new ScoreBox(this);
+    return new ScoreBox(this.name(),this);
   }
 }

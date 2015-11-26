@@ -1,35 +1,44 @@
 package enjug.erijan.games.yatzy;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+
 /**
  * Created by Jan Eriksson on 16/11/15.
  */
 public class SelectiveScoreSelection implements Scoring {
+
+  private GameState gameState;
+
+  public SelectiveScoreSelection(GameState gameState) {
+    this.gameState = gameState;
+  }
+
   @Override
-  public String setScore(Enum targetBox) {
+  public void setScore(String boxId) {
     String messageString = "";
-//    if (rollsDone == 0) {
-//      messageString = "You have to roll at least once.";
-//    } else if (!activeScoreColumn.isScoreSet(targetBox)) {
-//      activeScoreColumn.clearTempScores();
-//      activeScoreColumn.setResult(targetBox, dice.getValues());
-//      dice.deActivateAllDice();
-//      rollsDone = 0;
-//      if (turnIterator.hasNext()) {
-//        activeScoreColumn = (ScoreColumn) turnIterator.next();
-//      } else {
-//        if (activeScoreColumn.isAllScoreSet()) {
-//          messageString = getWinner() + " wins the game!";
-//          YatzyGui.gameMessage(messageString);
-//        } else {
-//          turnIterator = scoreColumns.listIterator();
-//          activeScoreColumn = (ScoreColumn) turnIterator.next();
-//        }
-//      }
-//      messageString = "Score set on " + targetBox.name();
-//
-//    } else {
-//      messageString = "This score is already set, try again";
-//    }
-    return messageString;
+    gameState.setScore(boxId);
+    gameState.setScoringAllowed(false);
+    gameState.setRollingAllowed(true);
+
+    // Remove from selectable scores
+    List availableScores = gameState.getAvailableScores();
+    ListIterator<String> availIter = availableScores.listIterator();
+    while (availIter.hasNext()) {
+      String nextBoxId = availIter.next();
+      if (nextBoxId.equals(boxId)) {
+        availIter.remove();
+      }
+    }
+
+    gameState.nextPlayer();
+
+    //TODO hilite
+  }
+
+  @Override
+  public void setTempScores() {
+    gameState.setTempScores();
   }
 }

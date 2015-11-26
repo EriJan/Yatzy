@@ -1,6 +1,7 @@
 package enjug.erijan.games.yatzy;
 
 import enjug.erijan.games.util.DiceHandler;
+import enjug.erijan.games.util.GameDie;
 
 import java.util.List;
 
@@ -22,12 +23,22 @@ public class RollControlMaxiYatzy implements RollControl {
   }
 
   @Override
-  public void rollActiveDice() {
-    diceHandler.rollActiveDice();
+  public void rollActiveDice(String playerName) {
+
+  }
+
+  @Override
+  public void resetDice() {
+
   }
 
   @Override
   public int rollsLeft() {
     return maxRerolls - reRolls;
+  }
+
+  @Override
+  public void toggleActiveDie(GameDie die) {
+    diceHandler.toggleActiveDie(die);
   }
 }

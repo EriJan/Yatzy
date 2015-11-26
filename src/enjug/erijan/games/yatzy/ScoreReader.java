@@ -1,21 +1,25 @@
 package enjug.erijan.games.yatzy;
 
+import enjug.erijan.games.yatzy.rules.ScoreBox;
+
+import java.util.Iterator;
+
 /**
  * Created by Jan Eriksson on 22/11/15.
  */
-public interface ScoreReader<T extends Enum<T>> {
+public interface ScoreReader {
   //Reader
-  int getScore(T scoreBox);
+  Iterator<ScoreBox> getScoreBoxIterator(String playerName);
 
-  int getTempScore(T scoreBox);
+  int getScore(String playerName, Enum boxKey);
 
-  int getTotal();
+  int getTempScore(String playerName, Enum boxKey);
 
-  boolean isAllScoreSet();
+  int getTotal(String playerName);
 
-  boolean isScoreSet(T scoreBox);
+  boolean isAllScoreSet(String playerName);
 
-  boolean isDerivedScore(T scoreBox);
+  boolean isScoreSet(String playerName,Enum boxKey);
 
-  Player getPlayer();
+  boolean isDerivedScore(String playerName,Enum boxKey);
 }

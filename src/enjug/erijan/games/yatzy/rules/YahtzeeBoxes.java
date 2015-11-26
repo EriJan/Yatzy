@@ -1,6 +1,6 @@
 package enjug.erijan.games.yatzy.rules;
 
-import enjug.erijan.games.yatzy.VariantsFactoryImpl;
+import enjug.erijan.games.yatzy.RulesetFactory;
 
 /**
  * Created by Jan Eriksson on 27/10/15.
@@ -25,7 +25,7 @@ public enum YahtzeeBoxes implements ScoreRule, ScoreBoxFactory {
   YATZY (result -> ScoreCalculator.nSame(5, 6, result)),
   TOTAL (result -> ScoreCalculator.totalSum(result));
 
-  private static final VariantsFactoryImpl yatzyVariant = VariantsFactoryImpl.YATZY;
+  private static final RulesetFactory yatzyVariant = RulesetFactory.YATZY;
 
   private final ScoreRule scoreRule;
 
@@ -33,7 +33,7 @@ public enum YahtzeeBoxes implements ScoreRule, ScoreBoxFactory {
     this.scoreRule = scoreRule;
   }
 
-  public static VariantsFactoryImpl getYatzyVariant() {
+  public static RulesetFactory getYatzyVariant() {
     return yatzyVariant;
   }
 
@@ -44,7 +44,7 @@ public enum YahtzeeBoxes implements ScoreRule, ScoreBoxFactory {
 
   @Override
   public ScoreBox getScoreBox() {
-    return new ScoreBox(this);
+    return new ScoreBox(this.name(),this);
   }
 
 

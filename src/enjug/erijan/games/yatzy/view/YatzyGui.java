@@ -2,7 +2,7 @@ package enjug.erijan.games.yatzy.view;
 
 import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.yatzy.*;
-import enjug.erijan.games.yatzy.rules.ScoreRule;
+import enjug.erijan.games.yatzy.rules.ScoreBox;
 
 import javax.swing.*;
 import javax.swing.JLabel;
@@ -10,52 +10,52 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
+import java.util.List;
+
 
 /**
  * Created by Jan Eriksson on 03/11/15.
  */
 
-public class YatzyGui<T extends Enum<T> & ScoreRule> {
+public class YatzyGui {
 
   private DiceHandler diceHandler;
-  private EnumSet<T> yatzyBoxTypes;
-  private Class<T> boxClass;
+  private List<String> yatzyBoxTypes;
 
   private JFrame jFrame;
   private JLabel infoLabel;
   private ScorePanel scorePanel;
   private DicePanel dicePanel;
   private ButtonsPanel buttonsPanel;
-  private GameControl yatzyAgent;
+  private GameControl gameControl;
+  private GameState gameState;
   private InfoPanel infoPanel;
   //private StateInfo stateInfo;
 
   /**
    * Constructor to YatzyGui
    *
-   * @param yatzyAgent
+   * @param gameControl
    * @param diceHandler
    */
-  public YatzyGui(Class<T> boxTypes, GameControl yatzyAgent,
-                  DiceHandler diceHandler, StateInfo stateInfo) {
-    boxClass = boxTypes;
-    yatzyBoxTypes = EnumSet.allOf(boxTypes);
-
+  public YatzyGui(GameControl gameControl,
+                  DiceHandler diceHandler, GameState gameState) {
+    yatzyBoxTypes = new ArrayList<>();
 
     jFrame = new JFrame("Yatzy");
     jFrame.setLayout(new GridBagLayout());
     jFrame.setVisible(true);
     jFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-    //infoLabel = new JLabel();
-    infoPanel = new InfoPanel(stateInfo);
-    this.yatzyAgent = yatzyAgent;
+    infoPanel = new InfoPanel(gameState);
+    this.gameState = gameState;
+    this.gameControl = gameControl;
     this.diceHandler = diceHandler;
 
     GridBagConstraints c = new GridBagConstraints();
     c.gridx = 0;
     c.gridy = 1;
-    scorePanel = new ScorePanel(yatzyAgent);
+    scorePanel = new ScorePanel();
     jFrame.add(scorePanel,c);
 
     c = new GridBagConstraints();
@@ -68,16 +68,11 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
     c = new GridBagConstraints();
     c.gridx = 2;
     c.gridy = 1;
-    dicePanel = new DicePanel(yatzyAgent, diceHandler);
+    dicePanel = new DicePanel(gameControl, diceHandler);
     jFrame.add(dicePanel,c);
 
-    //addInfoText("Lets play some Yatzy");
     c.gridx = 0;
     c.gridy = 0;
-//    c.anchor = GridBagConstraints.CENTER;
-//    c.gridheight = 2;
-//    c.gridwidth = 0;
-//    c.ipady = 40;
     jFrame.getContentPane().add(infoPanel,c);
 
     jFrame.pack();
@@ -128,89 +123,93 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
     return retStr;
   }
 
-
   // Todo, add space between buttons
-  private class ButtonsPanel extends JPanel {
+  private class ButtonsPanel extends JPanel implements StateInfoObserver {
 
     private final Dimension preferedButtonSize = new Dimension(100,40);
+    private JButton rollButton;
+    private JButton scoreButton;
+    private JButton newGameButton;
 
     public ButtonsPanel() {
       this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
       addRollButton(diceHandler);
       addSetScoreButton();
       addNewGameButton();
+      gameState.registerObserver(this);
       //this.setBorder(BorderFactory.createEtchedBorder());
     }
 
     public void addRollButton(DiceHandler diceHandler) {
-      JButton button = new JButton("Roll");
-      button.setAlignmentX(Component.CENTER_ALIGNMENT);
-      button.setPreferredSize(preferedButtonSize);
+      rollButton = new JButton("Roll");
+      rollButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+      rollButton.setPreferredSize(preferedButtonSize);
 
-      button.addActionListener(e -> {
+      rollButton.addActionListener(e -> {
         dicePanel.moveActiveDice(diceHandler);
-        yatzyAgent.rollActiveDice();
-        //updateInfoText(message);
+        gameControl.rollActiveDice();
       });
 
-      this.add(button);
+      this.add(rollButton);
      }
 
     public void addSetScoreButton() {
-      JButton button = new JButton("Set Score");
-      button.setAlignmentX(Component.CENTER_ALIGNMENT);
-      button.setPreferredSize(preferedButtonSize);
+      scoreButton = new JButton("Set Score");
+      scoreButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+      scoreButton.setPreferredSize(preferedButtonSize);
+      scoreButton.setEnabled(false);
 
-      button.addActionListener(new ActionListener() {
+      scoreButton.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-
+          scoreButton.setEnabled(false);
           JLabel nameLabel = scorePanel.getCurrentPlayerLabel();
           nameLabel.setBorder(null);
-
-          String messageString;
-          Enum selected = scorePanel.getSelected();
-          yatzyAgent.setScore(selected);
-          //updateInfoText(messageString);
+          String selected = scorePanel.getSelected();
+          gameControl.setScore(selected);
 
           nameLabel = scorePanel.getCurrentPlayerLabel();
           nameLabel.setBorder(BorderFactory.createRaisedSoftBevelBorder());
 
         }
       });
-      this.add(button);
+      this.add(scoreButton);
     }
 
     public void addNewGameButton() {
 
       for (int j = 0; j < 5; j++) {
         this.add(Box.createRigidArea(preferedButtonSize));
-
       }
 
-      JButton button = new JButton("New game");
-      button.setAlignmentX(Component.CENTER_ALIGNMENT);
-      button.setPreferredSize(preferedButtonSize);
+      newGameButton = new JButton("New game");
+      newGameButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+      newGameButton.setPreferredSize(preferedButtonSize);
 
-      button.addActionListener(e -> {
-        yatzyAgent.newGame(jFrame);
+      newGameButton.addActionListener(e -> {
+        //RulesetFactory.newGame();
       });
-      this.add(button);
+      this.add(newGameButton);
+    }
+
+    @Override
+    public void update(StateInfo stateInfo) {
+      rollButton.setEnabled(stateInfo.isRollingAllowed());
+      scoreButton.setEnabled(stateInfo.isScoringAllowed());
     }
   }
-
 
   /**
    * Created by Jan Eriksson on 19/11/15.
    */
-  public class ScorePanel extends JPanel implements ScoreObserver {
+  public class ScorePanel extends JPanel implements StateInfoObserver {
 
     private Map scoreColumnPerPlayer;
     private Map playerLabels;
-    private Map scoreSelection;
+    private Map<String, JComponent> scoreSelection;
     private ButtonGroup scoreSelectionButtons;
 
-    public ScorePanel(GameControl yatzyAgent) {
+    public ScorePanel() {
 
       this.setLayout(new GridBagLayout());
 
@@ -218,38 +217,37 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
 
       playerLabels = new HashMap<String,JLabel>();
       scoreColumnPerPlayer = new HashMap<String,Map>();
-      scoreSelection = new EnumMap<T,JRadioButton>(boxClass);
+      scoreSelection = new HashMap<>();
 
-      addScoreSelection(yatzyAgent.getActiveScoreColumn());
+      addScoreSelection();
 
       int column = 1;
-      Iterator<ScoreReader> colIterator = yatzyAgent.getScoreColumns();
 
-      while (colIterator.hasNext()) {
-        ScoreColumn scoreColumn = colIterator.next();
-        addScore(scoreColumn, column);
-        scoreColumn.registerObserver(this);
+      for (Player player : gameState.getPlayers()) {
+        addScore(player, column);
+
         column++;
       }
+      gameState.registerObserver(this);
       JLabel jLabel = getCurrentPlayerLabel();
       jLabel.setBorder(BorderFactory.createRaisedSoftBevelBorder());
     }
 
     public JLabel getCurrentPlayerLabel() {
-      ScoreReader scoreColumn = yatzyAgent.getActiveScoreColumn();
-      String name = scoreColumn.getPlayer().getName();
+      String name = gameState.getCurrentPlayer().getName();
       return  (JLabel) playerLabels.get(name);
     }
 
-    public void addScoreSelection(ScoreReader scoreColumn) {
+    public void addScoreSelection() {
       GridBagConstraints c = new GridBagConstraints();
       c.gridx = 0;
       c.gridy = 0;
       int row = 1;
 
-      for (T key : yatzyBoxTypes) {
-        if (scoreColumn.isDerivedScore(key)) {
-          JLabel jLabel = new JLabel(key.name());
+      List<String> allScores = gameState.getAllScores();
+      for (String boxId : allScores) {
+        if (gameState.isDerivedScore(boxId)) {
+          JLabel jLabel = new JLabel(boxId);
           Font font = jLabel.getFont();
           Font boldFont = new Font(font.getFontName(), Font.BOLD, font.getSize());
           jLabel.setFont(boldFont);
@@ -258,59 +256,56 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
           c.anchor = GridBagConstraints.CENTER;
           this.add(jLabel, c);
           row++;
-          scoreSelection.put(key, jLabel);
+          scoreSelection.put(boxId, jLabel);
         } else {
-          JRadioButton radButton = new JRadioButton(key.name());
+          JRadioButton radButton = new JRadioButton(boxId);
           scoreSelectionButtons.add(radButton);
           radButton.setEnabled(true);
-          radButton.setActionCommand(key.name());
+          radButton.setActionCommand(boxId);
           c.gridx = 0;
           c.gridy = row;
           c.anchor = GridBagConstraints.LINE_START;
           this.add(radButton, c);
           row++;
-          scoreSelection.put(key, radButton);
+          scoreSelection.put(boxId, radButton);
         }
       }
 
-      // Top Radio button is ONES
-      JRadioButton button = (JRadioButton) scoreSelection.get(Enum.valueOf(boxClass,"ONES"));
+      JRadioButton button = (JRadioButton) scoreSelection.get(allScores.get(0));
       scoreSelectionButtons.clearSelection();
       button.setSelected(true);
     }
 
-    public void updateScoreSelection(ScoreReader scoreColumn) {
-
-      for (Enum key : yatzyBoxTypes) {
-        if (!scoreColumn.isDerivedScore(key)) {
-          JRadioButton button = (JRadioButton) scoreSelection.get(key);
-          if (scoreColumn.isScoreSet(key)) {
-            button.setEnabled(false);
-          } else {
-            button.setEnabled(true);
-            // Lazy auto select, last active will be preselected
-            scoreSelectionButtons.clearSelection();
-            button.setSelected(true);
-          }
-        }
+    public void updateScoreSelection() {
+      for (JComponent jRadioButton : scoreSelection.values()) {
+        jRadioButton.setEnabled(false);
       }
+
+      List<String> availSelect = gameState.getAvailableScores();
+      for (String boxId : availSelect) {
+        JRadioButton button = (JRadioButton) scoreSelection.get(boxId);
+        button.setEnabled(true);
+      }
+      scoreSelectionButtons.clearSelection();
+      JRadioButton button = (JRadioButton) scoreSelection.get(availSelect.get(0));
+      button.setSelected(true);
+
       this.validate();
       this.repaint();
     }
 
-    public T getSelected() {
-      return Enum.valueOf(boxClass,scoreSelectionButtons.getSelection().
-          getActionCommand());
+    public String getSelected() {
+      return scoreSelectionButtons.getSelection().getActionCommand();
     }
 
-    public void addScore(ScoreReader scoreModel, int column) {
-      EnumMap<T,JComponent> scoreColumn = new EnumMap<T,JComponent>(boxClass);
+    public void addScore(Player player, int column) {
+      HashMap<String,JComponent> scoreColumn = new HashMap<>();
 
       GridBagConstraints c = new GridBagConstraints();
       c.gridy = 0;
       c.gridx = column;
 
-      String name = scoreModel.getPlayer().getName();
+      String name = player.getName();
       JLabel nameLabel = new JLabel(name);
       nameLabel.setHorizontalTextPosition(SwingConstants.CENTER);
       nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -321,36 +316,38 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
       playerLabels.put(name,nameLabel);
       this.add(nameLabel, c);
 
+      List<String> allScores = gameState.getAllScores();
       int row = 1;
-      for (T ybt : yatzyBoxTypes) {
+      for (String boxId : allScores) {
         c.gridy = row;
         c.anchor = GridBagConstraints.CENTER;
-        JLabel label = new JLabel(Integer.toString(scoreModel.getScore(ybt)));
-        //button.setActionCommand(ybt.name());
+        JLabel label = new JLabel(Integer.toString(gameState.getScore(boxId)));
+        //button.setActionCommand(boxId.name());
         label.setForeground(Color.BLACK);
         label.setHorizontalTextPosition(JLabel.CENTER);
         label.setHorizontalAlignment(JLabel.CENTER);
         label.setBorder(BorderFactory.createEtchedBorder());
         label.setPreferredSize(new Dimension(60, 30));
         this.add(label, c);
-        scoreColumn.put(ybt,label);
+        scoreColumn.put(boxId,label);
 
         row++;
       }
       scoreColumnPerPlayer.put(name,scoreColumn);
     }
 
-    public void updateScore(ScoreReader scoreModel) {
-      String name = scoreModel.getPlayer().getName();
+    public void updateScore() {
+      String name = gameState.getCurrentPlayer().getName();
       Map scoreColumn = (Map) scoreColumnPerPlayer.get(name);
       //JLabel nameLabel = (JLabel) playerLabels.get(name);
-      for (T ybt : yatzyBoxTypes) {
-        JLabel label = (JLabel) scoreColumn.get(ybt);
-        if (scoreModel.isScoreSet(ybt)) {
-          label.setText(Integer.toString(scoreModel.getScore(ybt)));
+      List<String> allScores = gameState.getAllScores();
+      for (String boxId : allScores) {
+        JLabel label = (JLabel) scoreColumn.get(boxId);
+        if (gameState.isScoreSet(boxId)) {
+          label.setText(Integer.toString(gameState.getScore(boxId)));
           label.setForeground(Color.BLACK);
         } else {
-          int tmpScore = scoreModel.getTempScore(ybt);
+          int tmpScore = gameState.getTempScore(boxId);
           label.setText(Integer.toString(tmpScore));
           if (tmpScore > 0) {
             label.setForeground(Color.GREEN);
@@ -364,11 +361,10 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
       this.repaint();
     }
 
-
     @Override
-    public void update(ScoreReader scoreColumn) {
-      updateScoreSelection(scoreColumn);
-      updateScore(scoreColumn);
+    public void update(StateInfo stateInfo) {
+      updateScoreSelection();
+      updateScore();
     }
   }
 
@@ -390,7 +386,6 @@ public class YatzyGui<T extends Enum<T> & ScoreRule> {
     @Override
     public void update(StateInfo stateInfo) {
       jLabel.setText(stateInfo.getStateMessage());
-
     }
   }
 }

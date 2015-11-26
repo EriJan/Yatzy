@@ -10,6 +10,7 @@ package enjug.erijan.games.yatzy.rules;
 
 public class ScoreBox {
 
+  private String boxId;
   private ScoreRule scoreRule;
   private int score;
   private int tempScore;
@@ -19,7 +20,8 @@ public class ScoreBox {
    *
    * @param rule The rule defines the score calculation.
    */
-  public ScoreBox (ScoreRule rule) {
+  public ScoreBox (String boxId, ScoreRule rule) {
+    this.boxId = boxId;
     scoreRule = rule;
     score = 0;
     tempScore = 0;
@@ -62,7 +64,6 @@ public class ScoreBox {
   public int getTempScore() {
     return tempScore;
   }
-
 
   public boolean isDerivedScore() {
     return derivedScore;

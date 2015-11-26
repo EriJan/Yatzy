@@ -3,6 +3,7 @@ package enjug.erijan.games.yatzy.view;
 import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.util.DiceObserver;
 import enjug.erijan.games.util.GameDie;
+import enjug.erijan.games.yatzy.GameControl;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,8 +23,7 @@ public class DicePanel extends JPanel implements DiceObserver {
   private List<GuiDie> dieButtons;
 
 
-  // TODO fix dice without run time resize
-  // TODO Add fillers so that dice panel no resized.
+  // TODO use gridbag spacer.
   static {
     selectedDieIcons = new ImageIcon[6];
     unselectedDieIcons = new ImageIcon[6];

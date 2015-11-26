@@ -7,7 +7,9 @@ import enjug.erijan.games.yatzy.view.YatzyGui;
  * Created by Jan Eriksson on 18/11/15.
  */
 public interface VariantFactory {
-  ScoreReader getScoreModel(Player player);
-  DiceHandler getDice();
-  YatzyGui getGui(GameControl yatzyAgent, DiceHandler diceHandler, StateInfo stateInfo);
+  GameState createGameState();
+  DiceHandler createDice();
+  GameControl createGameControl(GameState gameState, DiceHandler diceHandler);
+  YatzyGui getGui(GameControl gameControl, DiceHandler diceHandler,
+                  GameState gameState);
 }
