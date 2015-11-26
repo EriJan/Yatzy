@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.util.*;
 import java.util.List;
 
@@ -187,7 +188,10 @@ public class YatzyGui {
       newGameButton.setPreferredSize(preferedButtonSize);
 
       newGameButton.addActionListener(e -> {
-        //RulesetFactory.newGame();
+        //RulesetFactory.YATZY.newGame();
+        jFrame.dispatchEvent(new WindowEvent(jFrame, WindowEvent.WINDOW_CLOSING));
+        YatzyMain.main(null);
+
       });
       this.add(newGameButton);
     }
@@ -282,6 +286,7 @@ public class YatzyGui {
       }
 
       List<String> availSelect = gameState.getAvailableScores();
+
       for (String boxId : availSelect) {
         JRadioButton button = (JRadioButton) scoreSelection.get(boxId);
         button.setEnabled(true);
@@ -365,6 +370,7 @@ public class YatzyGui {
     public void update(StateInfo stateInfo) {
       updateScoreSelection();
       updateScore();
+      System.out.println("Updating score selection again");
     }
   }
 
@@ -386,6 +392,10 @@ public class YatzyGui {
     @Override
     public void update(StateInfo stateInfo) {
       jLabel.setText(stateInfo.getStateMessage());
+      if (stateInfo.isGameEnd()) {
+        String winner = stateInfo.getWinner();
+        gameMessage("Game ends with " + winner + " as the winner!");
+      }
     }
   }
 }

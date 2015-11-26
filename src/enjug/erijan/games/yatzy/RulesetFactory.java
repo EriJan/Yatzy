@@ -35,7 +35,7 @@ public enum RulesetFactory implements VariantFactory {
       ArrayList<String> sumRange = enumSetToStringList(sumRangeSet);
       ArrayList<String> totalRange = enumSetToStringList(totalRangeSet);
       // From start availableScores contains all scores
-      ArrayList<String> availableScores =
+      ArrayList<String> allScores =
           enumSetToStringList(EnumSet.allOf(YatzyBoxes.class));
 
       ScoreSheet scoreSheet = new ScoreSheet(derivedScores, sumRange, totalRange);
@@ -53,7 +53,7 @@ public enum RulesetFactory implements VariantFactory {
         scoreSheet.addPlayer(player.getName(), scoreColumn);
       }
 
-      GameState gameState = new GameState(scoreSheet, playerList, availableScores);
+      GameState gameState = new GameState(scoreSheet, playerList, allScores);
 
       return gameState;
     }

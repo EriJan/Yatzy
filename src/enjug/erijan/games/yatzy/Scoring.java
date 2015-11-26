@@ -5,5 +5,8 @@ package enjug.erijan.games.yatzy;
  */
 public interface Scoring {
   void setScore(String targetBox);
+
+  void setAvailableScores();
+
   void setTempScores();
 }

@@ -11,7 +11,7 @@ public enum MaxiYatzyBoxes implements ScoreRule, ScoreBoxFactory {
   FIVES (result -> ScoreCalculator.sumOfNs(5, result)),
   SIXES (result -> ScoreCalculator.sumOfNs(6, result)),
   SUM (result -> ScoreCalculator.totalSum(result)),
-  BONUS (result -> ScoreCalculator.yatzyBonus(63, 50, result)),
+  BONUS (result -> ScoreCalculator.yatzyBonus(84, 100, result)),
   ONE_PAIR (result -> ScoreCalculator.nSame(2, 6, result)),
   TWO_PAIR (result -> ScoreCalculator.twoPair(result)),
   THREE_PAIR (result -> ScoreCalculator.threePair(result)),
@@ -25,7 +25,7 @@ public enum MaxiYatzyBoxes implements ScoreRule, ScoreBoxFactory {
   BIG_STRAIGHT (result -> ScoreCalculator.bigStraight(result)),
   FULL_STRAIGHT (result -> ScoreCalculator.fullStraight(result)),
   CHANCE (result -> ScoreCalculator.totalSum(result)),
-  YATZY (result -> ScoreCalculator.nSame(6, 6, result)),
+  YATZY (result -> ScoreCalculator.yatzy(100,result)),
   TOTAL (result -> ScoreCalculator.totalSum(result));
 
   private final ScoreRule scoreRule;

@@ -10,7 +10,6 @@ import java.util.stream.Stream;
  */
 public class YatzyMain {
 
-
   private static RulesetFactory selectGameVariant() {
     String[] ruleSets;
     ruleSets = Stream.of(RulesetFactory.values()).map(RulesetFactory::name)
@@ -19,9 +18,7 @@ public class YatzyMain {
     return RulesetFactory.valueOf(ruleSets[retVal]);
   }
 
-
   public static void main(String[] args) {
-
     try {
       UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
     } catch (Exception e) {

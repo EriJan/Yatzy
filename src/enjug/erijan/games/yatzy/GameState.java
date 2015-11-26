@@ -1,7 +1,5 @@
 package enjug.erijan.games.yatzy;
 
-import enjug.erijan.games.yatzy.rules.ScoreBox;
-
 import java.util.*;
 
 /**
@@ -22,6 +20,8 @@ public class GameState implements StateInfo{
   private int[] currentDiceValue;
   private boolean rollingAllowed;
   private boolean scoringAllowed;
+
+
   private boolean gameEnd;
 
   ScoreSheet scoreSheet;
@@ -33,7 +33,7 @@ public class GameState implements StateInfo{
 
     this.scoreSheet = scoreSheet;
     this.allScores = allScores;
-    this.availableScores = new ArrayList<>(allScores);
+    availableScores = new ArrayList<>(allScores);
 
     // Remove derived scores from available scores
     ListIterator<String> availIter = availableScores.listIterator();
@@ -56,7 +56,13 @@ public class GameState implements StateInfo{
   }
 
   public void setTempScores() {
-    scoreSheet.setTempScores(currentPlayer.getName(), availableScores, currentDiceValue);
+    scoreSheet.setTempScores(currentPlayer.getName(), availableScores,
+        currentDiceValue);
+    notifyObservers();
+  }
+
+  public void clearTempScores() {
+    scoreSheet.clearTempScores(currentPlayer.getName());
     notifyObservers();
   }
 
@@ -67,11 +73,6 @@ public class GameState implements StateInfo{
   public boolean isDerivedScore(String boxId) {
     return scoreSheet.isDerivedScore(boxId);
   }
-
-  //  //public void setAvailableScores(List<String> availableScores) {
-//    this.availableScores = availableScores;
-//  }
-
 
   public List<String> getAllScores() {
     return allScores;
@@ -86,16 +87,18 @@ public class GameState implements StateInfo{
   }
 
   public void nextPlayer() {
-    if (playerListIterator.hasNext()) {
-      currentPlayer = playerListIterator.next();
-    } else {
-      //TODO check for game end
+    if (!playerListIterator.hasNext()) {
+      gameEnd = scoreSheet.isAllScoreSet(currentPlayer.getName());
       playerListIterator = players.listIterator();
-      currentPlayer = playerListIterator.next();
     }
+
+    //TODO check for game end
+    currentPlayer = playerListIterator.next();
+
     notifyObservers();
   }
 
+  @Override
   public String getWinner() {
     String winner = "";
     int highScore = 0;
@@ -119,10 +122,20 @@ public class GameState implements StateInfo{
     notifyObservers();
   }
 
+  public void setAvailableScores(List<String> availableScores) {
+    this.availableScores = availableScores;
+  }
+
+  @Override
+  public boolean isGameEnd() {
+    return gameEnd;
+  }
+
   @Override
   public boolean isRollingAllowed() {
     return rollingAllowed;
   }
+
   @Override
   public boolean isScoringAllowed() {
     return scoringAllowed;
@@ -158,18 +171,20 @@ public class GameState implements StateInfo{
     return scoreSheet.getTempScore(currentPlayer.getName(),boxId);
   }
 
+  @Override
   public void registerObserver(StateInfoObserver o) {
     observerList.add(o);
   }
 
+  @Override
   public void removeObserver(StateInfoObserver o) {
     observerList.remove(o);
   }
 
+  @Override
   public void notifyObservers() {
     for(StateInfoObserver o : observerList) {
       o.update(this);
     }
   }
-
 }

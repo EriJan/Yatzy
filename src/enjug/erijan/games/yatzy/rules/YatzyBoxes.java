@@ -24,7 +24,7 @@ public enum YatzyBoxes implements ScoreRule, ScoreBoxFactory {
   SMALL_STRAIGHT (result -> ScoreCalculator.smallStraight(result)),
   BIG_STRAIGHT (result -> ScoreCalculator.bigStraight(result)),
   CHANCE (result -> ScoreCalculator.totalSum(result)),
-  YATZY (result -> ScoreCalculator.nSame(5, 6, result)),
+  YATZY (result -> ScoreCalculator.yatzy(50,result)),
   TOTAL (result -> ScoreCalculator.totalSum(result));
 
   private static final RulesetFactory yatzyVariant = RulesetFactory.YATZY;

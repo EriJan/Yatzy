@@ -50,6 +50,15 @@ public abstract class ScoreCalculator {
     return score;
   }
 
+  public static int yatzy(int scoreVal, int... result) {
+    int score = 0;
+    long uniqueValues = IntStream.of(result).distinct().count();
+    if (uniqueValues == 1 && result.length > 1) {
+      score = scoreVal;
+    }
+    return score;
+  }
+
   public static int twoPair(int... result) {
 
     int score = nSame(2, 6, result);

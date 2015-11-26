@@ -6,6 +6,10 @@ import java.util.List;
  * Created by Jan Eriksson on 20/11/15.
  */
 public interface StateInfo extends StateInfoSubject {
+  String getWinner();
+
+  boolean isGameEnd();
+
   boolean isRollingAllowed();
 
   boolean isScoringAllowed();

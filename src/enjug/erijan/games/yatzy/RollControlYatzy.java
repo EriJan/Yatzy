@@ -58,6 +58,8 @@ public class RollControlYatzy implements RollControl {
 
   @Override
   public void toggleActiveDie(GameDie die) {
-    diceHandler.toggleActiveDie(die);
+    if (rollsDone > 0) {
+      diceHandler.toggleActiveDie(die);
+    }
   }
 }
