@@ -72,8 +72,9 @@ public class YatzyGui {
     dicePanel = new DicePanel(gameControl, diceHandler);
     jFrame.add(dicePanel,c);
 
-    c.gridx = 0;
+    c.gridx = 1;
     c.gridy = 0;
+    c.gridwidth = 3;
     jFrame.getContentPane().add(infoPanel,c);
 
     jFrame.pack();
@@ -364,6 +365,7 @@ public class YatzyGui {
       }
       this.validate();
       this.repaint();
+      jFrame.pack();
     }
 
     @Override

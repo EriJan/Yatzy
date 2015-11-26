@@ -25,7 +25,7 @@ public class GameControl {
   }
 
   public void rollActiveDice() {
-    rollControl.rollActiveDice("");
+    rollControl.rollActiveDice();
     scoring.setTempScores();
   }
 }

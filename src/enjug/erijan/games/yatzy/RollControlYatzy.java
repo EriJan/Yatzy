@@ -10,19 +10,20 @@ import java.util.List;
  */
 public class RollControlYatzy implements RollControl {
 
+
   private static final int maxRerolls = 2;
-
   private DiceHandler diceHandler;
-  private int rollsDone;
   private GameState gameState;
+  private int rollsDone;
 
-  RollControlYatzy(GameState gameState, DiceHandler diceHandler) {
-    this.diceHandler = diceHandler;
+  public RollControlYatzy (GameState gameState, DiceHandler diceHandler) {
     this.gameState = gameState;
+    this.diceHandler = diceHandler;
   }
 
   @Override
-  public void rollActiveDice(String playerName) {
+  public void rollActiveDice() {
+    String playerName = gameState.getCurrentPlayer().getName();
     String message;
     if (rollsDone < maxRerolls) {
       rollsDone++;
@@ -49,11 +50,6 @@ public class RollControlYatzy implements RollControl {
   public void resetDice() {
     rollsDone = 0;
     diceHandler.setAllDiceActive();
-  }
-
-  @Override
-  public int rollsLeft() {
-    return maxRerolls - rollsDone;
   }
 
   @Override

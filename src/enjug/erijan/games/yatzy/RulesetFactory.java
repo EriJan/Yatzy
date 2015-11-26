@@ -21,9 +21,9 @@ public enum RulesetFactory implements VariantFactory {
     public GameState createGameState() {
 
       HashMap<String, String> derivedScores = new HashMap<>();
-      derivedScores.put("sum",YatzyBoxes.SUM.toString());
-      derivedScores.put("bonus",YatzyBoxes.BONUS.toString());
-      derivedScores.put("total",YatzyBoxes.TOTAL.toString());
+      derivedScores.put("sum", YatzyBoxes.SUM.toString());
+      derivedScores.put("bonus", YatzyBoxes.BONUS.toString());
+      derivedScores.put("total", YatzyBoxes.TOTAL.toString());
 
       EnumSet<YatzyBoxes> derivedScoresSet = EnumSet.of(YatzyBoxes.SUM,
           YatzyBoxes.BONUS, YatzyBoxes.TOTAL);
@@ -67,15 +67,16 @@ public enum RulesetFactory implements VariantFactory {
     public GameControl createGameControl(GameState gameState, DiceHandler diceHandler) {
       Scoring scoring = new SelectiveScoreSelection(gameState);
       RollControl rollControl = new RollControlYatzy(gameState, diceHandler);
-      GameControl gameControl = new GameControl(scoring,rollControl);
+      GameControl gameControl = new GameControl(scoring, rollControl);
       return gameControl;
     }
 
     @Override
-    public YatzyGui getGui(GameControl yatzyAgent, DiceHandler dice, GameState stateInfo) {
-      return new YatzyGui(yatzyAgent, dice, stateInfo);
+    public YatzyGui getGui(GameControl gameControl, DiceHandler dice, GameState stateInfo) {
+      return new YatzyGui(gameControl, dice, stateInfo);
     }
-  };
+  },
+
 //  YATZEE {
 //    @Override
 //    public ScoreSheet createScoreSheet() {
@@ -92,36 +93,69 @@ public enum RulesetFactory implements VariantFactory {
 //      return null;
 //    }
 //  },
-//  MAXI_YATZY {
-//    @Override
-//    public ScoreSheet createScoreSheet() {
-//      return null;
-//    }
-//
-//    @Override
-//    public DiceHandler createDice() {
-//      return new DiceHandlerImpl(6);
-//    }
-//
-//    @Override
-//    public YatzyGui getGui(GameControl yatzyAgent, DiceHandler dice, StateInfo stateInfo) {
-//      return new YatzyGui<MaxiYatzyBoxes>(MaxiYatzyBoxes.class,yatzyAgent,dice,stateInfo);
-//    }
-//  };stateInfo
+  MAXI_YATZY {
+
+    @Override
+    public GameState createGameState() {
+
+      HashMap<String, String> derivedScores = new HashMap<>();
+      derivedScores.put("sum", MaxiYatzyBoxes.SUM.toString());
+      derivedScores.put("bonus", MaxiYatzyBoxes.BONUS.toString());
+      derivedScores.put("total", MaxiYatzyBoxes.TOTAL.toString());
+
+      EnumSet<MaxiYatzyBoxes> derivedScoresSet = EnumSet.of(MaxiYatzyBoxes.SUM,
+          MaxiYatzyBoxes.BONUS, MaxiYatzyBoxes.TOTAL);
+      EnumSet<MaxiYatzyBoxes> sumRangeSet = EnumSet.range(MaxiYatzyBoxes.ONES,
+          MaxiYatzyBoxes.SIXES);
+      EnumSet<MaxiYatzyBoxes> totalRangeSet = EnumSet.range(MaxiYatzyBoxes.SUM,
+          MaxiYatzyBoxes.YATZY);
+
+      ArrayList<String> sumRange = enumSetToStringList(sumRangeSet);
+      ArrayList<String> totalRange = enumSetToStringList(totalRangeSet);
+      // From start availableScores contains all scores
+      ArrayList<String> allScores =
+          enumSetToStringList(EnumSet.allOf(MaxiYatzyBoxes.class));
+
+      ScoreSheet scoreSheet = new ScoreSheet(derivedScores, sumRange, totalRange);
+
+      ArrayList<Player> playerList = addPlayers();
+      for (Player player : playerList) {
+        HashMap<String, ScoreBox> scoreColumn = new HashMap<>();
+        for (MaxiYatzyBoxes boxId : MaxiYatzyBoxes.values()) {
+          ScoreBox newBox = boxId.getScoreBox();
+          if (derivedScoresSet.contains(boxId)) {
+            newBox.setDerivedScore(true);
+          }
+          scoreColumn.put(boxId.toString(), newBox);
+        }
+        scoreSheet.addPlayer(player.getName(), scoreColumn);
+      }
+
+      GameState gameState = new GameState(scoreSheet, playerList, allScores);
+
+      return gameState;
+    }
+
+    @Override
+    public DiceHandler createDice() {
+      return new DiceHandlerImpl(6);
+    }
+
+    @Override
+    public GameControl createGameControl(GameState gameState, DiceHandler diceHandler) {
+      Scoring scoring = new SelectiveScoreSelection(gameState);
+      RollControl rollControl = new RollControlMaxiYatzy(gameState, diceHandler);
+      GameControl gameControl = new GameControl(scoring, rollControl);
+      return gameControl;
+    }
+
+    @Override
+    public YatzyGui getGui(GameControl gameControl, DiceHandler dice, GameState stateInfo) {
+      return new YatzyGui(gameControl,dice,stateInfo);
+    }
+  };
 
   public void newGame() {
-
-    // Create scoresheet
-    // Add parameters to scoresheet
-    // Add players
-    // Create gamestate
-    // Add sheet to state
-    // Create dice
-    // create gamecontrol
-    // add sheet and dice to control
-    // Create gui
-    //
-
     GameState gameState = createGameState();
     DiceHandler diceHandler = createDice();
     GameControl gameControl = createGameControl(gameState, diceHandler);
