@@ -3,6 +3,7 @@ package enjug.erijan.games.yatzy;
 import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.yatzy.rules.MaxiYatzyBoxes;
 import enjug.erijan.games.yatzy.rules.ScoreBox;
+import enjug.erijan.games.yatzy.rules.YahtzeeBoxes;
 import enjug.erijan.games.yatzy.rules.YatzyBoxes;
 import enjug.erijan.games.yatzy.view.YatzyGui;
 
@@ -77,22 +78,66 @@ public enum RulesetFactory implements VariantFactory {
     }
   },
 
-//  YATZEE {
-//    @Override
-//    public ScoreSheet createScoreSheet() {
-//      return null;
-//    }
-//
-//    @Override
-//    public DiceHandler createDice() {
-//      return new DiceHandlerImpl(5);
-//    }
-//
-//    @Override
-//    public YatzyGui getGui(GameControl yatzyAgent, DiceHandler dice, StateInfo stateInfo) {
-//      return null;
-//    }
-//  },
+  YATZEE {
+    @Override
+    public GameState createGameState() {
+
+      HashMap<String, String> derivedScores = new HashMap<>();
+      derivedScores.put("sum", YahtzeeBoxes.SUM.toString());
+      derivedScores.put("bonus", YahtzeeBoxes.BONUS.toString());
+      derivedScores.put("total", YahtzeeBoxes.TOTAL.toString());
+
+      EnumSet<YahtzeeBoxes> derivedScoresSet = EnumSet.of(YahtzeeBoxes.SUM,
+          YahtzeeBoxes.BONUS, YahtzeeBoxes.TOTAL);
+      EnumSet<YahtzeeBoxes> sumRangeSet = EnumSet.range(YahtzeeBoxes.ONES,
+          YahtzeeBoxes.SIXES);
+      EnumSet<YahtzeeBoxes> totalRangeSet = EnumSet.range(YahtzeeBoxes.SUM,
+          YahtzeeBoxes.YATZY);
+
+      ArrayList<String> sumRange = enumSetToStringList(sumRangeSet);
+      ArrayList<String> totalRange = enumSetToStringList(totalRangeSet);
+      // From start availableScores contains all scores
+      ArrayList<String> allScores =
+          enumSetToStringList(EnumSet.allOf(YahtzeeBoxes.class));
+
+      ScoreSheet scoreSheet = new ScoreSheet(derivedScores, sumRange, totalRange);
+
+      ArrayList<Player> playerList = addPlayers();
+      for (Player player : playerList) {
+        HashMap<String, ScoreBox> scoreColumn = new HashMap<>();
+        for (YahtzeeBoxes boxId : YahtzeeBoxes.values()) {
+          ScoreBox newBox = boxId.getScoreBox();
+          if (derivedScoresSet.contains(boxId)) {
+            newBox.setDerivedScore(true);
+          }
+          scoreColumn.put(boxId.toString(), newBox);
+        }
+        scoreSheet.addPlayer(player.getName(), scoreColumn);
+      }
+
+      GameState gameState = new GameState(scoreSheet, playerList, allScores);
+
+      return gameState;
+    }
+
+    @Override
+    public DiceHandler createDice() {
+      return new DiceHandlerImpl(5);
+    }
+
+    @Override
+    public GameControl createGameControl(GameState gameState, DiceHandler diceHandler) {
+      Scoring scoring = new SelectiveScoreSelection(gameState);
+      RollControl rollControl = new RollControlYatzy(gameState, diceHandler);
+      GameControl gameControl = new GameControl(scoring, rollControl);
+      return gameControl;
+    }
+
+    @Override
+    public YatzyGui getGui(GameControl gameControl, DiceHandler dice, GameState stateInfo) {
+      return new YatzyGui(gameControl, dice, stateInfo);
+    }
+  },
   MAXI_YATZY {
 
     @Override

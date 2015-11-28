@@ -1,5 +1,7 @@
 package enjug.erijan.games.yatzy.rules;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
@@ -26,6 +28,27 @@ public abstract class ScoreCalculator {
   public static int sumOfNs(int targetNumber, int... result) {
     int score = IntStream.of(result)
         .filter(val -> val == targetNumber).sum();
+    return score;
+  }
+
+  public static int nSameYahtzee(int nSame, int maxVal, int... result) {
+
+    int score = 0;
+
+    int[] uniqueValues = IntStream.of(result).distinct().sorted().toArray();
+    int i = uniqueValues.length - 1;
+    boolean matchFound = false;
+    while (i >= 0 && !matchFound) {
+      int uniq = uniqueValues[i];
+      if (uniqueValues[i] <= maxVal) {
+        long noHits = IntStream.of(result).filter(val -> val == uniq).count();
+        if (noHits >= nSame) {
+          score = totalSum(result);
+          matchFound = true;
+        }
+      }
+      i--;
+    }
     return score;
   }
 
@@ -68,6 +91,24 @@ public abstract class ScoreCalculator {
 
     if (firstPairVal*secondPairVal > 0) {
       score = 2*(firstPairVal + secondPairVal);
+    } else {
+      score = 0;
+    }
+
+    return score;
+  }
+
+  public static int fullHouseYahtzee(int... result) {
+
+    int score = nSame(3, 6, result);
+    int firstPairVal = score/3;
+
+    result = IntStream.of(result).filter(val -> val != firstPairVal).toArray();
+    score = nSame(2, 6, result);
+    int secondPairVal = score/2;
+
+    if (firstPairVal*secondPairVal > 0) {
+      score = 25;
     } else {
       score = 0;
     }
@@ -126,6 +167,69 @@ public abstract class ScoreCalculator {
       score = 0;
     }
 
+    return score;
+  }
+
+  public static int smallStraightYahtzee(int... result) {
+
+    Arrays.sort(result);
+
+    int[] uniqueValues = IntStream.of(result).distinct().sorted().toArray();
+    long noUniqVals =  IntStream.of(uniqueValues).distinct().count();
+
+    int score = 0;
+
+    if (noUniqVals >= 4) {
+
+      ArrayList<int[]> matchArrays = new ArrayList<>();
+      matchArrays.add(new int[] {1, 2, 3, 4});
+      matchArrays.add(new int[] {2, 3, 4, 5});
+      matchArrays.add(new int[] {3, 4, 5, 6});
+
+      ArrayList<int[]> resultSubArrays = new ArrayList<>();
+      for (int i = 0; i < noUniqVals - 3; i++) {
+        int[] testArr = Arrays.copyOfRange(uniqueValues, i, i + 4);
+        resultSubArrays.add(testArr);
+      }
+
+      for (int[] arr : resultSubArrays) {
+        for (int[] match : matchArrays) {
+          if (Arrays.equals(arr, match)) {
+            score = 30;
+          }
+        }
+      }
+    }
+    return score;
+  }
+
+  public static int bigStraightYahtzee(int... result) {
+
+    Arrays.sort(result);
+
+    int[] uniqueValues = IntStream.of(result).distinct().sorted().toArray();
+    long noUniqVals =  IntStream.of(uniqueValues).distinct().count();
+    int score = 0;
+
+    if (noUniqVals >= 5) {
+      ArrayList<int[]> matchArrays = new ArrayList<>();
+      matchArrays.add(new int[]{1, 2, 3, 4, 5});
+      matchArrays.add(new int[]{2, 3, 4, 5, 6});
+
+      ArrayList<int[]> resultSubArrays = new ArrayList<>();
+      for (int i = 0; i < noUniqVals - 4; i++) {
+        resultSubArrays.add(Arrays.copyOfRange(uniqueValues, i, i + 5));
+      }
+
+      for (int[] arr : resultSubArrays) {
+        for (int[] match : matchArrays) {
+          if (Arrays.equals(arr, match)) {
+            score = 40;
+          }
+
+        }
+      }
+    }
     return score;
   }
 
