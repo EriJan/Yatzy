@@ -10,7 +10,6 @@ import enjug.erijan.games.yatzy.view.YatzyGui;
 import javax.swing.*;
 import java.awt.event.WindowEvent;
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -68,7 +67,7 @@ public enum RulesetFactory implements VariantFactory {
     public GameControl createGameControl(GameState gameState, DiceHandler diceHandler) {
       Scoring scoring = new SelectiveScoreSelection(gameState);
       RollControl rollControl = new RollControlYatzy(gameState, diceHandler);
-      GameControl gameControl = new GameControl(scoring, rollControl);
+      GameControl gameControl = new GameControlImpl(scoring, rollControl);
       return gameControl;
     }
 
@@ -129,7 +128,7 @@ public enum RulesetFactory implements VariantFactory {
     public GameControl createGameControl(GameState gameState, DiceHandler diceHandler) {
       Scoring scoring = new SelectiveScoreSelection(gameState);
       RollControl rollControl = new RollControlYatzy(gameState, diceHandler);
-      GameControl gameControl = new GameControl(scoring, rollControl);
+      GameControl gameControl = new GameControlImpl(scoring, rollControl);
       return gameControl;
     }
 
@@ -190,7 +189,7 @@ public enum RulesetFactory implements VariantFactory {
     public GameControl createGameControl(GameState gameState, DiceHandler diceHandler) {
       Scoring scoring = new SelectiveScoreSelection(gameState);
       RollControl rollControl = new RollControlMaxiYatzy(gameState, diceHandler);
-      GameControl gameControl = new GameControl(scoring, rollControl);
+      GameControl gameControl = new GameControlImpl(scoring, rollControl);
       return gameControl;
     }
 

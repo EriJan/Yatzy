@@ -1,8 +1,11 @@
 package enjug.erijan.games.util;
 
 /**
- * Created by Jan Eriksson on 28/10/15.
+ *
  * Factory interface for the creation of GameDie objects.
+ *
+ * Created by Jan Eriksson on 28/10/15.
+ *
  */
 public interface DieFactory {
 

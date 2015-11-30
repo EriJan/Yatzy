@@ -3,13 +3,15 @@ package enjug.erijan.games.util;
 import java.util.Iterator;
 
 /**
- * Created by Jan Eriksson on 27/10/15.
- * This interface is supposed to handle a collection of GameDice,
- * this is both a controller and a model
  *
+ * This interface handle a collection of GameDice,
+ * this is both a controller and a model.
+ * DiceSubject interface is extended for use with DiceObserver.
+ *
+ * Created by Jan Eriksson on 27/10/15.
  */
 
-public interface DiceHandler extends DiceSubject{
+public interface DiceHandler extends DiceSubject {
 
   /**
    * Roll a subset of the dice.

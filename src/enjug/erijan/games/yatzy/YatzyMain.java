@@ -18,6 +18,8 @@ public class YatzyMain {
     return RulesetFactory.valueOf(ruleSets[retVal]);
   }
 
+
+//  TODO mer meddelanden till användaren
   public static void main(String[] args) {
     try {
       UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
@@ -25,7 +27,7 @@ public class YatzyMain {
       e.printStackTrace();
     }
 
-    //GameControl agent = new GameControl();
+    //GameControlImpl agent = new GameControlImpl();
     RulesetFactory ruleSet = selectGameVariant();
     ruleSet.newGame();
   }

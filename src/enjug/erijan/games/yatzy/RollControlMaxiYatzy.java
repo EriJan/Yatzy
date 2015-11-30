@@ -4,7 +4,6 @@ import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.util.GameDie;
 
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Jan Eriksson on 16/11/15.

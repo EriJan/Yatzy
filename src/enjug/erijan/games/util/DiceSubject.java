@@ -1,8 +1,11 @@
 package enjug.erijan.games.util;
 
 /**
- * Created by Jan Eriksson on 30/10/15.
+ *
  * Observable subject for dicehandler
+ *
+ * Created by Jan Eriksson on 30/10/15.
+ *
  */
 
 public interface DiceSubject {

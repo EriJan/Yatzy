@@ -1,8 +1,10 @@
 package enjug.erijan.games.util;
 
 /**
- * Created by Jan Eriksson on 30/10/15.
+ *
  * Dicehandler observer.
+ *
+ * Created by Jan Eriksson on 30/10/15.
  */
 
 public interface DiceObserver {

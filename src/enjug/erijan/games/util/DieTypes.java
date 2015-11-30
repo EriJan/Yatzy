@@ -1,7 +1,7 @@
 package enjug.erijan.games.util;
 
 /**
- * Created by Jan Eriksson on 27/10/15.
+ *
  * This is a enum factory to create
  * different kinds of dice.
  * The Dn classes are defined locally and
@@ -10,6 +10,8 @@ package enjug.erijan.games.util;
  * Example:
  * To create a 8 sided die, D8:
  * GameDie d8 = DieTypes.D8.create();
+ *
+ * Created by Jan Eriksson on 27/10/15.
  *
  */
 public enum DieTypes implements DieFactory {

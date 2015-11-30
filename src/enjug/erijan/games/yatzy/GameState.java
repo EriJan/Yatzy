@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * Created by Jan Eriksson on 20/11/15.
  */
-public class GameState implements StateInfo{
+public class GameState implements StateInfo {
 
   private List<StateInfoObserver> observerList;
   private StringBuffer stateMessage;
@@ -18,10 +18,9 @@ public class GameState implements StateInfo{
   private ListIterator<Player> playerListIterator;
 
   private int[] currentDiceValue;
+
   private boolean rollingAllowed;
   private boolean scoringAllowed;
-
-
   private boolean gameEnd;
 
   ScoreSheet scoreSheet;
@@ -89,6 +88,7 @@ public class GameState implements StateInfo{
   public void nextPlayer() {
     if (!playerListIterator.hasNext()) {
       gameEnd = scoreSheet.isAllScoreSet(currentPlayer.getName());
+      rollingAllowed = !gameEnd;
       playerListIterator = players.listIterator();
     }
 
@@ -141,11 +141,13 @@ public class GameState implements StateInfo{
     return scoringAllowed;
   }
 
+  @Override
   public String getStateMessage() {
     return stateMessage.toString();
 
   }
 
+  @Override
   public void setStateMessage(String stateMessage) {
     this.stateMessage = new StringBuffer(stateMessage);
     notifyObservers();

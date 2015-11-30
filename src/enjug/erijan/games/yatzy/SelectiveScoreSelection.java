@@ -15,14 +15,15 @@ public class SelectiveScoreSelection implements Scoring {
 
   @Override
   public void setScore(String boxId) {
-    String messageString = "";
+    String messageString = gameState.getCurrentPlayer().getName()
+        + " put the results on " + boxId;
     gameState.setScore(boxId);
+    gameState.clearTempScores();
     gameState.setScoringAllowed(false);
     gameState.setRollingAllowed(true);
-    gameState.clearTempScores();
     gameState.nextPlayer();
-
     setAvailableScores();
+    gameState.setStateMessage(messageString);
   }
 
   @Override

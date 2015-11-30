@@ -3,9 +3,13 @@ package enjug.erijan.games.util;
 import java.util.Random;
 
 /**
+ *
+ * Abstract class describing a general N sided die.
+ * It is up to the implementation to decide which values
+ * of noFaces are accepteable.
+ *
  * Created by Jan Eriksson on 27/10/15.
- * Abstract class describing a general
- * n sided die.
+ *
  */
 
 public abstract class GameDie implements Comparable<GameDie> {
@@ -37,6 +41,10 @@ public abstract class GameDie implements Comparable<GameDie> {
     return face;
   }
 
+
+  /**
+   * Compare to used for sorting dice in ascending order.
+   */
   @Override
   public int compareTo(GameDie o) {
     return this.getFace() - o.getFace();

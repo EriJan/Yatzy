@@ -2,7 +2,6 @@ package enjug.erijan.games.yatzy.view;
 
 import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.yatzy.*;
-import enjug.erijan.games.yatzy.rules.ScoreBox;
 
 import javax.swing.*;
 import javax.swing.JLabel;
@@ -128,13 +127,13 @@ public class YatzyGui {
   // Todo, add space between buttons
   private class ButtonsPanel extends JPanel implements StateInfoObserver {
 
-    private final Dimension preferedButtonSize = new Dimension(100,40);
+    private final Dimension preferedButtonSize = new Dimension(100,30);
     private JButton rollButton;
     private JButton scoreButton;
     private JButton newGameButton;
 
     public ButtonsPanel() {
-      this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+      this.setLayout(new GridLayout(18,1));
       addRollButton(diceHandler);
       addSetScoreButton();
       addNewGameButton();
@@ -180,7 +179,7 @@ public class YatzyGui {
 
     public void addNewGameButton() {
 
-      for (int j = 0; j < 5; j++) {
+      for (int j = 0; j < 15; j++) {
         this.add(Box.createRigidArea(preferedButtonSize));
       }
 
@@ -206,7 +205,9 @@ public class YatzyGui {
 
   /**
    * Created by Jan Eriksson on 19/11/15.
+   * Todo blank istf 0...
    */
+
   public class ScorePanel extends JPanel implements StateInfoObserver {
 
     private Map scoreColumnPerPlayer;
@@ -293,8 +294,10 @@ public class YatzyGui {
         button.setEnabled(true);
       }
       scoreSelectionButtons.clearSelection();
-      JRadioButton button = (JRadioButton) scoreSelection.get(availSelect.get(0));
-      button.setSelected(true);
+      if (availSelect.size() > 0) {
+        JRadioButton button = (JRadioButton) scoreSelection.get(availSelect.get(0));
+        button.setSelected(true);
+      }
 
       this.validate();
       this.repaint();
@@ -382,7 +385,6 @@ public class YatzyGui {
   public static class InfoPanel extends JPanel implements StateInfoObserver {
 
     JLabel jLabel;
-    //StateInfo stateInfo;
 
     public InfoPanel(StateInfo stateInfo) {
       jLabel = new JLabel("Lets play some Yatzy!");
