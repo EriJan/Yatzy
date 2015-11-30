@@ -1,11 +1,10 @@
-package enjug.erijan.games.yatzy;
+package enjug.erijan.games.yatzy.model;
 
 /**
  * Created by Jan Eriksson on 04/11/15.
  */
 public class Player {
   private final String name;
-  //private AbstractYatzyAgent behavior;
 
   public Player(String name) {
     this.name = name;
@@ -14,8 +13,4 @@ public class Player {
   public String getName() {
     return name;
   }
-
-  //public void setBehavior(AbstractYatzyAgent behavior) {
-//    this.behavior = behavior;
-//  }
 }

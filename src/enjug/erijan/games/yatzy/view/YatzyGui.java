@@ -2,6 +2,11 @@ package enjug.erijan.games.yatzy.view;
 
 import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.yatzy.*;
+import enjug.erijan.games.yatzy.control.GameControl;
+import enjug.erijan.games.yatzy.model.GameState;
+import enjug.erijan.games.yatzy.model.Player;
+import enjug.erijan.games.yatzy.model.StateInfo;
+import enjug.erijan.games.yatzy.model.StateInfoObserver;
 
 import javax.swing.*;
 import javax.swing.JLabel;

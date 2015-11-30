@@ -1,4 +1,4 @@
-package enjug.erijan.games.yatzy;
+package enjug.erijan.games.yatzy.model;
 
 import java.util.*;
 
@@ -25,7 +25,7 @@ public class GameState implements StateInfo {
 
   ScoreSheet scoreSheet;
 
-  GameState(ScoreSheet scoreSheet, List players, List allScores) {
+  public GameState(ScoreSheet scoreSheet, List players, List allScores) {
     this.players = players;
     playerListIterator = players.listIterator();
     currentPlayer = playerListIterator.next();

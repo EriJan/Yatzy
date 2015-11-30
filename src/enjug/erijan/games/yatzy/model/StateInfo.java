@@ -1,4 +1,4 @@
-package enjug.erijan.games.yatzy;
+package enjug.erijan.games.yatzy.model;
 
 import java.util.List;
 

@@ -1,6 +1,8 @@
-package enjug.erijan.games.yatzy;
+package enjug.erijan.games.yatzy.rules;
 
 import enjug.erijan.games.util.DiceHandler;
+import enjug.erijan.games.yatzy.control.GameControl;
+import enjug.erijan.games.yatzy.model.GameState;
 import enjug.erijan.games.yatzy.view.YatzyGui;
 
 /**

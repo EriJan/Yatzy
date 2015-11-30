@@ -1,4 +1,4 @@
-package enjug.erijan.games.yatzy;
+package enjug.erijan.games.yatzy.model;
 
 import enjug.erijan.games.util.*;
 
@@ -11,14 +11,14 @@ import java.util.List;
  * Created by Jan Eriksson on 27/10/15.
  */
 
-public class DiceHandlerImpl implements DiceHandler {
+public class YatzyDice implements DiceHandler {
 
   List<GameDie> dice;
   List<GameDie> activeDice;
   DieFactory dieType;
   List<DiceObserver> observers;
 
-  public DiceHandlerImpl(int numberOfDice) {
+  public YatzyDice(int numberOfDice) {
     dice = new ArrayList<GameDie>();
     activeDice = new ArrayList<GameDie>();
     dieType = DieTypes.D6;

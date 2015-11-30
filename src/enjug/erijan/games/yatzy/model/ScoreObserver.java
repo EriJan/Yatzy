@@ -1,10 +1,10 @@
-package enjug.erijan.games.yatzy;
+package enjug.erijan.games.yatzy.model;
 
 /**
  * Created by Jan Eriksson on 30/10/15.
  */
 
 public interface ScoreObserver {
-  public void update(ScoreReader scoreReader);
+  void update(ScoreInterface scoreInterface);
 }
 

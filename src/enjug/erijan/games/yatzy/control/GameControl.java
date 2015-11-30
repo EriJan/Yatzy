@@ -1,4 +1,4 @@
-package enjug.erijan.games.yatzy;
+package enjug.erijan.games.yatzy.control;
 
 import enjug.erijan.games.util.GameDie;
 

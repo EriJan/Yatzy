@@ -1,11 +1,13 @@
-package enjug.erijan.games.yatzy;
+package enjug.erijan.games.yatzy.control;
+
+import enjug.erijan.games.yatzy.model.GameState;
 
 import java.util.ArrayList;
 
 /**
  * Created by Jan Eriksson on 16/11/15.
  */
-public class SelectiveScoreSelection implements Scoring {
+public class SelectiveScoreSelection implements ScoringBehavior {
 
   private GameState gameState;
 

@@ -1,18 +1,18 @@
-package enjug.erijan.games.yatzy;
+package enjug.erijan.games.yatzy.model;
 
 import enjug.erijan.games.yatzy.rules.ScoreBox;
 
 import java.util.*;
 
 
-/** Score sheet for any kind of Yatzy game
- *
+/**
+ * Score sheet for any kind of Yatzy game
  *
  *
  * Created by Jan Eriksson on 23/11/15.
  */
 
-public class ScoreSheet {
+public class ScoreSheet implements ScoreInterface {
   private HashMap<String, HashMap> scoreSheetMap;
 
   private HashMap<String, String> derivedScores;
@@ -35,10 +35,12 @@ public class ScoreSheet {
     scoreSheetMap = new HashMap<String,HashMap>();
   }
 
+  @Override
   public void addPlayer(String playerName, HashMap scoreColumn) {
     scoreSheetMap.put(playerName,scoreColumn);
   }
 
+  @Override
   public void setScore(String playerName, String boxId, int... result) {
     HashMap scoreColumn = scoreSheetMap.get(playerName);
     ScoreBox scoreBox = (ScoreBox) scoreColumn.get(boxId);
@@ -48,6 +50,7 @@ public class ScoreSheet {
     }
   }
 
+  @Override
   public void setTempScores(String playerName, List<String> availableScores, int... result) {
     HashMap scoreColumn = scoreSheetMap.get(playerName);
     for (String boxId : availableScores) {
@@ -56,6 +59,7 @@ public class ScoreSheet {
     }
   }
 
+  @Override
   public void clearTempScores(String playerName) {
     HashMap scoreColumn = scoreSheetMap.get(playerName);
     Iterator<ScoreBox> scoreBoxIterator = scoreColumn.values().iterator();
@@ -93,24 +97,28 @@ public class ScoreSheet {
     }
   }
 
+  @Override
   public int getScore(String playerName, String boxId) {
     HashMap scoreColumn = scoreSheetMap.get(playerName);
     ScoreBox localBox = (ScoreBox) scoreColumn.get(boxId);
     return localBox.getScore();
   }
 
+  @Override
   public int getTotal(String playerName) {
     HashMap scoreColumn = scoreSheetMap.get(playerName);
     ScoreBox localBox = (ScoreBox) scoreColumn.get(totalKey);
     return localBox.getScore();
   }
 
+  @Override
   public int getTempScore(String playerName, String scoreBox) {
     HashMap scoreColumn = scoreSheetMap.get(playerName);
     ScoreBox localBox = (ScoreBox) scoreColumn.get(scoreBox);
     return localBox.getTempScore();
   }
 
+  @Override
   public boolean isAllScoreSet(String playerName) {
     boolean setScoreFound = true;
     HashMap scoreColumn = scoreSheetMap.get(playerName);
@@ -129,12 +137,14 @@ public class ScoreSheet {
     return setScoreFound;
   }
 
+  @Override
   public boolean isScoreSet(String playerName, String scoreBox) {
     HashMap scoreColumn = scoreSheetMap.get(playerName);
     ScoreBox localBox = (ScoreBox) scoreColumn.get(scoreBox);
     return localBox.isScoreSet();
   }
 
+  @Override
   public boolean isDerivedScore(String boxId) {
     return derivedScores.containsValue(boxId);
   }

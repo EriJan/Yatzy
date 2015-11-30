@@ -1,7 +1,5 @@
 package enjug.erijan.games.yatzy.rules;
 
-import enjug.erijan.games.yatzy.RulesetFactory;
-
 /**
  * Created by Jan Eriksson on 27/10/15.
  *

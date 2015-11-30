@@ -1,10 +1,13 @@
-package enjug.erijan.games.yatzy;
+package enjug.erijan.games.yatzy.rules;
 
 import enjug.erijan.games.util.DiceHandler;
-import enjug.erijan.games.yatzy.rules.MaxiYatzyBoxes;
-import enjug.erijan.games.yatzy.rules.ScoreBox;
-import enjug.erijan.games.yatzy.rules.YahtzeeBoxes;
-import enjug.erijan.games.yatzy.rules.YatzyBoxes;
+import enjug.erijan.games.yatzy.control.ScoringBehavior;
+import enjug.erijan.games.yatzy.control.SelectiveScoreSelection;
+import enjug.erijan.games.yatzy.control.*;
+import enjug.erijan.games.yatzy.model.GameState;
+import enjug.erijan.games.yatzy.model.Player;
+import enjug.erijan.games.yatzy.model.ScoreSheet;
+import enjug.erijan.games.yatzy.model.YatzyDice;
 import enjug.erijan.games.yatzy.view.YatzyGui;
 
 import javax.swing.*;
@@ -60,14 +63,14 @@ public enum RulesetFactory implements VariantFactory {
 
     @Override
     public DiceHandler createDice() {
-      return new DiceHandlerImpl(5);
+      return new YatzyDice(5);
     }
 
     @Override
     public GameControl createGameControl(GameState gameState, DiceHandler diceHandler) {
-      Scoring scoring = new SelectiveScoreSelection(gameState);
-      RollControl rollControl = new RollControlYatzy(gameState, diceHandler);
-      GameControl gameControl = new GameControlImpl(scoring, rollControl);
+      ScoringBehavior scoringBehavior = new SelectiveScoreSelection(gameState);
+      RollBehavior rollBehavior = new RollBehaviorYatzy(gameState, diceHandler);
+      GameControl gameControl = new GameControlImpl(scoringBehavior, rollBehavior);
       return gameControl;
     }
 
@@ -121,14 +124,14 @@ public enum RulesetFactory implements VariantFactory {
 
     @Override
     public DiceHandler createDice() {
-      return new DiceHandlerImpl(5);
+      return new YatzyDice(5);
     }
 
     @Override
     public GameControl createGameControl(GameState gameState, DiceHandler diceHandler) {
-      Scoring scoring = new SelectiveScoreSelection(gameState);
-      RollControl rollControl = new RollControlYatzy(gameState, diceHandler);
-      GameControl gameControl = new GameControlImpl(scoring, rollControl);
+      ScoringBehavior scoringBehavior = new SelectiveScoreSelection(gameState);
+      RollBehavior rollBehavior = new RollBehaviorYatzy(gameState, diceHandler);
+      GameControl gameControl = new GameControlImpl(scoringBehavior, rollBehavior);
       return gameControl;
     }
 
@@ -182,14 +185,14 @@ public enum RulesetFactory implements VariantFactory {
 
     @Override
     public DiceHandler createDice() {
-      return new DiceHandlerImpl(6);
+      return new YatzyDice(6);
     }
 
     @Override
     public GameControl createGameControl(GameState gameState, DiceHandler diceHandler) {
-      Scoring scoring = new SelectiveScoreSelection(gameState);
-      RollControl rollControl = new RollControlMaxiYatzy(gameState, diceHandler);
-      GameControl gameControl = new GameControlImpl(scoring, rollControl);
+      ScoringBehavior scoringBehavior = new SelectiveScoreSelection(gameState);
+      RollBehavior rollBehavior = new RollBehaviorMaxiYatzy(gameState, diceHandler);
+      GameControl gameControl = new GameControlImpl(scoringBehavior, rollBehavior);
       return gameControl;
     }
 
