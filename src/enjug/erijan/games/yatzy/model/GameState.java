@@ -37,6 +37,21 @@ public class GameState implements StateInfo {
     gameEnd = false;
   }
 
+  public GameState(List players) {
+    winner = "";
+
+    this.players = players;
+    playerListIterator = players.listIterator();
+    currentPlayer = playerListIterator.next();
+
+    stateMessage = new StringBuffer();
+    observerList = new ArrayList<>();
+    rollingAllowed = true;
+    scoringAllowed = true;
+    gameEnd = false;
+  }
+
+
   @Override
   public List<Player> getPlayers() {
     return players;

@@ -11,15 +11,5 @@ import enjug.erijan.games.yatzy.view.YatzyGui;
  * Created by Jan Eriksson on 18/11/15.
  */
 public interface VariantFactory {
-  GameState createGameState();
-
-  DiceHandler createDice();
-
-  GameControl createGameControl(ScoreInterface scoreInterface,
-                                StateInfo stateInfo,
-                                DiceHandler diceHandler);
-
-  YatzyGui getGui(ScoreInterface scoreInterface, StateInfo stateInfo,
-                  DiceHandler diceHandler,
-                  GameControl gameControl);
+  YatzyGui createAndPopulateGame();
 }

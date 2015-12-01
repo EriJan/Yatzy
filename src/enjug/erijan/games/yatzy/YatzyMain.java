@@ -3,6 +3,7 @@ package enjug.erijan.games.yatzy;
 import enjug.erijan.games.yatzy.view.YatzyGui;
 
 import javax.swing.*;
+import java.awt.event.WindowEvent;
 import java.util.stream.Stream;
 
 /**
@@ -18,8 +19,7 @@ public class YatzyMain {
     return RulesetFactory.valueOf(ruleSets[retVal]);
   }
 
-
-//  TODO mer meddelanden till användaren
+  //  TODO mer meddelanden till användaren
   public static void main(String[] args) {
     try {
       UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
@@ -27,8 +27,7 @@ public class YatzyMain {
       e.printStackTrace();
     }
 
-    //GameControlImpl agent = new GameControlImpl();
     RulesetFactory ruleSet = selectGameVariant();
-    ruleSet.newGame();
+    ruleSet.createAndPopulateGame();
   }
 }

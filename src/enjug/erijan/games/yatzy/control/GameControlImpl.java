@@ -10,10 +10,27 @@ public class GameControlImpl implements GameControl {
   private ScoringBehavior scoringBehavior;
   private RollBehavior rollBehavior;
 
+  private GameControlImpl() {};
+
   public GameControlImpl(ScoringBehavior scoringBehavior, RollBehavior rollBehavior) {
     this.scoringBehavior = scoringBehavior;
     this.rollBehavior = rollBehavior;
   }
+
+  public static GameControl getEmptyGameControl() {
+    return new GameControlImpl();
+  }
+
+  @Override
+  public void setScoringBehavior(ScoringBehavior scoringBehavior) {
+    this.scoringBehavior = scoringBehavior;
+  }
+
+  @Override
+  public void setRollBehavior(RollBehavior rollBehavior) {
+    this.rollBehavior = rollBehavior;
+  }
+
 
   @Override
   public void toggleActiveDie(GameDie die) {

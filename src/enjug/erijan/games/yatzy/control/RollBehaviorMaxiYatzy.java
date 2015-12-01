@@ -2,8 +2,8 @@ package enjug.erijan.games.yatzy.control;
 
 import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.util.GameDie;
-import enjug.erijan.games.yatzy.model.GameState;
 import enjug.erijan.games.yatzy.model.Player;
+import enjug.erijan.games.yatzy.model.StateInfo;
 
 import java.util.HashMap;
 
@@ -15,15 +15,15 @@ public class RollBehaviorMaxiYatzy implements RollBehavior {
   private static final int maxRerolls = 3;
 
   private DiceHandler diceHandler;
-  private GameState gameState;
+  private StateInfo stateInfo;
   private int rollsDone;
   HashMap<String,Integer> savedRolls;
 
-  public RollBehaviorMaxiYatzy(GameState gameState, DiceHandler diceHandler) {
+  public RollBehaviorMaxiYatzy(StateInfo stateInfo, DiceHandler diceHandler) {
     this.diceHandler = diceHandler;
-    this.gameState = gameState;
+    this.stateInfo = stateInfo;
     savedRolls = new HashMap<>();
-    for (Player player : gameState.getPlayers()) {
+    for (Player player : stateInfo.getPlayers()) {
       savedRolls.put(player.getName(),0);
     }
   }
@@ -32,23 +32,23 @@ public class RollBehaviorMaxiYatzy implements RollBehavior {
   public void rollActiveDice() {
     String message;
 
-    String playerName = gameState.getCurrentPlayer().getName();
+    String playerName = stateInfo.getCurrentPlayer().getName();
     int extraRolls = savedRolls.get(playerName);
     int tempRerolls = extraRolls + maxRerolls;
 
     if (rollsDone < tempRerolls) {
       rollsDone++;
       diceHandler.rollActiveDice();
-//      gameState.setCurrentDiceValue(diceHandler.getValues());
-      gameState.setScoringAllowed(true);
+//      stateInfo.setCurrentDiceValue(diceHandler.getValues());
+      stateInfo.setScoringAllowed(true);
       message = playerName + " rolled some dice "
           + (tempRerolls - rollsDone) + " rolls left.";
 
     } else if (rollsDone == tempRerolls) {
       diceHandler.rollActiveDice();
       savedRolls.put(playerName,0);
-//      gameState.setCurrentDiceValue(diceHandler.getValues());
-      gameState.setRollingAllowed(false);
+//      stateInfo.setCurrentDiceValue(diceHandler.getValues());
+      stateInfo.setRollingAllowed(false);
       diceHandler.deActivateAllDice();
       rollsDone = 0;
       message = playerName + " last roll.";
@@ -56,12 +56,12 @@ public class RollBehaviorMaxiYatzy implements RollBehavior {
     } else {
       message = "No more rolls alowed.";
     }
-    gameState.setStateMessage(message);
+    stateInfo.setStateMessage(message);
   }
 
   @Override
   public void resetDice() {
-    String playerName = gameState.getCurrentPlayer().getName();
+    String playerName = stateInfo.getCurrentPlayer().getName();
     int extraRolls = savedRolls.get(playerName);
     int rollsToSave = extraRolls + maxRerolls - rollsDone;
     savedRolls.put(playerName,rollsToSave);

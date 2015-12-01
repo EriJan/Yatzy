@@ -8,8 +8,6 @@ import enjug.erijan.games.yatzy.model.*;
 import enjug.erijan.games.yatzy.rules.*;
 import enjug.erijan.games.yatzy.view.YatzyGui;
 
-import javax.swing.*;
-import java.awt.event.WindowEvent;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,7 +17,7 @@ import java.util.stream.Collectors;
 public enum RulesetFactory implements VariantFactory {
   YATZY {
     @Override
-    public GameState createGameState() {
+    public YatzyGui createAndPopulateGame() {
 
       HashMap<String, String> derivedScores = new HashMap<>();
       derivedScores.put("sum", YatzyBoxes.SUM.toString());
@@ -39,7 +37,7 @@ public enum RulesetFactory implements VariantFactory {
       ArrayList<String> allScores =
           enumSetToStringList(EnumSet.allOf(YatzyBoxes.class));
 
-      ScoreSheet scoreSheet = new ScoreSheet(allScores, derivedScores, sumRange, totalRange);
+      ScoreInterface scoreSheet = new ScoreSheet(allScores, derivedScores, sumRange, totalRange);
 
       ArrayList<Player> playerList = addPlayers();
       for (Player player : playerList) {
@@ -54,37 +52,22 @@ public enum RulesetFactory implements VariantFactory {
         scoreSheet.addPlayer(player.getName(), scoreColumn);
       }
 
-      GameState gameState = new GameState(scoreSheet, playerList, allScores);
+      StateInfo state = new GameState(playerList);
 
-      return gameState;
-    }
+      DiceHandler dice = new YatzyDice(5);
 
-    @Override
-    public DiceHandler createDice() {
-      return new YatzyDice(5);
-    }
-
-    @Override
-    public GameControl createGameControl(ScoreInterface scoreInterface,
-                                         StateInfo stateInfo,
-                                         DiceHandler diceHandler) {
-      ScoringBehavior scoringBehavior = new SelectiveScoreSelection(stateInfo,
-          scoreInterface, diceHandler);
-      RollBehavior rollBehavior = new RollBehaviorYatzy(stateInfo, diceHandler);
-      GameControl gameControl = new GameControlImpl(scoringBehavior, rollBehavior);
-      return gameControl;
-    }
-
-    @Override
-    public YatzyGui getGui(ScoreInterface scoreInterface, StateInfo stateInfo,
-                           DiceHandler diceHandler, GameControl gameControl) {
-      return new YatzyGui(gameControl, scoreInterface, diceHandler, stateInfo);
+      RollBehavior rolling = new RollBehaviorYatzy(state, dice);
+      ScoringBehavior scoring = new SelectiveScoreSelection(state,scoreSheet,dice);
+      GameControl control = GameControlImpl.getEmptyGameControl();
+      control.setRollBehavior(rolling);
+      control.setScoringBehavior(scoring);
+      return new YatzyGui(control,scoreSheet,dice,state);
     }
   },
 
   YATZEE {
     @Override
-    public GameState createGameState() {
+    public YatzyGui createAndPopulateGame() {
 
       HashMap<String, String> derivedScores = new HashMap<>();
       derivedScores.put("sum", YahtzeeBoxes.SUM.toString());
@@ -100,11 +83,9 @@ public enum RulesetFactory implements VariantFactory {
 
       ArrayList<String> sumRange = enumSetToStringList(sumRangeSet);
       ArrayList<String> totalRange = enumSetToStringList(totalRangeSet);
-      // From start availableScores contains all scores
-      ArrayList<String> allScores =
-          enumSetToStringList(EnumSet.allOf(YahtzeeBoxes.class));
+      ArrayList<String> allScores = enumSetToStringList(EnumSet.allOf(YahtzeeBoxes.class));
 
-      ScoreSheet scoreSheet = new ScoreSheet(allScores, derivedScores, sumRange, totalRange);
+      ScoreInterface scoreSheet = new ScoreSheet(allScores, derivedScores, sumRange, totalRange);
 
       ArrayList<Player> playerList = addPlayers();
       for (Player player : playerList) {
@@ -119,35 +100,23 @@ public enum RulesetFactory implements VariantFactory {
         scoreSheet.addPlayer(player.getName(), scoreColumn);
       }
 
-      GameState gameState = new GameState(scoreSheet, playerList, allScores);
+      StateInfo state = new GameState(playerList);
 
-      return gameState;
-    }
+      DiceHandler dice = new YatzyDice(5);
 
-    @Override
-    public DiceHandler createDice() {
-      return new YatzyDice(5);
-    }
+      RollBehavior rolling = new RollBehaviorYatzy(state, dice);
+      ScoringBehavior scoring = new SelectiveScoreSelection(state, scoreSheet, dice);
+      GameControl control = GameControlImpl.getEmptyGameControl();
+      control.setRollBehavior(rolling);
+      control.setScoringBehavior(scoring);
 
-    @Override
-    public GameControl createGameControl(GameState gameState, DiceHandler diceHandler) {
-      ScoringBehavior scoringBehavior = new SelectiveScoreSelection(gameState, scoreInterface, diceHandler);
-      RollBehavior rollBehavior = new RollBehaviorYatzy(gameState, diceHandler);
-      GameControl gameControl = new GameControlImpl(scoringBehavior, rollBehavior);
-      return gameControl;
-    }
-
-    @Override
-    public YatzyGui getGui(GameControl gameControl, DiceHandler dice, GameState stateInfo) {
-      ScoreInterface scoreInterface = stateInfo.getScoreInterface();
-      return new YatzyGui(gameControl, scoreInterface, dice, stateInfo);
+      return new YatzyGui(control, scoreSheet, dice, state);
     }
   },
+
   MAXI_YATZY {
-
     @Override
-    public GameState createGameState() {
-
+    public YatzyGui createAndPopulateGame() {
       HashMap<String, String> derivedScores = new HashMap<>();
       derivedScores.put("sum", MaxiYatzyBoxes.SUM.toString());
       derivedScores.put("bonus", MaxiYatzyBoxes.BONUS.toString());
@@ -162,9 +131,7 @@ public enum RulesetFactory implements VariantFactory {
 
       ArrayList<String> sumRange = enumSetToStringList(sumRangeSet);
       ArrayList<String> totalRange = enumSetToStringList(totalRangeSet);
-      // From start availableScores contains all scores
-      ArrayList<String> allScores =
-          enumSetToStringList(EnumSet.allOf(MaxiYatzyBoxes.class));
+      ArrayList<String> allScores = enumSetToStringList(EnumSet.allOf(MaxiYatzyBoxes.class));
 
       ScoreSheet scoreSheet = new ScoreSheet(allScores, derivedScores, sumRange, totalRange);
 
@@ -181,42 +148,20 @@ public enum RulesetFactory implements VariantFactory {
         scoreSheet.addPlayer(player.getName(), scoreColumn);
       }
 
-      GameState gameState = new GameState(scoreSheet, playerList, allScores);
+      StateInfo state = new GameState(playerList);
 
-      return gameState;
-    }
+      DiceHandler dice = new YatzyDice(6);
 
-    @Override
-    public DiceHandler createDice() {
-      return new YatzyDice(6);
-    }
+      RollBehavior rolling = new RollBehaviorMaxiYatzy(state,dice);
+      ScoringBehavior scoring = new SelectiveScoreSelection(state, scoreSheet, dice);
+      GameControl control = GameControlImpl.getEmptyGameControl();
+      control.setRollBehavior(rolling);
+      control.setScoringBehavior(scoring);
 
-    @Override
-    public GameControl createGameControl(ScoreInterface scoreInterface, GameState gameState, DiceHandler diceHandler) {
-      ScoringBehavior scoringBehavior = new SelectiveScoreSelection(gameState,
-          scoreInterface, diceHandler);
-      RollBehavior rollBehavior = new RollBehaviorMaxiYatzy(gameState, diceHandler);
-      GameControl gameControl = new GameControlImpl(scoringBehavior, rollBehavior);
-      return gameControl;
-    }
-
-    @Override
-    public YatzyGui getGui(GameControl gameControl, DiceHandler dice, GameState stateInfo) {
-      return new YatzyGui(gameControl,scoreInterface, dice, stateInfo);
+      return new YatzyGui(control,scoreSheet,dice,state);
     }
   };
 
-  public void newGame() {
-    GameState gameState = createGameState();
-    DiceHandler diceHandler = createDice();
-    GameControl gameControl = createGameControl(gameState, diceHandler);
-    YatzyGui yatzyGui = getGui(gameControl,diceHandler, gameState);
-  }
-
-  public void newGame(JFrame oldFrame) {
-    oldFrame.dispatchEvent(new WindowEvent(oldFrame, WindowEvent.WINDOW_CLOSING));
-    newGame();
-  }
 
   private static ArrayList addPlayers() {
     ArrayList<Player> playerList = new ArrayList<>();
