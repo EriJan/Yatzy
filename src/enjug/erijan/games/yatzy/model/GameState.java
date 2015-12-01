@@ -10,85 +10,41 @@ public class GameState implements StateInfo {
   private List<StateInfoObserver> observerList;
   private StringBuffer stateMessage;
 
-  private List<String> allScores;
-  private List<String> availableScores;
-
   private List<Player> players;
   private Player currentPlayer;
   private ListIterator<Player> playerListIterator;
-
-  private int[] currentDiceValue;
 
   private boolean rollingAllowed;
   private boolean scoringAllowed;
   private boolean gameEnd;
 
-  ScoreInterface scoreInterface;
+  private String winner;
+
+//  ScoreInterface scoreInterface;
+
 
   public GameState(ScoreInterface scoreInterface, List players, List allScores) {
+    winner = "";
+
     this.players = players;
     playerListIterator = players.listIterator();
     currentPlayer = playerListIterator.next();
 
-    this.scoreInterface = scoreInterface;
-    this.allScores = allScores;
-    availableScores = new ArrayList<>(allScores);
-
-    // Remove derived scores from available scores
-    ListIterator<String> availIter = availableScores.listIterator();
-    while (availIter.hasNext()) {
-      String nextBoxId = availIter.next();
-      if (isDerivedScore(nextBoxId)) {
-        availIter.remove();
-      }
-    }
-
     stateMessage = new StringBuffer();
-    observerList = new ArrayList<StateInfoObserver>();
+    observerList = new ArrayList<>();
     rollingAllowed = true;
     scoringAllowed = true;
     gameEnd = false;
   }
 
-  public void setScore(String boxId) {
-    scoreInterface.setScore(currentPlayer.getName(), boxId, currentDiceValue);
-  }
-
-  public void setTempScores() {
-    scoreInterface.setTempScores(currentPlayer.getName(), availableScores,
-        currentDiceValue);
-    notifyObservers();
-  }
-
-  public void clearTempScores() {
-    scoreInterface.clearTempScores(currentPlayer.getName());
-    notifyObservers();
-  }
-
-  public ScoreInterface getScoreInterface() {
-    return scoreInterface;
-  }
-
-  public boolean isScoreSet(String boxId) {
-    return scoreInterface.isScoreSet(currentPlayer.getName(), boxId);
-  }
-
-  public boolean isDerivedScore(String boxId) {
-    return scoreInterface.isDerivedScore(boxId);
-  }
-
+  @Override
   public List<Player> getPlayers() {
     return players;
   }
 
-  public void setCurrentDiceValue(int[] currentDiceValue) {
-    this.currentDiceValue = currentDiceValue;
-  }
-
+  @Override
   public void nextPlayer() {
     if (!playerListIterator.hasNext()) {
-      gameEnd = scoreInterface.isAllScoreSet(currentPlayer.getName());
-      rollingAllowed = !gameEnd;
       playerListIterator = players.listIterator();
     }
 
@@ -99,39 +55,18 @@ public class GameState implements StateInfo {
   }
 
   @Override
-  public String getWinner() {
-    String winner = "";
-    int highScore = 0;
-    for (Player player : players) {
-      int totScore = scoreInterface.getTotal(player.getName());
-      if (totScore > highScore) {
-        highScore = totScore;
-        winner = player.getName();
-      }
-    }
-    return winner;
-  }
-
   public void setRollingAllowed(boolean rollingAllowed) {
     this.rollingAllowed = rollingAllowed;
     notifyObservers();
   }
 
+  @Override
   public void setScoringAllowed(boolean scoringAllowed) {
     this.scoringAllowed = scoringAllowed;
     notifyObservers();
   }
 
-  public void setAvailableScores(List<String> availableScores) {
-    this.availableScores = availableScores;
-  }
-
-  @Override
-  public boolean isGameEnd() {
-    return gameEnd;
-  }
-
-  @Override
+   @Override
   public boolean isRollingAllowed() {
     return rollingAllowed;
   }
@@ -159,19 +94,26 @@ public class GameState implements StateInfo {
   }
 
   @Override
-  public List<String> getAvailableScores() {
-    return availableScores;
+  public void setGameEnd(boolean gameEnd) {
+    this.gameEnd = gameEnd;
   }
 
   @Override
-  public int getScore(String boxId) {
-    return scoreInterface.getScore(currentPlayer.getName(),boxId);
+  public boolean isGameEnd() {
+    return gameEnd;
   }
 
   @Override
-  public int getTempScore(String boxId) {
-    return scoreInterface.getTempScore(currentPlayer.getName(),boxId);
+  public void setWinner(String winner) {
+    this.winner = winner;
   }
+
+  @Override
+  public String getWinner() {
+    return winner;
+  }
+
+  // Observer methods
 
   @Override
   public void registerObserver(StateInfoObserver o) {

@@ -6,7 +6,7 @@ package enjug.erijan.games.yatzy.control;
 public interface ScoringBehavior {
   void setScore(String targetBox);
 
-  void setAvailableScores();
-
   void setTempScores();
+
+  void evaluateGameEnd();
 }

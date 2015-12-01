@@ -31,7 +31,7 @@ public class YatzyGui {
 
   private DiceHandler diceHandler;
   private GameControl gameControl;
-  private GameState gameState;
+  private StateInfo stateInfo;
   private ScoreInterface scoreInterface;
 
   //private StateInfo stateInfo;
@@ -43,7 +43,7 @@ public class YatzyGui {
    * @param diceHandler
    */
   public YatzyGui(GameControl gameControl, ScoreInterface scoreInterface,
-                  DiceHandler diceHandler, GameState gameState) {
+                  DiceHandler diceHandler, StateInfo stateInfo) {
     //yatzyBoxTypes = new ArrayList<>();
 
     jFrame = new JFrame("Yatzy");
@@ -51,8 +51,8 @@ public class YatzyGui {
     jFrame.setVisible(true);
     jFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-    infoPanel = new InfoPanel(gameState);
-    this.gameState = gameState;
+    infoPanel = new InfoPanel(stateInfo);
+    this.stateInfo = stateInfo;
     this.gameControl = gameControl;
     this.diceHandler = diceHandler;
     this.scoreInterface = scoreInterface;
@@ -141,7 +141,7 @@ public class YatzyGui {
       addRollButton(diceHandler);
       addSetScoreButton();
       addNewGameButton();
-      gameState.registerObserver(this);
+      stateInfo.registerObserver(this);
       //this.setBorder(BorderFactory.createEtchedBorder());
     }
 
@@ -233,19 +233,19 @@ public class YatzyGui {
 
       int column = 1;
 
-      for (Player player : gameState.getPlayers()) {
+      for (Player player : stateInfo.getPlayers()) {
         addScore(player, column);
 
         column++;
       }
-//      gameState.registerObserver(this);
+//      stateInfo.registerObserver(this);
       scoreInterface.registerObserver(this);
       JLabel jLabel = getCurrentPlayerLabel();
       jLabel.setBorder(BorderFactory.createRaisedSoftBevelBorder());
     }
 
     public JLabel getCurrentPlayerLabel() {
-      String name = gameState.getCurrentPlayer().getName();
+      String name = stateInfo.getCurrentPlayer().getName();
       return  (JLabel) playerLabels.get(name);
     }
 
@@ -292,7 +292,8 @@ public class YatzyGui {
         jRadioButton.setEnabled(false);
       }
 
-      List<String> availSelect = gameState.getAvailableScores();
+      String playerName = stateInfo.getCurrentPlayer().getName();
+      List<String> availSelect = scoreInterface.getAvailableScores(playerName);
 
       for (String boxId : availSelect) {
         JRadioButton button = (JRadioButton) scoreSelection.get(boxId);
@@ -351,14 +352,14 @@ public class YatzyGui {
     }
 
     public void updateScore() {
-      String name = gameState.getCurrentPlayer().getName();
+      String name = stateInfo.getCurrentPlayer().getName();
       Map scoreColumn = (Map) scoreColumnPerPlayer.get(name);
       //JLabel nameLabel = (JLabel) playerLabels.get(name);
       List<String> allScores = scoreInterface.getAllScores();
       for (String boxId : allScores) {
         JLabel label = (JLabel) scoreColumn.get(boxId);
         if (scoreInterface.isScoreSet(name,boxId)) {
-          label.setText(Integer.toString(scoreInterface.getScore(name,boxId)));
+          label.setText(Integer.toString(scoreInterface.getScore(name, boxId)));
           label.setForeground(Color.BLACK);
         } else {
           int tmpScore = scoreInterface.getTempScore(name,boxId);
@@ -401,10 +402,10 @@ public class YatzyGui {
     @Override
     public void update(StateInfo stateInfo) {
       jLabel.setText(stateInfo.getStateMessage());
-      if (stateInfo.isGameEnd()) {
-        String winner = stateInfo.getWinner();
-        gameMessage("Game ends with " + winner + " as the winner!");
-      }
+        if (stateInfo.isGameEnd()) {
+          String winner = stateInfo.getWinner();
+          gameMessage("Game ends with " + winner + " as the winner!");
+        }
     }
   }
 }

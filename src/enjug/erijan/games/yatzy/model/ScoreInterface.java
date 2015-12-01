@@ -11,21 +11,25 @@ public interface ScoreInterface extends ScoreSubject {
 
   void setScore(String playerName, String boxId, int... result);
 
-  void setTempScores(String playerName, List<String> availableScores, int... result);
-
-  void clearTempScores(String playerName);
-
   int getScore(String playerName, String boxId);
 
-  int getTotal(String playerName);
+  List<String> getAvailableScores(String playerName);
+
+  List<String> getAllScores();
+
+  void setTempScores(String playerName, int... result);
 
   int getTempScore(String playerName, String scoreBox);
 
-  List<String> getAllScores();
+  void clearTempScores(String playerName);
+
+  int getTotal(String playerName);
 
   boolean isAllScoreSet(String playerName);
 
   boolean isScoreSet(String playerName, String scoreBox);
 
   boolean isDerivedScore(String boxId);
+
+  String getWinner();
 }

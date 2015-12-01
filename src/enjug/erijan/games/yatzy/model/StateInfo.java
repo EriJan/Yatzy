@@ -6,21 +6,31 @@ import java.util.List;
  * Created by Jan Eriksson on 20/11/15.
  */
 public interface StateInfo extends StateInfoSubject {
+
+  //  ScoreInterface scoreInterface;
   String getWinner();
 
-  boolean isGameEnd();
+  void setWinner(String winner);
+
+  List<Player> getPlayers();
+
+  Player getCurrentPlayer();
+
+  void nextPlayer();
+
+  void setRollingAllowed(boolean rollingAllowed);
+
+  void setScoringAllowed(boolean scoringAllowed);
 
   boolean isRollingAllowed();
 
   boolean isScoringAllowed();
 
+  void setGameEnd(boolean gameEnd);
+
+  boolean isGameEnd();
+
   String getStateMessage();
+
   void setStateMessage(String stateMessage);
-  Player getCurrentPlayer();
-
-  List<String> getAvailableScores();
-
-  int getScore(String boxId);
-
-  int getTempScore(String boxId);
 }

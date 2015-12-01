@@ -58,13 +58,26 @@ public class ScoreSheet implements ScoreInterface {
   }
 
   @Override
-  public void setTempScores(String playerName, List<String> availableScores, int... result) {
+  public void setTempScores(String playerName, int... result) {
+    List<String> availableScores = getAvailableScores(playerName);
+
     HashMap scoreColumn = scoreSheetMap.get(playerName);
     for (String boxId : availableScores) {
       ScoreBox scoreBox = (ScoreBox) scoreColumn.get(boxId);
       scoreBox.setTempScore(result);
     }
     notifyObservers();
+  }
+
+  @Override
+  public List<String> getAvailableScores(String playerName) {
+    List<String> availableScores = new ArrayList<>();
+    for (String id : allScores) {
+      if (!isScoreSet(playerName, id) && !isDerivedScore(id)) {
+        availableScores.add(id);
+      }
+    }
+    return availableScores;
   }
 
   @Override
@@ -162,6 +175,20 @@ public class ScoreSheet implements ScoreInterface {
   @Override
   public boolean isDerivedScore(String boxId) {
     return derivedScores.containsValue(boxId);
+  }
+
+  @Override
+  public String getWinner() {
+    String winner = "";
+    int highScore = 0;
+    for (String playerName : scoreSheetMap.keySet()) {
+      int totScore = getTotal(playerName);
+      if (totScore > highScore) {
+        highScore = totScore;
+        winner = playerName;
+      }
+    }
+    return winner;
   }
 
   // Observer methods

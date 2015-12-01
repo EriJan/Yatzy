@@ -65,19 +65,20 @@ public enum RulesetFactory implements VariantFactory {
     }
 
     @Override
-    public GameControl createGameControl(GameState gameState, DiceHandler diceHandler) {
-      ScoreInterface scoreInterface = gameState.getScoreInterface();
-      ScoringBehavior scoringBehavior = new SelectiveScoreSelection(gameState,
+    public GameControl createGameControl(ScoreInterface scoreInterface,
+                                         StateInfo stateInfo,
+                                         DiceHandler diceHandler) {
+      ScoringBehavior scoringBehavior = new SelectiveScoreSelection(stateInfo,
           scoreInterface, diceHandler);
-      RollBehavior rollBehavior = new RollBehaviorYatzy(gameState, diceHandler);
+      RollBehavior rollBehavior = new RollBehaviorYatzy(stateInfo, diceHandler);
       GameControl gameControl = new GameControlImpl(scoringBehavior, rollBehavior);
       return gameControl;
     }
 
     @Override
-    public YatzyGui getGui(GameControl gameControl, DiceHandler dice, GameState stateInfo) {
-      ScoreInterface scoreInterface = stateInfo.getScoreInterface();
-      return new YatzyGui(gameControl, scoreInterface, dice, stateInfo);
+    public YatzyGui getGui(ScoreInterface scoreInterface, StateInfo stateInfo,
+                           DiceHandler diceHandler, GameControl gameControl) {
+      return new YatzyGui(gameControl, scoreInterface, diceHandler, stateInfo);
     }
   },
 
@@ -130,7 +131,6 @@ public enum RulesetFactory implements VariantFactory {
 
     @Override
     public GameControl createGameControl(GameState gameState, DiceHandler diceHandler) {
-      ScoreInterface scoreInterface = gameState.getScoreInterface();
       ScoringBehavior scoringBehavior = new SelectiveScoreSelection(gameState, scoreInterface, diceHandler);
       RollBehavior rollBehavior = new RollBehaviorYatzy(gameState, diceHandler);
       GameControl gameControl = new GameControlImpl(scoringBehavior, rollBehavior);
@@ -192,8 +192,7 @@ public enum RulesetFactory implements VariantFactory {
     }
 
     @Override
-    public GameControl createGameControl(GameState gameState, DiceHandler diceHandler) {
-      ScoreInterface scoreInterface = gameState.getScoreInterface();
+    public GameControl createGameControl(ScoreInterface scoreInterface, GameState gameState, DiceHandler diceHandler) {
       ScoringBehavior scoringBehavior = new SelectiveScoreSelection(gameState,
           scoreInterface, diceHandler);
       RollBehavior rollBehavior = new RollBehaviorMaxiYatzy(gameState, diceHandler);
@@ -203,8 +202,7 @@ public enum RulesetFactory implements VariantFactory {
 
     @Override
     public YatzyGui getGui(GameControl gameControl, DiceHandler dice, GameState stateInfo) {
-      ScoreInterface scoreInterface = stateInfo.getScoreInterface();
-      return new YatzyGui(gameControl,scoreInterface, dice,stateInfo);
+      return new YatzyGui(gameControl,scoreInterface, dice, stateInfo);
     }
   };
 

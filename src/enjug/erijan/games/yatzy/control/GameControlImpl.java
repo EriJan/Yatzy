@@ -31,4 +31,6 @@ public class GameControlImpl implements GameControl {
     rollBehavior.rollActiveDice();
     scoringBehavior.setTempScores();
   }
+
+
 }

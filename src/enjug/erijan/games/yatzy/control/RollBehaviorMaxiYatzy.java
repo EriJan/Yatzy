@@ -39,7 +39,7 @@ public class RollBehaviorMaxiYatzy implements RollBehavior {
     if (rollsDone < tempRerolls) {
       rollsDone++;
       diceHandler.rollActiveDice();
-      gameState.setCurrentDiceValue(diceHandler.getValues());
+//      gameState.setCurrentDiceValue(diceHandler.getValues());
       gameState.setScoringAllowed(true);
       message = playerName + " rolled some dice "
           + (tempRerolls - rollsDone) + " rolls left.";
@@ -47,7 +47,7 @@ public class RollBehaviorMaxiYatzy implements RollBehavior {
     } else if (rollsDone == tempRerolls) {
       diceHandler.rollActiveDice();
       savedRolls.put(playerName,0);
-      gameState.setCurrentDiceValue(diceHandler.getValues());
+//      gameState.setCurrentDiceValue(diceHandler.getValues());
       gameState.setRollingAllowed(false);
       diceHandler.deActivateAllDice();
       rollsDone = 0;
