@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by Jan Eriksson on 30/11/15.
  */
-public interface ScoreInterface {
+public interface ScoreInterface extends ScoreSubject {
   void addPlayer(String playerName, HashMap scoreColumn);
 
   void setScore(String playerName, String boxId, int... result);
@@ -20,6 +20,8 @@ public interface ScoreInterface {
   int getTotal(String playerName);
 
   int getTempScore(String playerName, String scoreBox);
+
+  List<String> getAllScores();
 
   boolean isAllScoreSet(String playerName);
 

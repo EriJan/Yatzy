@@ -1,6 +1,8 @@
 package enjug.erijan.games.yatzy.control;
 
+import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.yatzy.model.GameState;
+import enjug.erijan.games.yatzy.model.ScoreInterface;
 
 import java.util.ArrayList;
 
@@ -10,17 +12,25 @@ import java.util.ArrayList;
 public class SelectiveScoreSelection implements ScoringBehavior {
 
   private GameState gameState;
+  private ScoreInterface scoreInterface;
+  private DiceHandler diceHandler;
 
-  public SelectiveScoreSelection(GameState gameState) {
+  public SelectiveScoreSelection(GameState gameState,
+                                 ScoreInterface scoreInterface,
+                                 DiceHandler diceHandler) {
     this.gameState = gameState;
+    this.scoreInterface = scoreInterface;
+    this.diceHandler = diceHandler;
   }
 
   @Override
   public void setScore(String boxId) {
-    String messageString = gameState.getCurrentPlayer().getName()
-        + " put the results on " + boxId;
-    gameState.setScore(boxId);
-    gameState.clearTempScores();
+    String playerName = gameState.getCurrentPlayer().getName();
+    String messageString = playerName + " put the results on " + boxId;
+    scoreInterface.setScore(playerName,boxId,diceHandler.getValues());
+    scoreInterface.clearTempScores(playerName);
+//    gameState.setScore(boxId);
+//    gameState.clearTempScores();
     gameState.setScoringAllowed(false);
     gameState.setRollingAllowed(true);
     gameState.nextPlayer();
@@ -36,7 +46,6 @@ public class SelectiveScoreSelection implements ScoringBehavior {
         availableScores.add(id);
       }
     }
-
     gameState.setAvailableScores(availableScores);
   }
 

@@ -3,10 +3,7 @@ package enjug.erijan.games.yatzy.view;
 import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.yatzy.*;
 import enjug.erijan.games.yatzy.control.GameControl;
-import enjug.erijan.games.yatzy.model.GameState;
-import enjug.erijan.games.yatzy.model.Player;
-import enjug.erijan.games.yatzy.model.StateInfo;
-import enjug.erijan.games.yatzy.model.StateInfoObserver;
+import enjug.erijan.games.yatzy.model.*;
 
 import javax.swing.*;
 import javax.swing.JLabel;
@@ -24,17 +21,19 @@ import java.util.List;
 
 public class YatzyGui {
 
-  private DiceHandler diceHandler;
-  private List<String> yatzyBoxTypes;
-
   private JFrame jFrame;
   private JLabel infoLabel;
+
   private ScorePanel scorePanel;
   private DicePanel dicePanel;
   private ButtonsPanel buttonsPanel;
+  private InfoPanel infoPanel;
+
+  private DiceHandler diceHandler;
   private GameControl gameControl;
   private GameState gameState;
-  private InfoPanel infoPanel;
+  private ScoreInterface scoreInterface;
+
   //private StateInfo stateInfo;
 
   /**
@@ -43,9 +42,9 @@ public class YatzyGui {
    * @param gameControl
    * @param diceHandler
    */
-  public YatzyGui(GameControl gameControl,
+  public YatzyGui(GameControl gameControl, ScoreInterface scoreInterface,
                   DiceHandler diceHandler, GameState gameState) {
-    yatzyBoxTypes = new ArrayList<>();
+    //yatzyBoxTypes = new ArrayList<>();
 
     jFrame = new JFrame("Yatzy");
     jFrame.setLayout(new GridBagLayout());
@@ -56,7 +55,7 @@ public class YatzyGui {
     this.gameState = gameState;
     this.gameControl = gameControl;
     this.diceHandler = diceHandler;
-
+    this.scoreInterface = scoreInterface;
     GridBagConstraints c = new GridBagConstraints();
     c.gridx = 0;
     c.gridy = 1;
@@ -213,7 +212,7 @@ public class YatzyGui {
    * Todo blank istf 0...
    */
 
-  public class ScorePanel extends JPanel implements StateInfoObserver {
+  public class ScorePanel extends JPanel implements ScoreObserver {
 
     private Map scoreColumnPerPlayer;
     private Map playerLabels;
@@ -239,7 +238,8 @@ public class YatzyGui {
 
         column++;
       }
-      gameState.registerObserver(this);
+//      gameState.registerObserver(this);
+      scoreInterface.registerObserver(this);
       JLabel jLabel = getCurrentPlayerLabel();
       jLabel.setBorder(BorderFactory.createRaisedSoftBevelBorder());
     }
@@ -255,9 +255,9 @@ public class YatzyGui {
       c.gridy = 0;
       int row = 1;
 
-      List<String> allScores = gameState.getAllScores();
+      List<String> allScores = scoreInterface.getAllScores();
       for (String boxId : allScores) {
-        if (gameState.isDerivedScore(boxId)) {
+        if (scoreInterface.isDerivedScore(boxId)) {
           JLabel jLabel = new JLabel(boxId);
           Font font = jLabel.getFont();
           Font boldFont = new Font(font.getFontName(), Font.BOLD, font.getSize());
@@ -330,12 +330,12 @@ public class YatzyGui {
       playerLabels.put(name,nameLabel);
       this.add(nameLabel, c);
 
-      List<String> allScores = gameState.getAllScores();
+      List<String> allScores = scoreInterface.getAllScores();
       int row = 1;
       for (String boxId : allScores) {
         c.gridy = row;
         c.anchor = GridBagConstraints.CENTER;
-        JLabel label = new JLabel(Integer.toString(gameState.getScore(boxId)));
+        JLabel label = new JLabel(Integer.toString(scoreInterface.getScore(name,boxId)));
         //button.setActionCommand(boxId.name());
         label.setForeground(Color.BLACK);
         label.setHorizontalTextPosition(JLabel.CENTER);
@@ -354,14 +354,14 @@ public class YatzyGui {
       String name = gameState.getCurrentPlayer().getName();
       Map scoreColumn = (Map) scoreColumnPerPlayer.get(name);
       //JLabel nameLabel = (JLabel) playerLabels.get(name);
-      List<String> allScores = gameState.getAllScores();
+      List<String> allScores = scoreInterface.getAllScores();
       for (String boxId : allScores) {
         JLabel label = (JLabel) scoreColumn.get(boxId);
-        if (gameState.isScoreSet(boxId)) {
-          label.setText(Integer.toString(gameState.getScore(boxId)));
+        if (scoreInterface.isScoreSet(name,boxId)) {
+          label.setText(Integer.toString(scoreInterface.getScore(name,boxId)));
           label.setForeground(Color.BLACK);
         } else {
-          int tmpScore = gameState.getTempScore(boxId);
+          int tmpScore = scoreInterface.getTempScore(name,boxId);
           label.setText(Integer.toString(tmpScore));
           if (tmpScore > 0) {
             label.setForeground(Color.GREEN);
@@ -377,7 +377,7 @@ public class YatzyGui {
     }
 
     @Override
-    public void update(StateInfo stateInfo) {
+    public void update(ScoreInterface scoreInterface) {
       updateScoreSelection();
       updateScore();
       System.out.println("Updating score selection again");

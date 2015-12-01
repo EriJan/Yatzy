@@ -23,14 +23,14 @@ public class GameState implements StateInfo {
   private boolean scoringAllowed;
   private boolean gameEnd;
 
-  ScoreSheet scoreSheet;
+  ScoreInterface scoreInterface;
 
-  public GameState(ScoreSheet scoreSheet, List players, List allScores) {
+  public GameState(ScoreInterface scoreInterface, List players, List allScores) {
     this.players = players;
     playerListIterator = players.listIterator();
     currentPlayer = playerListIterator.next();
 
-    this.scoreSheet = scoreSheet;
+    this.scoreInterface = scoreInterface;
     this.allScores = allScores;
     availableScores = new ArrayList<>(allScores);
 
@@ -51,30 +51,30 @@ public class GameState implements StateInfo {
   }
 
   public void setScore(String boxId) {
-    scoreSheet.setScore(currentPlayer.getName(), boxId, currentDiceValue);
+    scoreInterface.setScore(currentPlayer.getName(), boxId, currentDiceValue);
   }
 
   public void setTempScores() {
-    scoreSheet.setTempScores(currentPlayer.getName(), availableScores,
+    scoreInterface.setTempScores(currentPlayer.getName(), availableScores,
         currentDiceValue);
     notifyObservers();
   }
 
   public void clearTempScores() {
-    scoreSheet.clearTempScores(currentPlayer.getName());
+    scoreInterface.clearTempScores(currentPlayer.getName());
     notifyObservers();
   }
 
+  public ScoreInterface getScoreInterface() {
+    return scoreInterface;
+  }
+
   public boolean isScoreSet(String boxId) {
-    return scoreSheet.isScoreSet(currentPlayer.getName(), boxId);
+    return scoreInterface.isScoreSet(currentPlayer.getName(), boxId);
   }
 
   public boolean isDerivedScore(String boxId) {
-    return scoreSheet.isDerivedScore(boxId);
-  }
-
-  public List<String> getAllScores() {
-    return allScores;
+    return scoreInterface.isDerivedScore(boxId);
   }
 
   public List<Player> getPlayers() {
@@ -87,7 +87,7 @@ public class GameState implements StateInfo {
 
   public void nextPlayer() {
     if (!playerListIterator.hasNext()) {
-      gameEnd = scoreSheet.isAllScoreSet(currentPlayer.getName());
+      gameEnd = scoreInterface.isAllScoreSet(currentPlayer.getName());
       rollingAllowed = !gameEnd;
       playerListIterator = players.listIterator();
     }
@@ -103,7 +103,7 @@ public class GameState implements StateInfo {
     String winner = "";
     int highScore = 0;
     for (Player player : players) {
-      int totScore = scoreSheet.getTotal(player.getName());
+      int totScore = scoreInterface.getTotal(player.getName());
       if (totScore > highScore) {
         highScore = totScore;
         winner = player.getName();
@@ -165,12 +165,12 @@ public class GameState implements StateInfo {
 
   @Override
   public int getScore(String boxId) {
-    return scoreSheet.getScore(currentPlayer.getName(),boxId);
+    return scoreInterface.getScore(currentPlayer.getName(),boxId);
   }
 
   @Override
   public int getTempScore(String boxId) {
-    return scoreSheet.getTempScore(currentPlayer.getName(),boxId);
+    return scoreInterface.getTempScore(currentPlayer.getName(),boxId);
   }
 
   @Override

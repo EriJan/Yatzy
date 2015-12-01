@@ -1,13 +1,11 @@
-package enjug.erijan.games.yatzy.rules;
+package enjug.erijan.games.yatzy;
 
 import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.yatzy.control.ScoringBehavior;
 import enjug.erijan.games.yatzy.control.SelectiveScoreSelection;
 import enjug.erijan.games.yatzy.control.*;
-import enjug.erijan.games.yatzy.model.GameState;
-import enjug.erijan.games.yatzy.model.Player;
-import enjug.erijan.games.yatzy.model.ScoreSheet;
-import enjug.erijan.games.yatzy.model.YatzyDice;
+import enjug.erijan.games.yatzy.model.*;
+import enjug.erijan.games.yatzy.rules.*;
 import enjug.erijan.games.yatzy.view.YatzyGui;
 
 import javax.swing.*;
@@ -41,7 +39,7 @@ public enum RulesetFactory implements VariantFactory {
       ArrayList<String> allScores =
           enumSetToStringList(EnumSet.allOf(YatzyBoxes.class));
 
-      ScoreSheet scoreSheet = new ScoreSheet(derivedScores, sumRange, totalRange);
+      ScoreSheet scoreSheet = new ScoreSheet(allScores, derivedScores, sumRange, totalRange);
 
       ArrayList<Player> playerList = addPlayers();
       for (Player player : playerList) {
@@ -68,7 +66,9 @@ public enum RulesetFactory implements VariantFactory {
 
     @Override
     public GameControl createGameControl(GameState gameState, DiceHandler diceHandler) {
-      ScoringBehavior scoringBehavior = new SelectiveScoreSelection(gameState);
+      ScoreInterface scoreInterface = gameState.getScoreInterface();
+      ScoringBehavior scoringBehavior = new SelectiveScoreSelection(gameState,
+          scoreInterface, diceHandler);
       RollBehavior rollBehavior = new RollBehaviorYatzy(gameState, diceHandler);
       GameControl gameControl = new GameControlImpl(scoringBehavior, rollBehavior);
       return gameControl;
@@ -76,7 +76,8 @@ public enum RulesetFactory implements VariantFactory {
 
     @Override
     public YatzyGui getGui(GameControl gameControl, DiceHandler dice, GameState stateInfo) {
-      return new YatzyGui(gameControl, dice, stateInfo);
+      ScoreInterface scoreInterface = stateInfo.getScoreInterface();
+      return new YatzyGui(gameControl, scoreInterface, dice, stateInfo);
     }
   },
 
@@ -102,7 +103,7 @@ public enum RulesetFactory implements VariantFactory {
       ArrayList<String> allScores =
           enumSetToStringList(EnumSet.allOf(YahtzeeBoxes.class));
 
-      ScoreSheet scoreSheet = new ScoreSheet(derivedScores, sumRange, totalRange);
+      ScoreSheet scoreSheet = new ScoreSheet(allScores, derivedScores, sumRange, totalRange);
 
       ArrayList<Player> playerList = addPlayers();
       for (Player player : playerList) {
@@ -129,7 +130,8 @@ public enum RulesetFactory implements VariantFactory {
 
     @Override
     public GameControl createGameControl(GameState gameState, DiceHandler diceHandler) {
-      ScoringBehavior scoringBehavior = new SelectiveScoreSelection(gameState);
+      ScoreInterface scoreInterface = gameState.getScoreInterface();
+      ScoringBehavior scoringBehavior = new SelectiveScoreSelection(gameState, scoreInterface, diceHandler);
       RollBehavior rollBehavior = new RollBehaviorYatzy(gameState, diceHandler);
       GameControl gameControl = new GameControlImpl(scoringBehavior, rollBehavior);
       return gameControl;
@@ -137,7 +139,8 @@ public enum RulesetFactory implements VariantFactory {
 
     @Override
     public YatzyGui getGui(GameControl gameControl, DiceHandler dice, GameState stateInfo) {
-      return new YatzyGui(gameControl, dice, stateInfo);
+      ScoreInterface scoreInterface = stateInfo.getScoreInterface();
+      return new YatzyGui(gameControl, scoreInterface, dice, stateInfo);
     }
   },
   MAXI_YATZY {
@@ -163,7 +166,7 @@ public enum RulesetFactory implements VariantFactory {
       ArrayList<String> allScores =
           enumSetToStringList(EnumSet.allOf(MaxiYatzyBoxes.class));
 
-      ScoreSheet scoreSheet = new ScoreSheet(derivedScores, sumRange, totalRange);
+      ScoreSheet scoreSheet = new ScoreSheet(allScores, derivedScores, sumRange, totalRange);
 
       ArrayList<Player> playerList = addPlayers();
       for (Player player : playerList) {
@@ -190,7 +193,9 @@ public enum RulesetFactory implements VariantFactory {
 
     @Override
     public GameControl createGameControl(GameState gameState, DiceHandler diceHandler) {
-      ScoringBehavior scoringBehavior = new SelectiveScoreSelection(gameState);
+      ScoreInterface scoreInterface = gameState.getScoreInterface();
+      ScoringBehavior scoringBehavior = new SelectiveScoreSelection(gameState,
+          scoreInterface, diceHandler);
       RollBehavior rollBehavior = new RollBehaviorMaxiYatzy(gameState, diceHandler);
       GameControl gameControl = new GameControlImpl(scoringBehavior, rollBehavior);
       return gameControl;
@@ -198,7 +203,8 @@ public enum RulesetFactory implements VariantFactory {
 
     @Override
     public YatzyGui getGui(GameControl gameControl, DiceHandler dice, GameState stateInfo) {
-      return new YatzyGui(gameControl,dice,stateInfo);
+      ScoreInterface scoreInterface = stateInfo.getScoreInterface();
+      return new YatzyGui(gameControl,scoreInterface, dice,stateInfo);
     }
   };
 

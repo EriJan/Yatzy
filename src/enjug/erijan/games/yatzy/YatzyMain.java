@@ -1,6 +1,5 @@
 package enjug.erijan.games.yatzy;
 
-import enjug.erijan.games.yatzy.rules.RulesetFactory;
 import enjug.erijan.games.yatzy.view.YatzyGui;
 
 import javax.swing.*;

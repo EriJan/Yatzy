@@ -19,7 +19,7 @@ public class DicePanel extends JPanel implements DiceObserver {
 
   private JPanel diePanel;
   private JPanel selectedDicePanel;
-  private GameControl yatzyAgent;
+  private GameControl gameControl;
   private List<GuiDie> dieButtons;
 
 
@@ -42,9 +42,9 @@ public class DicePanel extends JPanel implements DiceObserver {
     }
   }
 
-  public DicePanel(GameControl yatzyAgent, DiceHandler diceHandler) {
+  public DicePanel(GameControl gameControl, DiceHandler diceHandler) {
     this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-    this.yatzyAgent = yatzyAgent;
+    this.gameControl = gameControl;
     dieButtons = new ArrayList<GuiDie>();
     diceHandler.registerObserver(this);
     addDice(diceHandler);
@@ -71,7 +71,7 @@ public class DicePanel extends JPanel implements DiceObserver {
       ImageIcon imageIcon = unselectedDieIcons[die.getFace() - 1];
 
       JButton button = new JButton(imageIcon);
-      button.addActionListener(e -> yatzyAgent.toggleActiveDie(die));
+      button.addActionListener(e -> gameControl.toggleActiveDie(die));
       button.setOpaque(false);
       button.setContentAreaFilled(false);
       button.setBorderPainted(false);

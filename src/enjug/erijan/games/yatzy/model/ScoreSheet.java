@@ -15,6 +15,7 @@ import java.util.*;
 public class ScoreSheet implements ScoreInterface {
   private HashMap<String, HashMap> scoreSheetMap;
 
+  private List<String> allScores;
   private HashMap<String, String> derivedScores;
   private List<String> sumRange;
   private List<String> totalRange;
@@ -23,7 +24,10 @@ public class ScoreSheet implements ScoreInterface {
   private String bonusKey;
   private String totalKey;
 
-  public ScoreSheet(HashMap derivedScores, List sumRange, List totalRange) {
+  private List<ScoreObserver> observerList;
+
+  public ScoreSheet(List allScores, HashMap derivedScores, List sumRange, List totalRange) {
+    this.allScores = allScores;
     this.derivedScores = derivedScores;
     this.sumRange = sumRange;
     this.totalRange = totalRange;
@@ -33,6 +37,8 @@ public class ScoreSheet implements ScoreInterface {
     totalKey = (String) derivedScores.get("total");
     
     scoreSheetMap = new HashMap<String,HashMap>();
+
+    observerList = new ArrayList<>();
   }
 
   @Override
@@ -48,6 +54,7 @@ public class ScoreSheet implements ScoreInterface {
       scoreBox.setScore(result);
       setSum(playerName);
     }
+    notifyObservers();
   }
 
   @Override
@@ -57,6 +64,7 @@ public class ScoreSheet implements ScoreInterface {
       ScoreBox scoreBox = (ScoreBox) scoreColumn.get(boxId);
       scoreBox.setTempScore(result);
     }
+    notifyObservers();
   }
 
   @Override
@@ -69,6 +77,7 @@ public class ScoreSheet implements ScoreInterface {
         scoreBox.setTempScore(0);
       }
     }
+    notifyObservers();
   }
 
   private void setSum(String playerName) {
@@ -95,6 +104,7 @@ public class ScoreSheet implements ScoreInterface {
       scoreBox = (ScoreBox) scoreColumn.get(totalKey);
       scoreBox.setScore(localSum);
     }
+    notifyObservers();
   }
 
   @Override
@@ -116,6 +126,11 @@ public class ScoreSheet implements ScoreInterface {
     HashMap scoreColumn = scoreSheetMap.get(playerName);
     ScoreBox localBox = (ScoreBox) scoreColumn.get(scoreBox);
     return localBox.getTempScore();
+  }
+
+  @Override
+  public List<String> getAllScores() {
+    return allScores;
   }
 
   @Override
@@ -147,5 +162,24 @@ public class ScoreSheet implements ScoreInterface {
   @Override
   public boolean isDerivedScore(String boxId) {
     return derivedScores.containsValue(boxId);
+  }
+
+  // Observer methods
+
+  @Override
+  public void registerObserver(ScoreObserver o) {
+    observerList.add(o);
+  }
+
+  @Override
+  public void removeObserver(ScoreObserver o) {
+    observerList.remove(o);
+  }
+
+  @Override
+  public void notifyObservers() {
+    for (ScoreObserver o : observerList) {
+      o.update(this);
+    }
   }
 }
