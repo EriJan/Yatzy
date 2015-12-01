@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Jan Eriksson on 29/10/15.
  */
-public enum RulesetFactory implements VariantFactory {
+public enum RulesetFactory implements RulesetFactoryInterface {
   YATZY {
     @Override
     public YatzyGui createAndPopulateGame() {
@@ -52,7 +52,7 @@ public enum RulesetFactory implements VariantFactory {
         scoreSheet.addPlayer(player.getName(), scoreColumn);
       }
 
-      StateInfo state = new GameState(playerList);
+      GameState state = new GameStateImpl(playerList);
 
       DiceHandler dice = new YatzyDice(5);
 
@@ -100,7 +100,7 @@ public enum RulesetFactory implements VariantFactory {
         scoreSheet.addPlayer(player.getName(), scoreColumn);
       }
 
-      StateInfo state = new GameState(playerList);
+      GameState state = new GameStateImpl(playerList);
 
       DiceHandler dice = new YatzyDice(5);
 
@@ -148,7 +148,7 @@ public enum RulesetFactory implements VariantFactory {
         scoreSheet.addPlayer(player.getName(), scoreColumn);
       }
 
-      StateInfo state = new GameState(playerList);
+      GameState state = new GameStateImpl(playerList);
 
       DiceHandler dice = new YatzyDice(6);
 

@@ -31,10 +31,10 @@ public class YatzyGui {
 
   private DiceHandler diceHandler;
   private GameControl gameControl;
-  private StateInfo stateInfo;
+  private GameState gameState;
   private ScoreInterface scoreInterface;
 
-  //private StateInfo stateInfo;
+  //private GameState gameState;
 
   /**
    * Constructor to YatzyGui
@@ -43,7 +43,7 @@ public class YatzyGui {
    * @param diceHandler
    */
   public YatzyGui(GameControl gameControl, ScoreInterface scoreInterface,
-                  DiceHandler diceHandler, StateInfo stateInfo) {
+                  DiceHandler diceHandler, GameState gameState) {
     //yatzyBoxTypes = new ArrayList<>();
 
     jFrame = new JFrame("Yatzy");
@@ -51,8 +51,8 @@ public class YatzyGui {
     jFrame.setVisible(true);
     jFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-    infoPanel = new InfoPanel(stateInfo);
-    this.stateInfo = stateInfo;
+    infoPanel = new InfoPanel(gameState);
+    this.gameState = gameState;
     this.gameControl = gameControl;
     this.diceHandler = diceHandler;
     this.scoreInterface = scoreInterface;
@@ -129,7 +129,7 @@ public class YatzyGui {
   }
 
   // Todo, add space between buttons
-  private class ButtonsPanel extends JPanel implements StateInfoObserver {
+  private class ButtonsPanel extends JPanel implements GameStateObserver {
 
     private final Dimension preferedButtonSize = new Dimension(100,30);
     private JButton rollButton;
@@ -141,7 +141,7 @@ public class YatzyGui {
       addRollButton(diceHandler);
       addSetScoreButton();
       addNewGameButton();
-      stateInfo.registerObserver(this);
+      gameState.registerObserver(this);
       //this.setBorder(BorderFactory.createEtchedBorder());
     }
 
@@ -201,9 +201,9 @@ public class YatzyGui {
     }
 
     @Override
-    public void update(StateInfo stateInfo) {
-      rollButton.setEnabled(stateInfo.isRollingAllowed());
-      scoreButton.setEnabled(stateInfo.isScoringAllowed());
+    public void update(GameState gameState) {
+      rollButton.setEnabled(gameState.isRollingAllowed());
+      scoreButton.setEnabled(gameState.isScoringAllowed());
     }
   }
 
@@ -233,19 +233,19 @@ public class YatzyGui {
 
       int column = 1;
 
-      for (Player player : stateInfo.getPlayers()) {
+      for (Player player : gameState.getPlayers()) {
         addScore(player, column);
 
         column++;
       }
-//      stateInfo.registerObserver(this);
+//      gameState.registerObserver(this);
       scoreInterface.registerObserver(this);
       JLabel jLabel = getCurrentPlayerLabel();
       jLabel.setBorder(BorderFactory.createRaisedSoftBevelBorder());
     }
 
     public JLabel getCurrentPlayerLabel() {
-      String name = stateInfo.getCurrentPlayer().getName();
+      String name = gameState.getCurrentPlayer().getName();
       return  (JLabel) playerLabels.get(name);
     }
 
@@ -292,7 +292,7 @@ public class YatzyGui {
         jRadioButton.setEnabled(false);
       }
 
-      String playerName = stateInfo.getCurrentPlayer().getName();
+      String playerName = gameState.getCurrentPlayer().getName();
       List<String> availSelect = scoreInterface.getAvailableScores(playerName);
 
       for (String boxId : availSelect) {
@@ -352,7 +352,7 @@ public class YatzyGui {
     }
 
     public void updateScore() {
-      String name = stateInfo.getCurrentPlayer().getName();
+      String name = gameState.getCurrentPlayer().getName();
       Map scoreColumn = (Map) scoreColumnPerPlayer.get(name);
       //JLabel nameLabel = (JLabel) playerLabels.get(name);
       List<String> allScores = scoreInterface.getAllScores();
@@ -388,22 +388,22 @@ public class YatzyGui {
   /**
    * Created by Jan Eriksson on 19/11/15.
    */
-  public static class InfoPanel extends JPanel implements StateInfoObserver {
+  public static class InfoPanel extends JPanel implements GameStateObserver {
 
     JLabel jLabel;
 
-    public InfoPanel(StateInfo stateInfo) {
+    public InfoPanel(GameState gameState) {
       jLabel = new JLabel("Lets play some Yatzy!");
-      //this.stateInfo = stateInfo;
+      //this.gameState = gameState;
       this.add(jLabel);
-      stateInfo.registerObserver(this);
+      gameState.registerObserver(this);
     }
 
     @Override
-    public void update(StateInfo stateInfo) {
-      jLabel.setText(stateInfo.getStateMessage());
-        if (stateInfo.isGameEnd()) {
-          String winner = stateInfo.getWinner();
+    public void update(GameState gameState) {
+      jLabel.setText(gameState.getStateMessage());
+        if (gameState.isGameEnd()) {
+          String winner = gameState.getWinner();
           gameMessage("Game ends with " + winner + " as the winner!");
         }
     }

@@ -3,7 +3,6 @@ package enjug.erijan.games.yatzy.control;
 import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.util.GameDie;
 import enjug.erijan.games.yatzy.model.GameState;
-import enjug.erijan.games.yatzy.model.StateInfo;
 
 /**
  * Created by Jan Eriksson on 16/11/15.
@@ -13,29 +12,27 @@ public class RollBehaviorYatzy implements RollBehavior {
 
   private static final int maxRerolls = 2;
   private DiceHandler diceHandler;
-  private StateInfo stateInfo;
+  private GameState gameState;
   private int rollsDone;
 
-  public RollBehaviorYatzy(StateInfo stateInfo, DiceHandler diceHandler) {
-    this.stateInfo = stateInfo;
+  public RollBehaviorYatzy(GameState gameState, DiceHandler diceHandler) {
+    this.gameState = gameState;
     this.diceHandler = diceHandler;
   }
 
   @Override
   public void rollActiveDice() {
-    String playerName = stateInfo.getCurrentPlayer().getName();
+    String playerName = gameState.getCurrentPlayer().getName();
     String message;
     if (rollsDone < maxRerolls) {
       rollsDone++;
       diceHandler.rollActiveDice();
-//      gameState.setCurrentDiceValue(diceHandler.getValues());
-      stateInfo.setScoringAllowed(true);
+      gameState.setScoringAllowed(true);
       message = playerName + " rolled some dice.";
 
     } else if (rollsDone == maxRerolls) {
       diceHandler.rollActiveDice();
-//      gameState.setCurrentDiceValue(diceHandler.getValues());
-      stateInfo.setRollingAllowed(false);
+      gameState.setRollingAllowed(false);
       diceHandler.deActivateAllDice();
       rollsDone = 0;
       message = playerName + " last roll.";
@@ -43,7 +40,8 @@ public class RollBehaviorYatzy implements RollBehavior {
     } else {
       message = "No more rolls alowed.";
     }
-    stateInfo.setStateMessage(message);
+    gameState.setChanged();
+    gameState.setStateMessage(message);
   }
 
   @Override

@@ -12,11 +12,6 @@ public class GameControlImpl implements GameControl {
 
   private GameControlImpl() {};
 
-  public GameControlImpl(ScoringBehavior scoringBehavior, RollBehavior rollBehavior) {
-    this.scoringBehavior = scoringBehavior;
-    this.rollBehavior = rollBehavior;
-  }
-
   public static GameControl getEmptyGameControl() {
     return new GameControlImpl();
   }
