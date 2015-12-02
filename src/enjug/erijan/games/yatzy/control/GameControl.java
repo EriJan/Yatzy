@@ -11,16 +11,14 @@ public interface GameControl {
   /**
    * Used to set the behaviour for score selection.
    *
-   * @param scoringBehavior A reference to a object implementing
-   *                        the ScoringBehaviour interface.
+   * @param scoringBehavior A reference to a object implementing the ScoringBehaviour interface.
    */
   void setScoringBehavior(ScoringBehavior scoringBehavior);
 
   /**
    * Setter for the behavior for dice rolling.
    *
-   * @param rollBehavior A reference to an object implementing
-   *                     the RollBehaviour interface.
+   * @param rollBehavior A reference to an object implementing the RollBehaviour interface.
    */
   void setRollBehavior(RollBehavior rollBehavior);
 
