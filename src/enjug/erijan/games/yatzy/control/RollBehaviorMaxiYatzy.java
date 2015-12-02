@@ -95,7 +95,7 @@ public class RollBehaviorMaxiYatzy implements RollBehavior {
   }
 
   /**
-   * Do saving of dice allowed until at least one roll.
+   * No holding of dice allowed until at least one roll.
    *
    * @param die Specific die to activate/deactivate.
    */

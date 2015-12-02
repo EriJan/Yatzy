@@ -3,7 +3,7 @@ package enjug.erijan.games.yatzy.control;
 import enjug.erijan.games.util.GameDie;
 
 /**
- * Roll behavior interface for use eith Yatzy and variants.
+ * Roll behavior interface for use with Yatzy and variants.
  *
  * Created by Jan Eriksson on 16/11/15.
  */

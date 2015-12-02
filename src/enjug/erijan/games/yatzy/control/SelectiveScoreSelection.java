@@ -6,6 +6,10 @@ import enjug.erijan.games.yatzy.model.Player;
 import enjug.erijan.games.yatzy.model.ScoreInterface;
 
 /**
+ *
+ * The most common variant of score selection gives full flexibility on where
+ * to put a dice result.
+ *
  * Created by Jan Eriksson on 16/11/15.
  */
 public class SelectiveScoreSelection implements ScoringBehavior {
