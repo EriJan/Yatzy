@@ -1,5 +1,7 @@
 package enjug.erijan.games.yatzy.model;
 
+import enjug.erijan.games.util.GenericObserver;
+
 import java.util.*;
 
 /**
@@ -7,7 +9,7 @@ import java.util.*;
  */
 public class GameStateImpl implements GameState {
 
-  private List<GameStateObserver> observerList;
+  private List<GenericObserver> genericObserverList;
   private boolean hasChanged;
   private StringBuffer stateMessage;
 
@@ -29,7 +31,7 @@ public class GameStateImpl implements GameState {
     currentPlayer = playerListIterator.next();
 
     stateMessage = new StringBuffer();
-    observerList = new ArrayList<>();
+    genericObserverList = new ArrayList<>();
     hasChanged = false;
 
     rollingAllowed = true;
@@ -113,22 +115,22 @@ public class GameStateImpl implements GameState {
     return winner;
   }
 
-  // Observer methods
+  // GenericObserver methods
 
   @Override
-  public void registerObserver(GameStateObserver o) {
-    observerList.add(o);
+  public void registerObserver(GenericObserver o) {
+    genericObserverList.add(o);
   }
 
   @Override
-  public void removeObserver(GameStateObserver o) {
-    observerList.remove(o);
+  public void removeObserver(GenericObserver o) {
+    genericObserverList.remove(o);
   }
 
   @Override
   public void notifyObservers() {
     if (hasChanged) {
-      for (GameStateObserver o : observerList) {
+      for (GenericObserver o : genericObserverList) {
         o.update(this);
       }
     }

@@ -11,7 +11,7 @@ import java.util.Iterator;
  * Created by Jan Eriksson on 27/10/15.
  */
 
-public interface DiceHandler extends DiceSubject {
+public interface DiceHandler extends GenericSubject {
 
   /**
    * Roll a subset of the dice.

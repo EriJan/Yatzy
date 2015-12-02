@@ -1,11 +1,13 @@
 package enjug.erijan.games.yatzy.model;
 
+import enjug.erijan.games.util.GenericSubject;
+
 import java.util.List;
 
 /**
  * Created by Jan Eriksson on 20/11/15.
  */
-public interface GameState extends GameStateSubject {
+public interface GameState extends GenericSubject {
 
   String getWinner();
 

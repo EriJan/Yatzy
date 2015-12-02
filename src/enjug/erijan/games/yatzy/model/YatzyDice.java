@@ -16,7 +16,7 @@ public class YatzyDice implements DiceHandler {
   List<GameDie> dice;
   List<GameDie> activeDice;
   DieFactory dieType;
-  List<DiceObserver> observers;
+  List<GenericObserver> observers;
 
   public YatzyDice(int numberOfDice) {
     dice = new ArrayList<GameDie>();
@@ -29,7 +29,7 @@ public class YatzyDice implements DiceHandler {
     for(GameDie d : dice) {
       activeDice.add(d);
     }
-    observers = new ArrayList<DiceObserver>();
+    observers = new ArrayList<>();
   }
 
   @Override
@@ -101,18 +101,18 @@ public class YatzyDice implements DiceHandler {
   }
 
   @Override
-  public void registerObserver(DiceObserver o) {
+  public void registerObserver(GenericObserver o) {
     observers.add(o);
   }
 
   @Override
-  public void removeObserver(DiceObserver o) {
+  public void removeObserver(GenericObserver o) {
     observers.remove(o);
   }
 
   @Override
   public void notifyObservers() {
-    for (DiceObserver o : observers) {
+    for (GenericObserver o : observers) {
       o.update(this);
     }
   }

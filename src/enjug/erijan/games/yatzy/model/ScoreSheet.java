@@ -1,5 +1,6 @@
 package enjug.erijan.games.yatzy.model;
 
+import enjug.erijan.games.util.GenericObserver;
 import enjug.erijan.games.yatzy.rules.ScoreBox;
 
 import java.util.*;
@@ -24,7 +25,7 @@ public class ScoreSheet implements ScoreInterface {
   private String bonusKey;
   private String totalKey;
 
-  private List<ScoreObserver> observerList;
+  private List<GenericObserver> observerList;
 
   public ScoreSheet(List allScores, HashMap derivedScores, List sumRange, List totalRange) {
     this.allScores = allScores;
@@ -191,21 +192,21 @@ public class ScoreSheet implements ScoreInterface {
     return winner;
   }
 
-  // Observer methods
+  // GenericObserver methods
 
   @Override
-  public void registerObserver(ScoreObserver o) {
+  public void registerObserver(GenericObserver o) {
     observerList.add(o);
   }
 
   @Override
-  public void removeObserver(ScoreObserver o) {
+  public void removeObserver(GenericObserver o) {
     observerList.remove(o);
   }
 
   @Override
   public void notifyObservers() {
-    for (ScoreObserver o : observerList) {
+    for (GenericObserver o : observerList) {
       o.update(this);
     }
   }

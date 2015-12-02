@@ -57,15 +57,15 @@ public enum RulesetFactory implements RulesetFactoryInterface {
       DiceHandler dice = new YatzyDice(5);
 
       RollBehavior rolling = new RollBehaviorYatzy(state, dice);
-      ScoringBehavior scoring = new SelectiveScoreSelection(state,scoreSheet,dice);
+      ScoringBehavior scoring = new SelectiveScoreSelection(state, scoreSheet, dice);
       GameControl control = GameControlImpl.getEmptyGameControl();
       control.setRollBehavior(rolling);
       control.setScoringBehavior(scoring);
-      return new YatzyGui(control,scoreSheet,dice,state);
+      return new YatzyGui(control, scoreSheet, dice, state);
     }
   },
 
-  YATZEE {
+  YAHTZEE {
     @Override
     public YatzyGui createAndPopulateGame() {
 
@@ -79,7 +79,7 @@ public enum RulesetFactory implements RulesetFactoryInterface {
       EnumSet<YahtzeeBoxes> sumRangeSet = EnumSet.range(YahtzeeBoxes.ONES,
           YahtzeeBoxes.SIXES);
       EnumSet<YahtzeeBoxes> totalRangeSet = EnumSet.range(YahtzeeBoxes.SUM,
-          YahtzeeBoxes.YATZY);
+          YahtzeeBoxes.YAHTZEE);
 
       ArrayList<String> sumRange = enumSetToStringList(sumRangeSet);
       ArrayList<String> totalRange = enumSetToStringList(totalRangeSet);
@@ -152,13 +152,13 @@ public enum RulesetFactory implements RulesetFactoryInterface {
 
       DiceHandler dice = new YatzyDice(6);
 
-      RollBehavior rolling = new RollBehaviorMaxiYatzy(state,dice);
+      RollBehavior rolling = new RollBehaviorMaxiYatzy(state, dice);
       ScoringBehavior scoring = new SelectiveScoreSelection(state, scoreSheet, dice);
       GameControl control = GameControlImpl.getEmptyGameControl();
       control.setRollBehavior(rolling);
       control.setScoringBehavior(scoring);
 
-      return new YatzyGui(control,scoreSheet,dice,state);
+      return new YatzyGui(control, scoreSheet, dice, state);
     }
   };
 
@@ -171,7 +171,7 @@ public enum RulesetFactory implements RulesetFactoryInterface {
       String playerInputStr = YatzyGui.userInput(
           "What is the name of player " + playerCounter + " ?");
 
-      if ( playerInputStr.isEmpty()) {
+      if (playerInputStr.isEmpty()) {
         if (playerCounter > 1) {
           morePlayers = false;
         } else {
@@ -191,5 +191,23 @@ public enum RulesetFactory implements RulesetFactoryInterface {
     return enumSet.stream()
         .map(T::toString)
         .collect(Collectors.toCollection(ArrayList::new));
+  }
+
+  @Override
+  public String toString() {
+    String string;
+
+    switch (this) {
+      case YATZY : string = "Yatzy";
+        break;
+      case MAXI_YATZY : string = "Maxi Yatzy";
+        break;
+      case YAHTZEE: string = "Yahtzee";
+        break;
+      default : string = this.name();
+        break;
+    }
+
+    return string;
   }
 }

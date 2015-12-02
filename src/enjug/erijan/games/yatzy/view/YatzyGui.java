@@ -1,5 +1,6 @@
 package enjug.erijan.games.yatzy.view;
 
+import enjug.erijan.games.util.GenericObserver;
 import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.yatzy.*;
 import enjug.erijan.games.yatzy.control.GameControl;
@@ -129,7 +130,7 @@ public class YatzyGui {
   }
 
   // Todo, add space between buttons
-  private class ButtonsPanel extends JPanel implements GameStateObserver {
+  private class ButtonsPanel extends JPanel implements GenericObserver<GameState> {
 
     private final Dimension preferedButtonSize = new Dimension(100,30);
     private JButton rollButton;
@@ -212,7 +213,7 @@ public class YatzyGui {
    * Todo blank istf 0...
    */
 
-  public class ScorePanel extends JPanel implements ScoreObserver {
+  public class ScorePanel extends JPanel implements GenericObserver<ScoreInterface> {
 
     private Map scoreColumnPerPlayer;
     private Map playerLabels;
@@ -238,7 +239,6 @@ public class YatzyGui {
 
         column++;
       }
-//      gameState.registerObserver(this);
       scoreInterface.registerObserver(this);
       JLabel jLabel = getCurrentPlayerLabel();
       jLabel.setBorder(BorderFactory.createRaisedSoftBevelBorder());
@@ -388,7 +388,7 @@ public class YatzyGui {
   /**
    * Created by Jan Eriksson on 19/11/15.
    */
-  public static class InfoPanel extends JPanel implements GameStateObserver {
+  public static class InfoPanel extends JPanel implements GenericObserver<GameState> {
 
     JLabel jLabel;
 

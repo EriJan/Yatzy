@@ -1,12 +1,14 @@
 package enjug.erijan.games.yatzy.model;
 
+import enjug.erijan.games.util.GenericSubject;
+
 import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by Jan Eriksson on 30/11/15.
  */
-public interface ScoreInterface extends ScoreSubject {
+public interface ScoreInterface extends GenericSubject {
   void addPlayer(String playerName, HashMap scoreColumn);
 
   void setScore(String playerName, String boxId, int... result);

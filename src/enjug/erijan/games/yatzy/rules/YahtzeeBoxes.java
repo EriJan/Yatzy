@@ -22,7 +22,7 @@ public enum YahtzeeBoxes implements ScoreRule, ScoreBoxFactory {
   SMALL_STRAIGHT (result -> ScoreCalculator.smallStraightYahtzee(result)),
   BIG_STRAIGHT (result -> ScoreCalculator.bigStraightYahtzee(result)),
   CHANCE (result -> ScoreCalculator.totalSum(result)),
-  YATZY (result -> ScoreCalculator.nSame(5, 6, result)),
+  YAHTZEE (result -> ScoreCalculator.nSame(5, 6, result)),
   TOTAL (result -> ScoreCalculator.totalSum(result));
 
   private static final RulesetFactory yatzyVariant = RulesetFactory.YATZY;
@@ -47,5 +47,47 @@ public enum YahtzeeBoxes implements ScoreRule, ScoreBoxFactory {
     return new ScoreBox(this.name(),this);
   }
 
+  @Override
+  public String toString() {
+    String string;
+
+    switch (this) {
+      case ONES : string = "Ones";
+        break;
+      case TWOS : string = "Twos";
+        break;
+      case THREES : string = "Threes";
+        break;
+      case FOURS : string = "Fours";
+        break;
+      case FIVES : string = "Fives";
+        break;
+      case SIXES : string = "TwSixesos";
+        break;
+      case SUM : string = "Sum";
+        break;
+      case BONUS : string = "Bonus";
+        break;
+      case THREE_OF_SAME : string = "Three of a Kind";
+        break;
+      case FOUR_OF_SAME : string = "Four of a kind";
+        break;
+      case FULL_HOUSE : string = "Full house";
+        break;
+      case SMALL_STRAIGHT : string = "Small Straight";
+        break;
+      case BIG_STRAIGHT : string = "Big Straight";
+        break;
+      case CHANCE : string = "Chance";
+        break;
+      case YAHTZEE : string = "Yahtzee";
+        break;
+      case TOTAL : string = "Total";
+        break;
+      default: string = this.name();
+        break;
+    }
+    return string;
+  }
 
 }

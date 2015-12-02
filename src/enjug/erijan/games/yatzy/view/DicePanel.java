@@ -1,8 +1,8 @@
 package enjug.erijan.games.yatzy.view;
 
 import enjug.erijan.games.util.DiceHandler;
-import enjug.erijan.games.util.DiceObserver;
 import enjug.erijan.games.util.GameDie;
+import enjug.erijan.games.util.GenericObserver;
 import enjug.erijan.games.yatzy.control.GameControl;
 
 import javax.swing.*;
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by Jan Eriksson on 19/11/15.
  */
-public class DicePanel extends JPanel implements DiceObserver {
+public class DicePanel extends JPanel implements GenericObserver<DiceHandler> {
   private static final ImageIcon[] selectedDieIcons;
   private static final ImageIcon[] unselectedDieIcons;
 

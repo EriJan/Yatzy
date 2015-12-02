@@ -4,6 +4,7 @@ import enjug.erijan.games.yatzy.view.YatzyGui;
 
 import javax.swing.*;
 import java.awt.event.WindowEvent;
+import java.util.EnumSet;
 import java.util.stream.Stream;
 
 /**
@@ -12,11 +13,15 @@ import java.util.stream.Stream;
 public class YatzyMain {
 
   private static RulesetFactory selectGameVariant() {
-    String[] ruleSets;
-    ruleSets = Stream.of(RulesetFactory.values()).map(RulesetFactory::name)
+    EnumSet<RulesetFactory> ruleSets = EnumSet.allOf(RulesetFactory.class);
+    RulesetFactory[] ruleSetsArr = ruleSets.toArray(new RulesetFactory[ruleSets.size()]);
+
+    String[] ruleSetStrings;
+    ruleSetStrings = Stream.of(RulesetFactory.values()).map(RulesetFactory::toString)
         .toArray(String[]::new);
-    int retVal = YatzyGui.userInputFromMenu("What ruleset?", ruleSets);
-    return RulesetFactory.valueOf(ruleSets[retVal]);
+
+    int retVal = YatzyGui.userInputFromMenu("What ruleset?", ruleSetStrings);
+    return ruleSetsArr[retVal];
   }
 
   //  TODO mer meddelanden till användaren
