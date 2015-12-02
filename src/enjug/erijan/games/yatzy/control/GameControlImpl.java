@@ -3,10 +3,17 @@ package enjug.erijan.games.yatzy.control;
 import enjug.erijan.games.util.GameDie;
 
 /**
+ *
+ *
  * Created by Jan Eriksson on 16/11/15.
  */
+
 public class GameControlImpl implements GameControl {
 
+
+  /**
+   *
+   */
   private ScoringBehavior scoringBehavior;
   private RollBehavior rollBehavior;
 
