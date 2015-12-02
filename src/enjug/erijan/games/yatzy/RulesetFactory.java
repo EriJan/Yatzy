@@ -12,6 +12,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * One enum value for each defined Yatzy ruleset.
+ *
+ * Factory method is called on the enum to start a specific game.
+ *
+ * The sequence is the same for all:
+ * 1. Define the specific ranges and key Strings for derived scores
+ * 2. Create a ScoreSheet from the derived parameters.
+ * 3. Add players
+ * 4. Create a score column for each player and add to ScoreSheet
+ * 5. Create the rest of the model: dice and state
+ * 6. Roll and Score behavior are added to GameControl.
+ * 7. Return a new Gui populated GUI.
+ *
  * Created by Jan Eriksson on 29/10/15.
  */
 public enum RulesetFactory implements RulesetFactoryInterface {
@@ -185,8 +198,14 @@ public enum RulesetFactory implements RulesetFactoryInterface {
     return playerList;
   }
 
+  /**
+   * Takes a generic enum of type T and converts to ArrayList of String.
+   *
+   * @param enumSet Set to convert.
+   * @param <T> Enum type.
+   * @return Returns ArrayList of Strings.
+   */
 
-  // Takes a generics T enum and converts to ArrayList of String.
   private static <T extends Enum<T>> ArrayList enumSetToStringList(EnumSet<T> enumSet) {
     return enumSet.stream()
         .map(T::toString)

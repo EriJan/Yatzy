@@ -11,11 +11,8 @@ package enjug.erijan.games.yatzy.rules;
  * Created by Jan Eriksson on 27/10/15.
  */
 
-
-// TODO boxId might be redundant.
 public class ScoreBox {
 
-  private String boxId;
   private ScoreRule scoreRule;
   private int score;
   private int tempScore;
@@ -25,9 +22,8 @@ public class ScoreBox {
    *
    * @param rule The rule defines the score calculation.
    */
-  public ScoreBox (String boxId, ScoreRule rule) {
-    this.boxId = boxId;
-    scoreRule = rule;
+  public ScoreBox (ScoreRule rule) {
+     scoreRule = rule;
     score = 0;
     tempScore = 0;
     scoreSet = false;

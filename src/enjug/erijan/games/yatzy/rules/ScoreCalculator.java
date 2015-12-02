@@ -65,12 +65,16 @@ public abstract class ScoreCalculator {
 
   /**
    *
+   * This method looks for a number of equal values.
+   * For convineient use with other ScoreCalculator methods, there is
+   * a maxVal to limit the search.
    *
+   * In Yahtzee all dice are summarized
    *
-   * @param nSame
-   * @param maxVal
-   * @param result
-   * @return
+   * @param nSame The desired number of equal values.
+   * @param maxVal The highest value to look for.
+   * @param result Result array.
+   * @return Calculated score.
    */
   public static int nSameYahtzee(int nSame, int maxVal, int... result) {
 
@@ -93,6 +97,17 @@ public abstract class ScoreCalculator {
     return score;
   }
 
+  /**
+   *
+   * This method looks for a number of equal values.
+   * For convineient use with other ScoreCalculator methods, there is
+   * a maxVal to limit the search.
+   *
+   * @param nSame The desired number of equal values.
+   * @param maxVal The highest value to look for.
+   * @param result Result array.
+   * @return Calculated score.
+   */
   public static int nSame(int nSame, int maxVal, int... result) {
 
     int score = 0;
@@ -114,6 +129,14 @@ public abstract class ScoreCalculator {
     return score;
   }
 
+  /**
+   *
+   * If all values are the same, return scoreVal as score.
+   *
+   * @param scoreVal The score value for a yatzy.
+   * @param result Result array.
+   * @return Calculated score.
+   */
   public static int yatzy(int scoreVal, int... result) {
     int score = 0;
     long uniqueValues = IntStream.of(result).distinct().count();
@@ -139,6 +162,9 @@ public abstract class ScoreCalculator {
     return score;
   }
 
+  /**
+   * Full house in Yahtzee is always worth 25 points.
+   */
   public static int fullHouseYahtzee(int... result) {
 
     int score = nSame(3, 6, result);
@@ -175,6 +201,13 @@ public abstract class ScoreCalculator {
     return score;
   }
 
+  /**
+   * Villa is two times three of same.
+   *
+   * @param result Result array.
+   * @return Calculated score.
+   */
+
   public static int villa(int... result) {
 
     int score = nSame(3, 6, result);
@@ -193,6 +226,12 @@ public abstract class ScoreCalculator {
     return score;
   }
 
+  /**
+   * Tower is four of same and a pair.
+   *
+   * @param result Result array.
+   * @return Result array.
+   */
   public static int tower(int... result) {
 
     int score = nSame(4, 6, result);
@@ -211,6 +250,12 @@ public abstract class ScoreCalculator {
     return score;
   }
 
+  /**
+   * Small straight in Yahtzee is four in a row, worth 30 points.
+   *
+   * @param result Result array.
+   * @return Calculated score.
+   */
   public static int smallStraightYahtzee(int... result) {
 
     Arrays.sort(result);
@@ -243,6 +288,13 @@ public abstract class ScoreCalculator {
     }
     return score;
   }
+
+  /**
+   * Big stright in Yahtzee is five in any sequence. Always yields a score of 40 points.
+   *
+   * @param result
+   * @return
+   */
 
   public static int bigStraightYahtzee(int... result) {
 
