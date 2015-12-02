@@ -10,7 +10,7 @@ package enjug.erijan.games.util;
 
 public interface GenericObserver<T> {
   /**
-   * Generic update method. Since there is only one
+   * Generic update method. Since there is only one subject this shuould be a safe solution.
    *
    * @param subjectRef A reference to the subject is passed to the observer.
    *                   To be used for any data needed from subject by observer.

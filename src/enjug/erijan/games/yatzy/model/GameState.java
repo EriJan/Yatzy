@@ -5,13 +5,21 @@ import enjug.erijan.games.util.GenericSubject;
 import java.util.List;
 
 /**
+ * GameState interface handles interaction with state part of the model.
+ *
+ * State is defined as messages, player turn, control over what actions are
+ * allowed and also who the winner is. Game state is a subject to parts of
+ * the User interface.
+ *
+ * Methods are exclusivly setters and getters, and are mostly self explaining.
+ *
  * Created by Jan Eriksson on 20/11/15.
  */
 public interface GameState extends GenericSubject {
 
-  String getWinner();
+  String getStateMessage();
 
-  void setWinner(String winner);
+  void setStateMessage(String stateMessage);
 
   List<Player> getPlayers();
 
@@ -21,9 +29,9 @@ public interface GameState extends GenericSubject {
 
   void setRollingAllowed(boolean rollingAllowed);
 
-  void setScoringAllowed(boolean scoringAllowed);
-
   boolean isRollingAllowed();
+
+  void setScoringAllowed(boolean scoringAllowed);
 
   boolean isScoringAllowed();
 
@@ -31,9 +39,7 @@ public interface GameState extends GenericSubject {
 
   boolean isGameEnd();
 
-  String getStateMessage();
+  String getWinner();
 
-  void setStateMessage(String stateMessage);
-
-
+  void setWinner(String winner);
 }

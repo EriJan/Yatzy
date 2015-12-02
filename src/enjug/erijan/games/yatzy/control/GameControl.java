@@ -3,7 +3,11 @@ package enjug.erijan.games.yatzy.control;
 import enjug.erijan.games.util.GameDie;
 
 /**
+ * Takes actions from GUI and modifies model accordingdly.
+ *
  * Game controller interface for any kind of Yatzy game.
+ * It is a spider in the web functionality. UI input triggers actions
+ * in the controller which modifies the model.
  *
  * Created by Jan Eriksson on 30/11/15.
  */

@@ -8,7 +8,9 @@ import enjug.erijan.games.yatzy.model.ScoreInterface;
 /**
  *
  * The most common variant of score selection gives full flexibility on where
- * to put a dice result.
+ * to put a dice result. Setting a 0 result is the same as crossing a score box.
+ *
+ * Interacts with all three parts of the model: score sheet, state and dice.
  *
  * Created by Jan Eriksson on 16/11/15.
  */
@@ -18,12 +20,25 @@ public class SelectiveScoreSelection implements ScoringBehavior {
   private ScoreInterface scoreInterface;
   private DiceHandler diceHandler;
 
+  /**
+   * Constructor, takes refrences to all three parts of the model.
+   * @param state Reference to a GameState object.
+   * @param scoring Reference to a ScoreInterface object.
+   * @param dice Refrence to a DiceHandler object.
+   */
   public SelectiveScoreSelection(GameState state, ScoreInterface scoring, DiceHandler dice) {
     this.gameState = state;
     this.scoreInterface = scoring;
     this.diceHandler = dice;
   }
 
+  /**
+   * Called when player selects a score.
+   * Sets score on specified box, clears temporary scores, blocks scoring,
+   * unblocks rolling, evaluates if game ends and advances game to next player.
+   *
+   * @param boxId
+   */
   @Override
   public void setScore(String boxId) {
     String playerName = gameState.getCurrentPlayer().getName();
@@ -40,12 +55,22 @@ public class SelectiveScoreSelection implements ScoringBehavior {
 
   }
 
+  /**
+   * Usually called after dice roll to show the different score results of a dice roll.
+   */
   @Override
   public void setTempScores() {
     String playerName = gameState.getCurrentPlayer().getName();
     scoreInterface.setTempScores(playerName, diceHandler.getValues());
   }
 
+  /**
+   * Checks if the game is ended.
+   * Game ends when all scores are set for all players.
+   * If game ends, no rolling or scoring is allowed.
+   * Winner i set on the model. GUI will handle visual notification
+   * of winner.
+   */
   @Override
   public void evaluateGameEnd() {
     boolean allScoresSet = false;

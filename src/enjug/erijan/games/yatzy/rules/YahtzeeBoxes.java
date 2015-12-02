@@ -25,16 +25,10 @@ public enum YahtzeeBoxes implements ScoreRule, ScoreBoxFactory {
   YAHTZEE (result -> ScoreCalculator.nSame(5, 6, result)),
   TOTAL (result -> ScoreCalculator.totalSum(result));
 
-  private static final RulesetFactory yatzyVariant = RulesetFactory.YATZY;
-
   private final ScoreRule scoreRule;
 
   YahtzeeBoxes(ScoreRule scoreRule) {
     this.scoreRule = scoreRule;
-  }
-
-  public static RulesetFactory getYatzyVariant() {
-    return yatzyVariant;
   }
 
   @Override

@@ -9,6 +9,11 @@ import java.util.*;
 /**
  * Score sheet for any kind of Yatzy game
  *
+ * The assumption is to have data represented in a matrix, with player names
+ * as column keys and strings representing different score boxes on the rows.
+ *
+ * The term derived scores is used for sum, bonus and total,
+ * since they are derived from a set of other scores.
  *
  * Created by Jan Eriksson on 23/11/15.
  */
@@ -27,6 +32,13 @@ public class ScoreSheet implements ScoreInterface {
 
   private List<GenericObserver> observerList;
 
+  /**
+   *
+   * @param allScores
+   * @param derivedScores
+   * @param sumRange
+   * @param totalRange
+   */
   public ScoreSheet(List allScores, HashMap derivedScores, List sumRange, List totalRange) {
     this.allScores = allScores;
     this.derivedScores = derivedScores;
