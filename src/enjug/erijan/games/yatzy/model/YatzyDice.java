@@ -8,6 +8,13 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * Implementation of DiceHandler with a number of 6 sided dice, D6, defined at construction.
+ *
+ * The field dice store every die in the pool, does not change.
+ *
+ * Active dice are stored as references in the activeDice list. Removed and added
+ * with the toggleActiveDice method.
+ *
  * Created by Jan Eriksson on 27/10/15.
  */
 
@@ -18,12 +25,17 @@ public class YatzyDice implements DiceHandler {
   DieFactory dieType;
   List<GenericObserver> observers;
 
+  /**
+   * Constructor, defines a number of dice to create.
+   *
+   * @param numberOfDice The number of dice in the pool.
+   */
+
   public YatzyDice(int numberOfDice) {
     dice = new ArrayList<GameDie>();
     activeDice = new ArrayList<GameDie>();
     dieType = DieTypes.D6;
     for (int i = 0; i < numberOfDice; i++) {
-      //dice.add(DieTypes.D6.create());
       dice.add(dieType.create());
     }
     for(GameDie d : dice) {

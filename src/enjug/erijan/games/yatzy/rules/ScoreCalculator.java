@@ -1,22 +1,47 @@
 package enjug.erijan.games.yatzy.rules;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
 /**
+ * This is a non-instantiable, non-inheritable utility class for ScoreBox calculations.
+ *
+ * All methods here are written in a way that with added constants, they will
+ * match the ScoreRule functional interface. This makes it possible to use
+ * lambda expressions to define all ScoreBoxes.
+ *
+ * The class is abstract, so no instantiation.
+ *
  * Created by Jan Eriksson on 13/11/15.
  */
 public abstract class ScoreCalculator {
 
+  /**
+   * Private constructor to avoid inheritance.
+   */
   private ScoreCalculator() {}
 
+  /**
+   * Summmarize all input values. Uses IntStream to make the code compact.
+   *
+   * @param result The int result array.
+   * @return The calculated score based on result.
+   */
   public static int totalSum(int... result) {
     int score = IntStream.of(result).sum();
     return score;
   }
 
+  /**
+   *
+   * If the sum of result is equal or greater than limit, score is set to bonus.
+   *
+   * @param limit Required sum to get bonus.
+   * @param bonus The score value of the bonus,
+   * @param result Result array.
+   * @return Calculated score.
+   */
   public static int yatzyBonus(int limit, int bonus, int... result) {
     int score = 0;
     if (totalSum(result) >= limit) {
@@ -25,12 +50,28 @@ public abstract class ScoreCalculator {
     return score;
   }
 
+  /**
+   *
+   * Sum of all results of value == target number.
+   *
+   * @param targetNumber Value to summarize.
+   * @param result Result array.
+   * @return Calculated Score.
+   */
   public static int sumOfNs(int targetNumber, int... result) {
-    int score = IntStream.of(result)
-        .filter(val -> val == targetNumber).sum();
+    int score = IntStream.of(result).filter(val -> val == targetNumber).sum();
     return score;
   }
 
+  /**
+   *
+   *
+   *
+   * @param nSame
+   * @param maxVal
+   * @param result
+   * @return
+   */
   public static int nSameYahtzee(int nSame, int maxVal, int... result) {
 
     int score = 0;

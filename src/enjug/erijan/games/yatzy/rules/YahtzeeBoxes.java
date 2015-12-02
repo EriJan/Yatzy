@@ -3,6 +3,11 @@ package enjug.erijan.games.yatzy.rules;
 import enjug.erijan.games.yatzy.RulesetFactory;
 
 /**
+ * Defines all Yahtzee ScoreRules as enum values.
+ * Every enum has a ScoreRule, defined with the use of lambda expressions
+ * in the constructor. When getScoreBox is called, a new ScoreBox with
+ * the corresponding ScoreRule will be created.
+ *
  * Created by Jan Eriksson on 27/10/15.
  *
  */

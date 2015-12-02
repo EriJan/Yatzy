@@ -14,6 +14,11 @@ import java.util.*;
  *
  * The term derived scores is used for sum, bonus and total,
  * since they are derived from a set of other scores.
+ * By convention, the exact strings "sum", "bonus" and "total" need to be used as keys in the
+ * HashMap defining the actual corresponding keys.
+ *
+ * The ScoreSheet needs to be created and populated all at the same time, at start of the game.
+ * It depends on the usage of ScoreBoxes as representation and calculation of scores.
  *
  * Created by Jan Eriksson on 23/11/15.
  */
@@ -33,11 +38,13 @@ public class ScoreSheet implements ScoreInterface {
   private List<GenericObserver> observerList;
 
   /**
+   * ScoreSheet constructor need four defining paramters to set up its funktonality.
+   * When players are added the same ScoreBox names has to be used.
    *
-   * @param allScores
-   * @param derivedScores
-   * @param sumRange
-   * @param totalRange
+   * @param allScores A String list of all ScoreBoxes.
+   * @param derivedScores A HashMap with the three dervied scores defined.
+   * @param sumRange The score boxes used to calculated the bonus yielding sum.
+   * @param totalRange The score boxes used to calcualte total score.
    */
   public ScoreSheet(List allScores, HashMap derivedScores, List sumRange, List totalRange) {
     this.allScores = allScores;
@@ -49,16 +56,31 @@ public class ScoreSheet implements ScoreInterface {
     bonusKey = (String) derivedScores.get("bonus");
     totalKey = (String) derivedScores.get("total");
     
-    scoreSheetMap = new HashMap<String,HashMap>();
+    scoreSheetMap = new HashMap<>();
 
     observerList = new ArrayList<>();
   }
 
+  /**
+   * Add player and a corresponding score column.
+   *
+   * @param playerName Player name as a String.
+   * @param scoreColumn ScoreBoxes in a HashMap.
+   */
   @Override
   public void addPlayer(String playerName, HashMap scoreColumn) {
     scoreSheetMap.put(playerName,scoreColumn);
   }
 
+
+  /**
+   *
+   * Assign a dice result to a specific ScoreBox.
+   *
+   * @param playerName Owning player name as String.
+   * @param boxId The box name as String.
+   * @param result The dice result as an int array.
+   */
   @Override
   public void setScore(String playerName, String boxId, int... result) {
     HashMap scoreColumn = scoreSheetMap.get(playerName);
@@ -70,6 +92,13 @@ public class ScoreSheet implements ScoreInterface {
     notifyObservers();
   }
 
+  /**
+   *
+   * Assign a temporary result to all ScoreBoxes owned by a specific player.
+   *
+   * @param playerName Player name.
+   * @param result Result from dice roll.
+   */
   @Override
   public void setTempScores(String playerName, int... result) {
     List<String> availableScores = getAvailableScores(playerName);
@@ -82,6 +111,13 @@ public class ScoreSheet implements ScoreInterface {
     notifyObservers();
   }
 
+  /**
+   *
+   * Returns the scores that are assignable.
+   *
+   * @param playerName Player name as String.
+   * @return String List of available scores.
+   */
   @Override
   public List<String> getAvailableScores(String playerName) {
     List<String> availableScores = new ArrayList<>();
@@ -106,6 +142,14 @@ public class ScoreSheet implements ScoreInterface {
     notifyObservers();
   }
 
+  /**
+   * Collects and assigns sum, bonus and total scores for a specific player.
+   * Based on the ranges defined at construction.
+   *
+   * Total only calculated if all other scores set.
+   *
+   * @param playerName Name of the specific player.
+   */
   private void setSum(String playerName) {
     int localSum = 0;
     ScoreBox scoreBox;

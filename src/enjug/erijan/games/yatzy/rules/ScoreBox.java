@@ -1,13 +1,18 @@
 package enjug.erijan.games.yatzy.rules;
 
-/** Holds score calculated from a rule.
+/**
+ * Holds score calculated from a rule.
+ *
  * ScoreBox class has a scoreRule which is called when
  * score is set. There is also a temp score for intermediate result
  * analysis. The score Rule is set on construction of the box object.
  * The object is aware if its score is set.
+ *
  * Created by Jan Eriksson on 27/10/15.
  */
 
+
+// TODO boxId might be redundant.
 public class ScoreBox {
 
   private String boxId;

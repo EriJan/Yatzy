@@ -1,6 +1,11 @@
 package enjug.erijan.games.yatzy.rules;
 
 /**
+ * Defines all Maxi Yatzy ScoreRules as enum values.
+ * Every enum has a ScoreRule, defined with the use of lambda expressions
+ * in the constructor. When getScoreBox is called, a new ScoreBox with
+ * the corresponding ScoreRule will be created.
+ *
  * Created by Jan Eriksson on 27/10/15.
  */
 public enum MaxiYatzyBoxes implements ScoreRule, ScoreBoxFactory {
