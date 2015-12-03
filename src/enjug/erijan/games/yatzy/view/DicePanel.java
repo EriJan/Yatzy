@@ -11,13 +11,14 @@ import java.util.*;
 import java.util.List;
 
 /**
+ * <p>
  * Gui representation of the Dice.
  * It is a panel with tow panels inside, one for inactive, saved dice, and one
  * for the rolled dice.
- * <p></p>
+ * </p>
  * Observer to the dice model.
- * <p></p>
- * Created by Jan Eriksson on 19/11/15.
+ * <p>
+ * Created by Jan Eriksson on 19/11/15.</p>
  */
 public class DicePanel extends JPanel implements GenericObserver<DiceHandler> {
   private static final ImageIcon[] selectedDieIcons;

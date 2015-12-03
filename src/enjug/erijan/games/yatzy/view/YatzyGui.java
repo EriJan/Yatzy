@@ -16,11 +16,11 @@ import java.util.*;
 import java.util.List;
 
 /**
+ * <p>
  * GUI wrapper for any kind of Yatzy game.
  * Built from four separate panels: Score, Dice, Buttons and Info.
  * Fixme buttons should not have their own panel.
- *
- * <p></p>
+ * </p>
  *
  * Created by Jan Eriksson on 03/11/15.
  */
@@ -224,9 +224,9 @@ public class YatzyGui {
    * Panel for the ScoreSheet.
    * RadioButton is used to select score to set when Score button is pressed.
    * Unavailable scores are greyed out.
-   * <p></p>
+   * <p>
    * Observer to a ScoreInterface
-   * <p></p>
+   * </p>
    * Created by Jan Eriksson on 19/11/15.
    * Todo blank istf 0...
    */
@@ -238,7 +238,7 @@ public class YatzyGui {
     private ButtonGroup scoreSelectionButtons;
 
     /**
-     *
+     * Panel for displaying the scores.
      */
     public ScorePanel() {
 
@@ -307,6 +307,10 @@ public class YatzyGui {
       button.setSelected(true);
     }
 
+    /**
+     * Updates the current score selection based on curren players available scores.
+     *
+     */
     public void updateScoreSelection() {
       for (JComponent jRadioButton : scoreSelection.values()) {
         jRadioButton.setEnabled(false);
@@ -329,10 +333,20 @@ public class YatzyGui {
       this.repaint();
     }
 
+    /**
+     * Get the string corresponding to the selected score.
+     * @return Selected score.
+     */
     public String getSelected() {
       return scoreSelectionButtons.getSelection().getActionCommand();
     }
 
+    /**
+     * Add score column for a specific player.
+     *
+     * @param player Name of player.
+     * @param column Index of column.
+     */
     public void addScore(Player player, int column) {
       HashMap<String,JComponent> scoreColumn = new HashMap<>();
 
@@ -371,6 +385,9 @@ public class YatzyGui {
       scoreColumnPerPlayer.put(name,scoreColumn);
     }
 
+    /**
+     * Called when score model is updated.
+     */
     public void updateScore() {
       String name = gameState.getCurrentPlayer().getName();
       Map scoreColumn = (Map) scoreColumnPerPlayer.get(name);
@@ -397,6 +414,12 @@ public class YatzyGui {
       jFrame.pack();
     }
 
+    /**
+     * This method is called from the score model to trigger updates to
+     * the score view.
+     *
+     * @param scoreInterface Reference to the score model.
+     */
     @Override
     public void update(ScoreInterface scoreInterface) {
       updateScoreSelection();
@@ -406,6 +429,8 @@ public class YatzyGui {
   }
 
   /**
+   * A panel where the game displays information to the user.
+   *
    * Created by Jan Eriksson on 19/11/15.
    */
   public static class InfoPanel extends JPanel implements GenericObserver<GameState> {

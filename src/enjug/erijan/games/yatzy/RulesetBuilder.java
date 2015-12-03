@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * Factory method is called on the enum to start a specific game.
  *
  * This is actually a builder.
- * <p></p>
+ * <p>
  * The sequence is the same for all: <br>
  * 1. Define the specific ranges and key Strings for derived scores <br>
  * 2. Create a ScoreSheet from the derived parameters.<br>
