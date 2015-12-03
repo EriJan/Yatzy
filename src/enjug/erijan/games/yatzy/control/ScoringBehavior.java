@@ -10,7 +10,7 @@ public interface ScoringBehavior {
    * Set the score and trigger related actions for a given
    * score box.
    *
-   * @param boxId Score box to set
+   * @param boxId Score box to set.
    */
   void setScore(String boxId);
 

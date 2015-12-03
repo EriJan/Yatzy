@@ -37,7 +37,7 @@ public class SelectiveScoreSelection implements ScoringBehavior {
    * Sets score on specified box, clears temporary scores, blocks scoring,
    * unblocks rolling, evaluates if game ends and advances game to next player.
    *
-   * @param boxId
+   * @param boxId Id of score to set.
    */
   @Override
   public void setScore(String boxId) {
