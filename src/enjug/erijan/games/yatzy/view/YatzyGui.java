@@ -193,7 +193,7 @@ public class YatzyGui {
       newGameButton.setPreferredSize(preferedButtonSize);
 
       newGameButton.addActionListener(e -> {
-        //RulesetFactory.YATZY.newGame();
+        //RulesetBuilder.YATZY.newGame();
         jFrame.dispatchEvent(new WindowEvent(jFrame, WindowEvent.WINDOW_CLOSING));
         YatzyMain.main(null);
 

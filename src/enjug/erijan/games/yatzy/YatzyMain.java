@@ -3,7 +3,6 @@ package enjug.erijan.games.yatzy;
 import enjug.erijan.games.yatzy.view.YatzyGui;
 
 import javax.swing.*;
-import java.awt.event.WindowEvent;
 import java.util.EnumSet;
 import java.util.stream.Stream;
 
@@ -12,12 +11,12 @@ import java.util.stream.Stream;
  */
 public class YatzyMain {
 
-  private static RulesetFactory selectGameVariant() {
-    EnumSet<RulesetFactory> ruleSets = EnumSet.allOf(RulesetFactory.class);
-    RulesetFactory[] ruleSetsArr = ruleSets.toArray(new RulesetFactory[ruleSets.size()]);
+  private static RulesetBuilder selectGameVariant() {
+    EnumSet<RulesetBuilder> ruleSets = EnumSet.allOf(RulesetBuilder.class);
+    RulesetBuilder[] ruleSetsArr = ruleSets.toArray(new RulesetBuilder[ruleSets.size()]);
 
     String[] ruleSetStrings;
-    ruleSetStrings = Stream.of(RulesetFactory.values()).map(RulesetFactory::toString)
+    ruleSetStrings = Stream.of(RulesetBuilder.values()).map(RulesetBuilder::toString)
         .toArray(String[]::new);
 
     int retVal = YatzyGui.userInputFromMenu("What ruleset?", ruleSetStrings);
@@ -32,7 +31,7 @@ public class YatzyMain {
       e.printStackTrace();
     }
 
-    RulesetFactory ruleSet = selectGameVariant();
+    RulesetBuilder ruleSet = selectGameVariant();
     ruleSet.createAndPopulateGame();
   }
 }

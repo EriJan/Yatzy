@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
  *
  * Factory method is called on the enum to start a specific game.
  *
+ * This is actually a builder.
+ *
  * The sequence is the same for all:
  * 1. Define the specific ranges and key Strings for derived scores
  * 2. Create a ScoreSheet from the derived parameters.
@@ -27,7 +29,7 @@ import java.util.stream.Collectors;
  *
  * Created by Jan Eriksson on 29/10/15.
  */
-public enum RulesetFactory implements RulesetFactoryInterface {
+public enum RulesetBuilder implements RulesetBuilderInterface {
   YATZY {
     @Override
     public YatzyGui createAndPopulateGame() {

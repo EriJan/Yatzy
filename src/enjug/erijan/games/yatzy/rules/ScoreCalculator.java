@@ -292,8 +292,8 @@ public abstract class ScoreCalculator {
   /**
    * Big stright in Yahtzee is five in any sequence. Always yields a score of 40 points.
    *
-   * @param result
-   * @return
+   * @param result Result array.
+   * @return Calculated score.
    */
 
   public static int bigStraightYahtzee(int... result) {

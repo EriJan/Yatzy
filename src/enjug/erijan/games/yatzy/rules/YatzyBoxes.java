@@ -1,6 +1,8 @@
 package enjug.erijan.games.yatzy.rules;
 
 /**
+ * Factory implementation for Yatzy.
+ *
  * Defines all Yatzy ScoreRules as enum values.
  * Every enum value is a ScoreRule, defined with the use of lambda expressions
  * in the constructor. When getScoreBox is called, a new ScoreBox with

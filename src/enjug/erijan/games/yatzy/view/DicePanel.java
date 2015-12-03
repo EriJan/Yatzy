@@ -48,9 +48,6 @@ public class DicePanel extends JPanel implements GenericObserver<DiceHandler> {
     dieButtons = new ArrayList<GuiDie>();
     diceHandler.registerObserver(this);
     addDice(diceHandler);
-    /// /diePanel = new JPanel();
-    //selectedDicePanel = new JPanel();
-
   }
 
   public void addDice(DiceHandler diceHandler) {

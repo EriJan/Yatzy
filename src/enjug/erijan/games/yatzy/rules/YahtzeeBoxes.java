@@ -1,8 +1,8 @@
 package enjug.erijan.games.yatzy.rules;
 
-import enjug.erijan.games.yatzy.RulesetFactory;
-
 /**
+ * Factory implementation for Yahtzee.
+ *
  * Defines all Yahtzee ScoreRules as enum values.
  * Every enum value is a ScoreRule, defined with the use of lambda expressions
  * in the constructor. When getScoreBox is called, a new ScoreBox with
