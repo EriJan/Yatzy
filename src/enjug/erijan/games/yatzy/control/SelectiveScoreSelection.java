@@ -11,7 +11,7 @@ import enjug.erijan.games.yatzy.model.ScoreInterface;
  * to put a dice result. Setting a 0 result is the same as crossing a score box.
  *
  * Interacts with all three parts of the model: score sheet, state and dice.
- *
+ * <p>
  * Created by Jan Eriksson on 16/11/15.
  */
 public class SelectiveScoreSelection implements ScoringBehavior {

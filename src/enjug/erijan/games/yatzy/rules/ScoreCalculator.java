@@ -164,6 +164,9 @@ public abstract class ScoreCalculator {
 
   /**
    * Full house in Yahtzee is always worth 25 points.
+   *
+   * @param result Result array.
+   * @return Calculated score.
    */
   public static int fullHouseYahtzee(int... result) {
 

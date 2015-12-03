@@ -7,9 +7,9 @@ package enjug.erijan.games.yatzy.rules;
  * Every enum value is a ScoreRule, defined with the use of lambda expressions
  * in the constructor. When getScoreBox is called, a new ScoreBox with
  * the corresponding ScoreRule will be created.
- *
+ * <br>
  * For example the rule for ONES will always be sum of ones etc.
- *
+ * <br>
  * Created by Jan Eriksson on 27/10/15.
  *
  */
@@ -65,7 +65,7 @@ public enum YatzyBoxes implements ScoreRule, ScoreBoxFactory {
         break;
       case FIVES : string = "Fives";
         break;
-      case SIXES : string = "TwSixesos";
+      case SIXES : string = "Sixe";
         break;
       case SUM : string = "Sum";
         break;

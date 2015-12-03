@@ -11,6 +11,12 @@ import java.util.*;
 import java.util.List;
 
 /**
+ * Gui representation of the Dice.
+ * It is a panel with tow panels inside, one for inactive, saved dice, and one
+ * for the rolled dice.
+ * <p></p>
+ * Observer to the dice model.
+ * <p></p>
  * Created by Jan Eriksson on 19/11/15.
  */
 public class DicePanel extends JPanel implements GenericObserver<DiceHandler> {
@@ -19,11 +25,11 @@ public class DicePanel extends JPanel implements GenericObserver<DiceHandler> {
 
   private JPanel diePanel;
   private JPanel selectedDicePanel;
-  private GameControl gameControl;
   private List<GuiDie> dieButtons;
 
-
-  // TODO use gridbag spacer.
+  /**
+   * Static block where dice images are resized and assigned to array of ImageIcons.
+   */
   static {
     selectedDieIcons = new ImageIcon[6];
     unselectedDieIcons = new ImageIcon[6];
@@ -42,15 +48,26 @@ public class DicePanel extends JPanel implements GenericObserver<DiceHandler> {
     }
   }
 
+  /**
+   * Create dice representation and panels.
+   *
+   * @param gameControl Controller.
+   * @param diceHandler Dice model.
+   */
   public DicePanel(GameControl gameControl, DiceHandler diceHandler) {
     this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-    this.gameControl = gameControl;
-    dieButtons = new ArrayList<GuiDie>();
+    dieButtons = new ArrayList<>();
     diceHandler.registerObserver(this);
-    addDice(diceHandler);
+    addDice(gameControl, diceHandler);
   }
 
-  public void addDice(DiceHandler diceHandler) {
+  /**
+   * Create the dice representation and panels.
+   *
+   * @param gameControl Game controller.
+   * @param diceHandler Dice model.
+   */
+  public void addDice(GameControl gameControl, DiceHandler diceHandler) {
     diePanel = new JPanel();
     selectedDicePanel = new JPanel();
 
@@ -76,7 +93,7 @@ public class DicePanel extends JPanel implements GenericObserver<DiceHandler> {
       dieButtons.add(new GuiDie(die,button,new int[] {0,0}));
       selectedDicePanel.add(button);
     }
-    // Add empty spacers in diePanel
+
     for (int i = 0; i < 10; i++) {
       for (int j = 0; j < 10; j++) {
         GridBagConstraints c = new GridBagConstraints();
@@ -93,6 +110,10 @@ public class DicePanel extends JPanel implements GenericObserver<DiceHandler> {
     selectedDicePanel.setVisible(true);
   }
 
+  /**
+   * Called when there is an update to any die.
+   * @param diceHandler Dice model.
+   */
   public void updateDice(DiceHandler diceHandler) {
     Collections.sort(dieButtons);
     for (Object o : dieButtons) {
@@ -128,6 +149,12 @@ public class DicePanel extends JPanel implements GenericObserver<DiceHandler> {
     selectedDicePanel.repaint();
   }
 
+  /**
+   * Move dice around the panel to get some kind of rolling illusion.
+   *
+   * @param diceHandler Dice model.
+   */
+  // TODO nicer effect when moving dice would be to scatter from a point.
   public void moveActiveDice(DiceHandler diceHandler) {
 
     Iterator<GameDie> dice = diceHandler.getDice();
@@ -172,11 +199,22 @@ public class DicePanel extends JPanel implements GenericObserver<DiceHandler> {
     //jFrame.pack();
   }
 
+  /**
+   * Update called from Subject.
+   * @param diceHandler Dice model.
+   */
   @Override
   public void update(DiceHandler diceHandler) {
      updateDice(diceHandler);
    }
 
+
+  /**
+   * Nested class representing a visual die.
+   * Keeps track of position to make movement between inactive panel
+   * and rolling area run smoothly. Implements Comparable for sorting
+   * of the saved, inActive dice.
+   */
   private class GuiDie implements Comparable<GuiDie>{
     GameDie die;
     JButton jButton;

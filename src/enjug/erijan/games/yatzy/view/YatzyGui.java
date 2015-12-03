@@ -15,15 +15,19 @@ import java.awt.event.WindowEvent;
 import java.util.*;
 import java.util.List;
 
-
 /**
+ * GUI wrapper for any kind of Yatzy game.
+ * Built from four separate panels: Score, Dice, Buttons and Info.
+ * Fixme buttons should not have their own panel.
+ *
+ * <p></p>
+ *
  * Created by Jan Eriksson on 03/11/15.
  */
 
 public class YatzyGui {
 
   private JFrame jFrame;
-  private JLabel infoLabel;
 
   private ScorePanel scorePanel;
   private DicePanel dicePanel;
@@ -35,17 +39,16 @@ public class YatzyGui {
   private GameState gameState;
   private ScoreInterface scoreInterface;
 
-  //private GameState gameState;
-
   /**
-   * Constructor to YatzyGui
+   * Creates all the panels and places them in a GridBagLayout.
    *
-   * @param gameControl
-   * @param diceHandler
+   * @param gameControl Controller.
+   * @param scoreInterface Score model.
+   * @param diceHandler Dice model.
+   * @param gameState State model.
    */
   public YatzyGui(GameControl gameControl, ScoreInterface scoreInterface,
                   DiceHandler diceHandler, GameState gameState) {
-    //yatzyBoxTypes = new ArrayList<>();
 
     jFrame = new JFrame("Yatzy");
     jFrame.setLayout(new GridBagLayout());
@@ -84,29 +87,23 @@ public class YatzyGui {
     jFrame.pack();
   }
 
-  public void addInfoText(String str) {
-    infoLabel.setText(str);
-    GridBagConstraints c = new GridBagConstraints();
-    c.gridx = 0;
-    c.gridy = 19;
-    c.anchor = GridBagConstraints.CENTER;
-    c.gridheight = 2;
-    c.gridwidth = 0;
-    c.ipady = 40;
-    jFrame.getContentPane().add(infoLabel,c);
-    //jFrame.pack();
-  }
 
-  public void updateInfoText(String str) {
-    infoLabel.setText(str);
-    jFrame.pack();
-  }
-
+  /**
+   * Static simple message dialog for use from anywhere.
+   * @param message Message to be displayed.
+   */
   public static void gameMessage(String message) {
     JOptionPane.showMessageDialog(null, message, "Game Message",
         JOptionPane.PLAIN_MESSAGE);
   }
 
+  /**
+   * Dialog to query a few options from from a drop down menu.
+   *
+   * @param queryString Question to user.
+   * @param menuElements Options to select between.
+   * @return Index of the selected element.
+   */
   public static int userInputFromMenu(String queryString, String... menuElements) {
     String retStr = (String) JOptionPane.showInputDialog(null,
         queryString, "Choose from menu", JOptionPane.INFORMATION_MESSAGE,
@@ -123,19 +120,30 @@ public class YatzyGui {
     return menuItemNo;
   }
 
+  /**
+   * Dialog to get String input from the user.
+   *
+   * @param queryString Question to user.
+   * @return User input.
+   */
   public static String userInput(String queryString) {
     String retStr = (String) JOptionPane.showInputDialog(queryString);
     retStr = (retStr == null) ? "" : retStr;
     return retStr;
   }
 
-  // Todo, add space between buttons
+  /**
+   * Panel holding the three buttons Roll, Score and New Game.
+   * This class is an observer of GameState. Buttons are activeated and
+   * inactivated through a property in GameState.
+   */
   private class ButtonsPanel extends JPanel implements GenericObserver<GameState> {
 
     private final Dimension preferedButtonSize = new Dimension(100,30);
     private JButton rollButton;
     private JButton scoreButton;
     private JButton newGameButton;
+
 
     public ButtonsPanel() {
       this.setLayout(new GridLayout(18,1));
@@ -201,6 +209,10 @@ public class YatzyGui {
       this.add(newGameButton);
     }
 
+    /**
+     * Enabel/disable roll and score button.
+     * @param gameState Game state model.
+     */
     @Override
     public void update(GameState gameState) {
       rollButton.setEnabled(gameState.isRollingAllowed());
@@ -209,10 +221,15 @@ public class YatzyGui {
   }
 
   /**
+   * Panel for the ScoreSheet.
+   * RadioButton is used to select score to set when Score button is pressed.
+   * Unavailable scores are greyed out.
+   * <p></p>
+   * Observer to a ScoreInterface
+   * <p></p>
    * Created by Jan Eriksson on 19/11/15.
    * Todo blank istf 0...
    */
-
   public class ScorePanel extends JPanel implements GenericObserver<ScoreInterface> {
 
     private Map scoreColumnPerPlayer;
@@ -220,6 +237,9 @@ public class YatzyGui {
     private Map<String, JComponent> scoreSelection;
     private ButtonGroup scoreSelectionButtons;
 
+    /**
+     *
+     */
     public ScorePanel() {
 
       this.setLayout(new GridBagLayout());
