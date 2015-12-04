@@ -1,13 +1,21 @@
 package enjug.erijan.games.yatzy.model;
 
+import enjug.erijan.games.util.GenericObserver;
+
 import java.util.*;
 
 /**
+ *
+ * GameState implementation.
+ *
+ * Stores all necessary data for the gamestate. Allowed actions,
+ * players, active player and winner. Is a subject to the UI.
+ *
  * Created by Jan Eriksson on 20/11/15.
  */
 public class GameStateImpl implements GameState {
 
-  private List<GameStateObserver> observerList;
+  private List<GenericObserver> genericObserverList;
   private boolean hasChanged;
   private StringBuffer stateMessage;
 
@@ -21,6 +29,12 @@ public class GameStateImpl implements GameState {
 
   private String winner;
 
+  /**
+   * Constructor takes a list of the players, creates an iterator
+   * to use as turn counter and intiates all fields.
+   *
+   * @param players All players in the game.
+   */
   public GameStateImpl(List players) {
     winner = "";
 
@@ -29,7 +43,7 @@ public class GameStateImpl implements GameState {
     currentPlayer = playerListIterator.next();
 
     stateMessage = new StringBuffer();
-    observerList = new ArrayList<>();
+    genericObserverList = new ArrayList<>();
     hasChanged = false;
 
     rollingAllowed = true;
@@ -43,6 +57,10 @@ public class GameStateImpl implements GameState {
     return players;
   }
 
+  /**
+   * Set next player in iterator as current player.
+   * Creates new iterator when it wraps.
+   */
   @Override
   public void nextPlayer() {
     if (!playerListIterator.hasNext()) {
@@ -113,22 +131,22 @@ public class GameStateImpl implements GameState {
     return winner;
   }
 
-  // Observer methods
+  // GenericObserver methods
 
   @Override
-  public void registerObserver(GameStateObserver o) {
-    observerList.add(o);
+  public void registerObserver(GenericObserver o) {
+    genericObserverList.add(o);
   }
 
   @Override
-  public void removeObserver(GameStateObserver o) {
-    observerList.remove(o);
+  public void removeObserver(GenericObserver o) {
+    genericObserverList.remove(o);
   }
 
   @Override
   public void notifyObservers() {
     if (hasChanged) {
-      for (GameStateObserver o : observerList) {
+      for (GenericObserver o : genericObserverList) {
         o.update(this);
       }
     }

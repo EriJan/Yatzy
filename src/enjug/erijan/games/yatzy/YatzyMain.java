@@ -3,20 +3,28 @@ package enjug.erijan.games.yatzy;
 import enjug.erijan.games.yatzy.view.YatzyGui;
 
 import javax.swing.*;
-import java.awt.event.WindowEvent;
+import java.util.EnumSet;
 import java.util.stream.Stream;
 
 /**
+ * Main class.
+ * Sets swing look and feel to cross platform.
+ * Asks for which rule set to use and launches a game of that variant.
+ *
  * Created by Jan Eriksson on 08/11/15.
  */
 public class YatzyMain {
 
-  private static RulesetFactory selectGameVariant() {
-    String[] ruleSets;
-    ruleSets = Stream.of(RulesetFactory.values()).map(RulesetFactory::name)
+  private static RulesetBuilder selectGameVariant() {
+    EnumSet<RulesetBuilder> ruleSets = EnumSet.allOf(RulesetBuilder.class);
+    RulesetBuilder[] ruleSetsArr = ruleSets.toArray(new RulesetBuilder[ruleSets.size()]);
+
+    String[] ruleSetStrings;
+    ruleSetStrings = Stream.of(RulesetBuilder.values()).map(RulesetBuilder::toString)
         .toArray(String[]::new);
-    int retVal = YatzyGui.userInputFromMenu("What ruleset?", ruleSets);
-    return RulesetFactory.valueOf(ruleSets[retVal]);
+
+    int retVal = YatzyGui.userInputFromMenu("What ruleset?", ruleSetStrings);
+    return ruleSetsArr[retVal];
   }
 
   //  TODO mer meddelanden till användaren
@@ -27,7 +35,7 @@ public class YatzyMain {
       e.printStackTrace();
     }
 
-    RulesetFactory ruleSet = selectGameVariant();
+    RulesetBuilder ruleSet = selectGameVariant();
     ruleSet.createAndPopulateGame();
   }
 }

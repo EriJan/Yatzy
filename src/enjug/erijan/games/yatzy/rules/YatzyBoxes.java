@@ -1,8 +1,15 @@
 package enjug.erijan.games.yatzy.rules;
 
-import enjug.erijan.games.yatzy.RulesetFactory;
-
 /**
+ * Factory implementation for Yatzy.
+ *
+ * Defines all Yatzy ScoreRules as enum values.
+ * Every enum value is a ScoreRule, defined with the use of lambda expressions
+ * in the constructor. When getScoreBox is called, a new ScoreBox with
+ * the corresponding ScoreRule will be created.
+ * <br>
+ * For example the rule for ONES will always be sum of ones etc.
+ * <br>
  * Created by Jan Eriksson on 27/10/15.
  *
  */
@@ -27,16 +34,10 @@ public enum YatzyBoxes implements ScoreRule, ScoreBoxFactory {
   YATZY (result -> ScoreCalculator.yatzy(50,result)),
   TOTAL (result -> ScoreCalculator.totalSum(result));
 
-  private static final RulesetFactory yatzyVariant = RulesetFactory.YATZY;
-
   private final ScoreRule scoreRule;
 
   YatzyBoxes(ScoreRule scoreRule) {
     this.scoreRule = scoreRule;
-  }
-
-  public static RulesetFactory getYatzyVariant() {
-    return yatzyVariant;
   }
 
   @Override
@@ -46,7 +47,54 @@ public enum YatzyBoxes implements ScoreRule, ScoreBoxFactory {
 
   @Override
   public ScoreBox getScoreBox() {
-    return new ScoreBox(this.name(),this);
+    return new ScoreBox(this);
+  }
+
+  @Override
+  public String toString() {
+    String string;
+
+    switch (this) {
+      case ONES : string = "Ones";
+        break;
+      case TWOS : string = "Twos";
+        break;
+      case THREES : string = "Threes";
+        break;
+      case FOURS : string = "Fours";
+        break;
+      case FIVES : string = "Fives";
+        break;
+      case SIXES : string = "Sixes";
+        break;
+      case SUM : string = "Sum";
+        break;
+      case BONUS : string = "Bonus";
+        break;
+      case ONE_PAIR : string = "One Pair";
+        break;
+      case TWO_PAIR : string = "Two Pairs";
+        break;
+      case THREE_OF_SAME : string = "Three of a Kind";
+        break;
+      case FOUR_OF_SAME : string = "Four of a kind";
+        break;
+      case FULL_HOUSE : string = "Full house";
+        break;
+      case SMALL_STRAIGHT : string = "Small Straight";
+        break;
+      case BIG_STRAIGHT : string = "Big Straight";
+        break;
+      case CHANCE : string = "Chance";
+        break;
+      case YATZY : string = "Yatzy";
+        break;
+      case TOTAL : string = "Total";
+        break;
+      default: string = this.name();
+        break;
+    }
+    return string;
   }
 
 
