@@ -63,7 +63,7 @@ public enum YahtzeeBoxes implements ScoreRule, ScoreBoxFactory {
         break;
       case FIVES : string = "Fives";
         break;
-      case SIXES : string = "TwSixesos";
+      case SIXES : string = "Sixes";
         break;
       case SUM : string = "Sum";
         break;

@@ -7,6 +7,10 @@ import java.util.EnumSet;
 import java.util.stream.Stream;
 
 /**
+ * Main class.
+ * Sets swing look and feel to cross platform.
+ * Asks for which rule set to use and launches a game of that variant.
+ *
  * Created by Jan Eriksson on 08/11/15.
  */
 public class YatzyMain {

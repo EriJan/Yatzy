@@ -402,7 +402,8 @@ public class YatzyGui {
           int tmpScore = scoreInterface.getTempScore(name,boxId);
           label.setText(Integer.toString(tmpScore));
           if (tmpScore > 0) {
-            label.setForeground(Color.GREEN);
+            Color color = new Color(0xA408E9);
+            label.setForeground(color);
           } else {
             label.setForeground(Color.BLACK);
           }

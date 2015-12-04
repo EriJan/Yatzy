@@ -4,6 +4,8 @@ import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.util.GameDie;
 import enjug.erijan.games.yatzy.model.GameState;
 
+import java.util.Iterator;
+
 /**
  * Standard Yatzy rolling. Uses five dice.
  *
@@ -79,6 +81,14 @@ public class RollBehaviorYatzy implements RollBehavior {
   public void toggleActiveDie(GameDie die) {
     if (rollsDone > 0) {
       diceHandler.toggleActiveDie(die);
+      Iterator<GameDie> dieIterator = diceHandler.getDice();
+      boolean anyActiveDice = false;
+      while (dieIterator.hasNext() && !anyActiveDice) {
+        GameDie localDie = dieIterator.next();
+        anyActiveDice = diceHandler.isActiveDie(localDie);
+      }
+      gameState.setChanged();
+      gameState.setRollingAllowed(anyActiveDice);
     }
   }
 }
