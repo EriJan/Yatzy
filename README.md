@@ -1,6 +1,6 @@
 # Yatzy examination project
 
-This Yatzy project is the second examination project of the course 
+This Yatzy project is the second examination assignment for the course 
 "Objektorienterad Programmering med Java" at Jensen Yrkeshögskola. 
 It is a single student assignment.
 
