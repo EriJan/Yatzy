@@ -10,5 +10,9 @@ The basic requirement of this project is  a working Yatzy game with
 Graphical User Interface in swing.
 
 The project was extended with the exploration of some design patterns,
-enums and Java generics. Patterns used are Model-View-Control, Strategy,
-Factory, Builder and Observer.
+enums and Java generics. Patterns used are 
+* Model-View-Control
+* Strategy
+* Factory
+* Builder
+* Observer
