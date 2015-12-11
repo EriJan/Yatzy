@@ -79,7 +79,7 @@ public class YatzyGui implements GenericObserver<GameState> {
     c.gridx = 2;
     playerColumns = new HashMap<>();
     for (Player player : gameState.getPlayers()) {
-      currentPlayerColumn = new PlayerColumn(player.getName(), scoreInterface);
+      currentPlayerColumn = new PlayerColumn(player.getName(), scoreInterface, gameControl);
       playerColumns.put(player.getName(),currentPlayerColumn);
       jFrame.add(currentPlayerColumn,c);
       c.gridx++;
@@ -186,13 +186,10 @@ public class YatzyGui implements GenericObserver<GameState> {
     scoreButton.setPreferredSize(preferedButtonSize);
     scoreButton.setEnabled(false);
 
-    scoreButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        scoreButton.setEnabled(false);
-        String selected = selectionColumn.getSelected();
-        gameControl.setScore(selected);
-      }
+    scoreButton.addActionListener(e -> {
+      scoreButton.setEnabled(false);
+      String selected = selectionColumn.getSelected();
+      gameControl.setScore(selected);
     });
 //    jFrame.add(scoreButton);
     return scoreButton;

@@ -1,12 +1,15 @@
 package enjug.erijan.games.yatzy.view;
 
 import enjug.erijan.games.util.GenericObserver;
+import enjug.erijan.games.yatzy.control.GameControl;
 import enjug.erijan.games.yatzy.model.GameState;
 import enjug.erijan.games.yatzy.model.Player;
 import enjug.erijan.games.yatzy.model.ScoreInterface;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
 
@@ -24,7 +27,7 @@ public class PlayerColumn extends JPanel implements GenericObserver<ScoreInterfa
   private Map<String, JComponent> scoreColumn;
   private final Dimension preferedLabelSize = new Dimension(60, 20);
 
-  public PlayerColumn(String playerName, ScoreInterface scoreInterface) {
+  public PlayerColumn(String playerName, ScoreInterface scoreInterface, GameControl gameControl) {
     List<String> allScores = scoreInterface.getAllScores();
     this.setLayout(new GridLayout(0,1));
 
@@ -45,18 +48,24 @@ public class PlayerColumn extends JPanel implements GenericObserver<ScoreInterfa
       JButton scoreComponent = new JButton(Integer.toString(scoreInterface
           .getScore(playerName, boxId)));
 
+      // Appearance of button
       scoreComponent.setForeground(Color.BLACK);
-      scoreComponent.setHorizontalTextPosition(JLabel.CENTER);
-      scoreComponent.setHorizontalAlignment(JLabel.CENTER);
+      scoreComponent.setHorizontalTextPosition(JButton.CENTER);
+      scoreComponent.setHorizontalAlignment(JButton.CENTER);
       scoreComponent.setBorder(BorderFactory.createEtchedBorder());
       scoreComponent.setPreferredSize(preferedLabelSize);
+
       this.add(scoreComponent);
-
       scoreColumn.put(boxId, scoreComponent);
-      if (scoreInterface.isDerivedScore(boxId)) {
 
-      } else {
-
+      if (!scoreInterface.isDerivedScore(boxId)) {
+        scoreComponent.addActionListener(new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            gameControl.setScore(boxId);
+            scoreComponent.removeActionListener(this);
+          }
+        });
       }
     }
     scoreInterface.registerObserver(this);
@@ -66,7 +75,7 @@ public class PlayerColumn extends JPanel implements GenericObserver<ScoreInterfa
   public void update(ScoreInterface scoreInterface) {
     List<String> allScores = scoreInterface.getAllScores();
     for (String boxId : allScores) {
-      JLabel label = (JLabel) scoreColumn.get(boxId);
+      JButton label = (JButton) scoreColumn.get(boxId);
       if (scoreInterface.isScoreSet(playerName,boxId)) {
         label.setText(Integer.toString(scoreInterface.getScore(playerName, boxId)));
         label.setForeground(Color.BLACK);
