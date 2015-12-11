@@ -4,9 +4,12 @@ import enjug.erijan.games.util.DiceHandler;
 import enjug.erijan.games.util.GameDie;
 import enjug.erijan.games.util.GenericObserver;
 import enjug.erijan.games.yatzy.control.GameControl;
+import enjug.erijan.games.yatzy.model.GameState;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
 
@@ -55,7 +58,10 @@ public class DicePanel extends JPanel implements GenericObserver<DiceHandler> {
    * @param gameControl Controller.
    * @param diceHandler Dice model.
    */
-  public DicePanel(GameControl gameControl, DiceHandler diceHandler) {
+  public DicePanel(GameControl gameControl, DiceHandler diceHandler, GameState gameState) {
+    diePanel = new JPanel();
+    selectedDicePanel = new JPanel();
+
     this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     dieButtons = new ArrayList<>();
     diceHandler.registerObserver(this);
@@ -69,16 +75,14 @@ public class DicePanel extends JPanel implements GenericObserver<DiceHandler> {
    * @param diceHandler Dice model.
    */
   public void addDice(GameControl gameControl, DiceHandler diceHandler) {
-    diePanel = new JPanel();
-    selectedDicePanel = new JPanel();
 
     selectedDicePanel.setPreferredSize(new Dimension(600,60));
     diePanel.setPreferredSize(new Dimension(600,600));
     Dimension prefSize = new Dimension(60,60);
 
-
     Iterator<GameDie> dice = diceHandler.getDice();
     diePanel.setLayout(new GridBagLayout());
+
 
     while (dice.hasNext()) {
 
