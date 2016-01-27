@@ -20,7 +20,7 @@ import java.util.List;
 public class ScoreColumn extends JPanel implements GenericObserver<ScoreInterface> {
 
   String currentPlayer;
-  private Map<String, JComponent> scoreSelection;
+  private Map<String, JLabel> scoreSelection;
   private ButtonGroup scoreSelectionButtons;
   private final Dimension prefSize = new Dimension(150,20);
 
@@ -32,7 +32,7 @@ public class ScoreColumn extends JPanel implements GenericObserver<ScoreInterfac
     scoreSelection = new HashMap<>();
     this.add(Box.createRigidArea(prefSize));
     for (String boxId : allScores) {
-      if (scoreInterface.isDerivedScore(boxId)) {
+//      if (scoreInterface.isDerivedScore(boxId)) {
         JLabel jLabel = new JLabel(boxId);
         Font font = jLabel.getFont();
         Font boldFont = new Font(font.getFontName(), Font.BOLD, font.getSize());
@@ -40,20 +40,20 @@ public class ScoreColumn extends JPanel implements GenericObserver<ScoreInterfac
         jLabel.setPreferredSize(prefSize);
         this.add(jLabel);
         scoreSelection.put(boxId, jLabel);
-      } else {
-        JRadioButton radButton = new JRadioButton(boxId);
-        scoreSelectionButtons.add(radButton);
-        radButton.setEnabled(true);
-        radButton.setActionCommand(boxId);
-        radButton.setPreferredSize(prefSize);
-        this.add(radButton);
-        scoreSelection.put(boxId, radButton);
-      }
+//      } else {
+//        JRadioButton radButton = new JRadioButton(boxId);
+//        scoreSelectionButtons.add(radButton);
+//        radButton.setEnabled(true);
+//        radButton.setActionCommand(boxId);
+//        radButton.setPreferredSize(prefSize);
+//        this.add(radButton);
+//        scoreSelection.put(boxId, radButton);
+//      }
     }
 
-    JRadioButton button = (JRadioButton) scoreSelection.get(allScores.get(0));
-    scoreSelectionButtons.clearSelection();
-    button.setSelected(true);
+//    JRadioButton button = (JRadioButton) scoreSelection.get(allScores.get(0));
+//    scoreSelectionButtons.clearSelection();
+//    button.setSelected(true);
 
     scoreInterface.registerObserver(this);
   }
@@ -76,21 +76,16 @@ public class ScoreColumn extends JPanel implements GenericObserver<ScoreInterfac
    */
   @Override
   public void update(ScoreInterface subjectRef) {
-    for (JComponent jRadioButton : scoreSelection.values()) {
-      jRadioButton.setEnabled(false);
+    for (JLabel label : scoreSelection.values()) {
+      label.setEnabled(false);
     }
 
     String playerName = currentPlayer;
     java.util.List<String> availSelect = subjectRef.getAvailableScores(playerName);
 
     for (String boxId : availSelect) {
-      JRadioButton button = (JRadioButton) scoreSelection.get(boxId);
-      button.setEnabled(true);
-    }
-    scoreSelectionButtons.clearSelection();
-    if (availSelect.size() > 0) {
-      JRadioButton button = (JRadioButton) scoreSelection.get(availSelect.get(0));
-      button.setSelected(true);
+      JLabel label = scoreSelection.get(boxId);
+      label.setEnabled(true);
     }
 
     this.validate();

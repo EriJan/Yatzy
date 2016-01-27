@@ -48,7 +48,13 @@ public class PlayerColumn extends JPanel implements GenericObserver<ScoreInterfa
       JButton scoreComponent = new JButton(Integer.toString(scoreInterface
           .getScore(playerName, boxId)));
 
-      // Appearance of button
+      // Appearance of button to look like a JLabel
+      scoreComponent.setFocusPainted(false);
+      scoreComponent.setMargin(new Insets(0, 0, 0, 0));
+      scoreComponent.setContentAreaFilled(false);
+//      scoreComponent.setBorderPainted(false);
+      scoreComponent.setOpaque(false);
+
       scoreComponent.setForeground(Color.BLACK);
       scoreComponent.setHorizontalTextPosition(JButton.CENTER);
       scoreComponent.setHorizontalAlignment(JButton.CENTER);
