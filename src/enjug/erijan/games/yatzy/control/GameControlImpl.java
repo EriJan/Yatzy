@@ -59,8 +59,8 @@ public class GameControlImpl implements GameControl {
    */
   @Override
   public void setScore(String boxId) {
-    scoringBehavior.setScore(boxId);
     rollBehavior.resetDice();
+    scoringBehavior.setScore(boxId);
   }
 
   /**

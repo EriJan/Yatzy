@@ -32,7 +32,6 @@ public class ScoreColumn extends JPanel implements GenericObserver<ScoreInterfac
     scoreSelection = new HashMap<>();
     this.add(Box.createRigidArea(prefSize));
     for (String boxId : allScores) {
-//      if (scoreInterface.isDerivedScore(boxId)) {
         JLabel jLabel = new JLabel(boxId);
         Font font = jLabel.getFont();
         Font boldFont = new Font(font.getFontName(), Font.BOLD, font.getSize());
@@ -40,20 +39,7 @@ public class ScoreColumn extends JPanel implements GenericObserver<ScoreInterfac
         jLabel.setPreferredSize(prefSize);
         this.add(jLabel);
         scoreSelection.put(boxId, jLabel);
-//      } else {
-//        JRadioButton radButton = new JRadioButton(boxId);
-//        scoreSelectionButtons.add(radButton);
-//        radButton.setEnabled(true);
-//        radButton.setActionCommand(boxId);
-//        radButton.setPreferredSize(prefSize);
-//        this.add(radButton);
-//        scoreSelection.put(boxId, radButton);
-//      }
     }
-
-//    JRadioButton button = (JRadioButton) scoreSelection.get(allScores.get(0));
-//    scoreSelectionButtons.clearSelection();
-//    button.setSelected(true);
 
     scoreInterface.registerObserver(this);
   }

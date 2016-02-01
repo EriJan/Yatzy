@@ -5,6 +5,7 @@ import enjug.erijan.games.util.GameDie;
 import enjug.erijan.games.yatzy.model.Player;
 import enjug.erijan.games.yatzy.model.GameState;
 
+import java.nio.channels.Pipe;
 import java.util.HashMap;
 
 /**
@@ -15,7 +16,7 @@ import java.util.HashMap;
  */
 public class RollBehaviorMaxiYatzy implements RollBehavior {
 
-  private static final int maxRerolls = 3;
+  private static final int INITIAL_REROLLS = 2;
 
   private DiceHandler diceHandler;
   private GameState gameState;
@@ -37,6 +38,7 @@ public class RollBehaviorMaxiYatzy implements RollBehavior {
     for (Player player : gameState.getPlayers()) {
       savedRolls.put(player.getName(),0);
     }
+    rollsDone = 0;
   }
 
   /**
@@ -57,21 +59,20 @@ public class RollBehaviorMaxiYatzy implements RollBehavior {
 
     String playerName = gameState.getCurrentPlayer().getName();
     int extraRolls = savedRolls.get(playerName);
-    int tempRerolls = extraRolls + maxRerolls;
+    int tempRerolls = extraRolls + INITIAL_REROLLS;
 
     if (rollsDone < tempRerolls) {
-      rollsDone++;
       diceHandler.rollActiveDice();
       gameState.setScoringAllowed(true);
       message = playerName + " rolled some dice "
           + (tempRerolls - rollsDone) + " rolls left.";
+      rollsDone++;
 
     } else if (rollsDone == tempRerolls) {
       diceHandler.rollActiveDice();
-      savedRolls.put(playerName,0);
       gameState.setRollingAllowed(false);
       diceHandler.deActivateAllDice();
-      rollsDone = 0;
+      rollsDone++;
       message = playerName + " last roll.";
 
     } else {
@@ -88,7 +89,8 @@ public class RollBehaviorMaxiYatzy implements RollBehavior {
   public void resetDice() {
     String playerName = gameState.getCurrentPlayer().getName();
     int extraRolls = savedRolls.get(playerName);
-    int rollsToSave = extraRolls + maxRerolls - rollsDone;
+    // First roll is free, add one...
+    int rollsToSave = extraRolls + INITIAL_REROLLS - rollsDone + 1;
     savedRolls.put(playerName,rollsToSave);
     rollsDone = 0;
     diceHandler.setAllDiceActive();

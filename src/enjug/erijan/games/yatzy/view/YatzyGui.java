@@ -104,22 +104,9 @@ public class YatzyGui implements GenericObserver<GameState> {
     c.gridx = 2;
     c.gridy = 0;
     c.gridwidth = 3;
-    //infoPanel.setPreferredSize(new Dimension(200,60));
     c.fill = GridBagConstraints.BOTH;
     jFrame.add(infoPanel,c);
 
-//    rollButton = createRollButton(gameControl,diceHandler);
-//    c.gridwidth = 1;
-//    c.gridx = 0;
-//    jFrame.add(rollButton,c);
-
-//    scoreButton = createSetScoreButton(gameControl);
-//    c.gridx = 1;
-//    jFrame.add(scoreButton,c);
-
-//    newGameButton = createNewGameButton();
-//    c.gridx = 10;
-//    jFrame.add(newGameButton,c);
 
     jFrame.pack();
 
@@ -159,11 +146,6 @@ public class YatzyGui implements GenericObserver<GameState> {
     });
 
     selectionColumn.setCurrentPlayer(currentPlayer);
-
-    //rollButton.setEnabled(gameState.isRollingAllowed());
-    //scoreButton.setEnabled(gameState.isScoringAllowed());
-
-
   }
 
   public JButton createRollButton(GameControl gameControl, DiceHandler diceHandler) {
