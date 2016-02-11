@@ -201,7 +201,7 @@ public enum RulesetBuilder implements RulesetBuilderInterface {
   }
 
   /**
-   * Takes a generic enum of type T and converts to ArrayList of String.
+   * Takes a enumset of a generic enum of type T and converts to ArrayList of String.
    *
    * @param enumSet Set to convert.
    * @param <T> Enum type.
